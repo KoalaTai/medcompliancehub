@@ -59,7 +59,7 @@ interface Project {
   riskLevel: number
 }
 
-interface ResourceAllocation {
+interface ResourceAllocationData {
   projectId: string
   teamMembers: string[]
   allocatedHours: number
@@ -222,7 +222,7 @@ export function ResourceAllocation() {
     }
   ])
 
-  const [allocations, setAllocations] = useKV<ResourceAllocation[]>('resource-allocations', [])
+  const [allocations, setAllocations] = useKV<ResourceAllocationData[]>('resource-allocations', [])
   const [performanceMetrics] = useKV<PerformanceMetric[]>('performance-metrics', [
     { period: 'Q3 2023', efficiency: 88, quality: 92, onTimeDelivery: 94, utilization: 82, satisfaction: 4.6 },
     { period: 'Q4 2023', efficiency: 91, quality: 94, onTimeDelivery: 96, utilization: 85, satisfaction: 4.7 }
@@ -1287,5 +1287,3 @@ export function ResourceAllocation() {
       </Tabs>
     </div>
   )
-}
-
