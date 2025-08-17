@@ -6,11 +6,27 @@ import { AuditSimulations } from '@/components/AuditSimulations'
 import { EvidenceManager } from '@/components/EvidenceManager'
 import { RegulatoryIntelligence } from '@/components/RegulatoryIntelligence'
 import { DigestScheduler } from '@/components/DigestScheduler'
+import { WebhookIntegrations } from '@/components/WebhookIntegrations'
+import { WebhookNotificationSystem } from '@/components/WebhookNotificationSystem'
+import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'workflows' | 'intelligence' | 'scheduler' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
+  const [isWebhookMonitoring] = useKV('webhook-monitoring', false)
+
+  // Handle navigation events from dashboard widgets
+  useEffect(() => {
+    const handleNavigateToWebhooks = () => {
+      setActiveSection('webhooks')
+    }
+
+    window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
+    return () => {
+      window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
+    }
+  }, [setActiveSection])
 
   const renderSection = () => {
     switch (activeSection) {
@@ -31,6 +47,8 @@ function App() {
         return <RegulatoryIntelligence />
       case 'scheduler':
         return <DigestScheduler />
+      case 'webhooks':
+        return <WebhookIntegrations />
       case 'team':
         return (
           <div className="p-6">
@@ -62,6 +80,9 @@ function App() {
           {renderSection()}
         </main>
       </div>
+      
+      {/* Global webhook notification system */}
+      <WebhookNotificationSystem isMonitoring={isWebhookMonitoring} />
     </div>
   )
 }

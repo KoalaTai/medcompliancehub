@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
+import { WebhookStatusWidget } from '@/components/WebhookStatusWidget'
 import { 
   Shield, 
   Warning, 
@@ -15,7 +16,8 @@ import {
   Zap,
   Target,
   Bell,
-  Mail
+  Mail,
+  ArrowRight
 } from '@phosphor-icons/react'
 import { useNotificationService } from '@/hooks/useNotificationService'
 
@@ -370,6 +372,46 @@ export function ComplianceDashboard() {
               <Button size="sm" variant="outline" className="w-full">
                 <Mail className="h-3 w-3 mr-1" />
                 Manage Digests
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Webhook Integration Status */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <WebhookStatusWidget 
+            showDetails={true}
+            onViewAll={() => {
+              // This would typically use a router to navigate
+              // For now, we'll use the useKV hook to change the active section
+              window.dispatchEvent(new CustomEvent('navigate-to-webhooks'))
+            }}
+          />
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Team Activity
+            </CardTitle>
+            <CardDescription>Current team engagement with compliance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Active Users Today</span>
+                <span className="text-2xl font-bold text-primary">8</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Pending Approvals</span>
+                <span className="text-2xl font-bold text-destructive">3</span>
+              </div>
+              <Button size="sm" variant="outline" className="w-full">
+                <Users className="h-3 w-3 mr-1" />
+                View Team
               </Button>
             </div>
           </CardContent>

@@ -7,7 +7,8 @@ import {
   Shield,
   TrendUp,
   Database,
-  Calendar
+  Calendar,
+  Webhook
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -19,6 +20,7 @@ const navigationItems = [
   { id: 'workflows', label: 'Compliance Workflows', icon: TrendUp },
   { id: 'intelligence', label: 'Regulatory Intelligence', icon: Database },
   { id: 'scheduler', label: 'Digest Scheduler', icon: Calendar },
+  { id: 'webhooks', label: 'Webhook Integrations', icon: Webhook },
   { id: 'team', label: 'Team Management', icon: Users },
   { id: 'settings', label: 'Settings', icon: Gear },
 ]
