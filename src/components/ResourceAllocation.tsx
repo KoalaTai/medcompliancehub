@@ -1844,103 +1844,107 @@ export function ResourceAllocation() {
                                       {need}
                                     </Badge>
                                   ))}
+                                </div>
                               </div>
                             )}
                           </div>
-                          </div>
+                        </div>
                       )
-                      )
+                    })}
                   </div>
-                  </div>
+                </ScrollArea>
               </CardContent>
             </Card>
-            </Card>
 
-
-          <Card>
-              <CardTitle>Resource Intelligence Summary</CardTitle>
-            <CardHeader>esource planning</CardDescription>
-            </CardHeader>
-              <CardDescription>AI-driven insights for strategic resource planning</CardDescription>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <CardContent>
-                  <h4 className="font-semibold text-sm">Optimization Opportunities</h4>
-                  <div className="space-y-2">
-                    <div className="p-3 bg-green-50 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                    <div className="p-3 bg-green-50 rounded-lg">
-                        <span className="text-sm font-medium">Cross-Training ROI</span>
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                      <p className="text-xs text-muted-foreground">
+            {/* Resource Intelligence Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Resource Intelligence Summary</CardTitle>
+                <CardDescription>AI-driven insights for strategic resource planning</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-sm">Optimization Opportunities</h4>
+                    <div className="space-y-2">
+                      <div className="p-3 bg-green-50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                          <span className="text-sm font-medium">Cross-Training ROI</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Enhanced team flexibility through strategic skill development
+                        </p>
                       </div>
-                      </p>
-                    <div className="p-3 bg-blue-50 rounded-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <TrendingUp className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm font-medium">Efficiency Gains</span>
-                      <div className="flex items-center gap-2 mb-1">
-                        <TrendingUp className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm font-medium">Efficiency Gains</span>
-                      </p>
-                    </div>
-                        AI-optimized allocations show 15% faster project completion
-                </div>
-                    </div>
-                <div className="space-y-4">
-                </div>
-2">
-                <div className="space-y-4">
-                      <div className="flex items-center gap-2 mb-1">
-                        <AlertTriangle className="h-4 w-4 text-orange-600" />
-                        <span className="text-sm font-medium">Capacity Planning</span>
-                      <div className="flex items-center gap-2 mb-1">
-                      <p className="text-xs text-muted-foreground">
-                        Q4 demand surge may require 1-2 additional team members
-                      </p>
-                    </div>
-                        Q4 demand surge may require 1-2 additional team members
-                      </p>
-                    </div>
-                        <span className="text-sm font-medium">Timeline Risks</span>
+                      <div className="p-3 bg-blue-50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <TrendingUp className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm font-medium">Efficiency Gains</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          AI-optimized allocations show 15% faster project completion
+                        </p>
                       </div>
-                        <Clock className="h-4 w-4 text-red-600" />
-                        <span className="text-sm font-medium">Timeline Risks</span>
-                      </p>
-                    </div>
-                        3 critical projects have overlapping resource requirements
-                </div>
                     </div>
                   </div>
-                </div>gic Recommendations</h4>
 
-                      <div className="flex items-center gap-2 mb-1">
-                  <h4 className="font-semibold text-sm">Strategic Recommendations</h4>
-                        <span className="text-sm font-medium">AI Enhancement</span>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-sm">Risk Mitigation</h4>
+                    <div className="space-y-2">
+                      <div className="p-3 bg-orange-50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <AlertTriangle className="h-4 w-4 text-orange-600" />
+                          <span className="text-sm font-medium">Capacity Planning</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Q4 demand surge may require 1-2 additional team members
+                        </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        <Brain className="h-4 w-4 text-purple-600" />
-                      </p>
+                      <div className="p-3 bg-red-50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Clock className="h-4 w-4 text-red-600" />
+                          <span className="text-sm font-medium">Timeline Risks</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          3 critical projects have overlapping resource requirements
+                        </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Target className="h-4 w-4 text-indigo-600" />
-                        <span className="text-sm font-medium">Performance Focus</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-sm">Strategic Recommendations</h4>
+                    <div className="space-y-2">
+                      <div className="p-3 bg-purple-50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Brain className="h-4 w-4 text-purple-600" />
+                          <span className="text-sm font-medium">AI Enhancement</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Implement predictive scheduling for 25% better resource utilization
+                        </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        <Target className="h-4 w-4 text-indigo-600" />
-                        <span className="text-sm font-medium">Performance Focus</span>
+                      <div className="p-3 bg-indigo-50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Target className="h-4 w-4 text-indigo-600" />
+                          <span className="text-sm font-medium">Performance Focus</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Focus on quality metrics to maintain 4.8+ satisfaction rating
+                        </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        Focus on quality metrics to maintain 4.8+ satisfaction rating
-              </div>
-            </CardContent>
-          </Card>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="optimization" className="space-y-6">
           <TemplateOptimizationEngine />
         </TabsContent>
       </Tabs>
-        <TabsContent value="optimization" className="space-y-6">
+    </div>
   )
-}      </Tabs>
+}
