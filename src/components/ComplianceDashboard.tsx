@@ -473,23 +473,47 @@ export function ComplianceDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              Team Activity
+              Team Skill Performance
             </CardTitle>
-            <CardDescription>Current team engagement with compliance</CardDescription>
+            <CardDescription>Real-time team skill benchmarking and analytics</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Active Users Today</span>
-                <span className="text-2xl font-bold text-primary">8</span>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">7.3</div>
+                  <div className="text-xs text-muted-foreground">Avg Team Score</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-destructive">2</div>
+                  <div className="text-xs text-muted-foreground">At Risk</div>
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Pending Approvals</span>
-                <span className="text-2xl font-bold text-destructive">3</span>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>SOX Compliance</span>
+                  <span className="font-medium">8.2/10</span>
+                </div>
+                <Progress value={82} className="h-2" />
               </div>
-              <Button size="sm" variant="outline" className="w-full">
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Data Privacy</span>
+                  <span className="font-medium text-destructive">6.1/10</span>
+                </div>
+                <Progress value={61} className="h-2" />
+              </div>
+
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full" 
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-team-comparison'))}
+              >
                 <Users className="h-3 w-3 mr-1" />
-                View Team
+                View Team Benchmarks
               </Button>
             </div>
           </CardContent>
