@@ -20,10 +20,10 @@
 
 ## Core Features
 
-### AI-Powered Skill Gap Identification ✨
-- **Functionality**: Analyzes current skill levels vs. target requirements using AI assessment
-- **Purpose**: Proactively identifies compliance knowledge gaps before they become audit findings
-- **Success Criteria**: 95% accuracy in gap identification with actionable training recommendations
+### AI-Powered Skill Gap Identification & Learning Path Optimization ✨
+- **Functionality**: Analyzes current skill levels vs. target requirements using AI assessment with automated learning path optimization based on upcoming audit schedules and regulatory changes
+- **Purpose**: Proactively identifies compliance knowledge gaps and creates personalized learning paths that align with audit timelines and regulatory deadlines
+- **Success Criteria**: 95% accuracy in gap identification with time-optimized training recommendations that prepare teams for specific audits and regulatory changes
 
 ### Audit Simulations
 - **Functionality**: Virtual compliance audit environments for practice and assessment
@@ -50,9 +50,14 @@
 - **Purpose**: Stay ahead of compliance requirements with proactive alerts
 - **Success Criteria**: 100% coverage of relevant regulatory updates with contextual impact analysis
 
+### Automated Learning Path Optimization Engine
+- **Functionality**: AI-driven creation of personalized learning paths that align training schedules with audit timelines and regulatory change deadlines
+- **Purpose**: Optimize learning efficiency by prioritizing skills based on upcoming compliance requirements and deadlines
+- **Success Criteria**: 90% of learners complete critical training before audit/regulatory deadlines with improved skill assessment scores
+
 ### Training Recommendation Engine
-- **Functionality**: Personalized training plans based on AI skill gap analysis
-- **Purpose**: Optimize learning paths for maximum compliance improvement
+- **Functionality**: Personalized training plans based on AI skill gap analysis with intelligent scheduling around business constraints
+- **Purpose**: Optimize learning paths for maximum compliance improvement while respecting operational schedules
 - **Success Criteria**: 80% completion rate of recommended training with measurable skill improvement
 
 ## Design Direction
@@ -105,9 +110,11 @@
 
 ### AI Integration
 - LLM-powered skill assessment and gap analysis
+- Automated learning path optimization based on audit schedules and regulatory timelines
 - Natural language processing for regulatory document analysis  
-- Intelligent training recommendation algorithms
+- Intelligent training recommendation algorithms with deadline awareness
 - Automated CAPA workflow generation
+- Predictive analytics for compliance readiness scoring
 
 ### Real-time Features
 - Webhook integration for external system connectivity
