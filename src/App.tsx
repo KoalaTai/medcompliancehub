@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { ComplianceHeader } from '@/components/ComplianceHeader'
 import { ComplianceSidebar } from '@/components/ComplianceSidebar'
