@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { WebhookStatusWidget } from '@/components/WebhookStatusWidget'
+import { AIInsightsPanel } from '@/components/AIInsightsPanel'
 import { 
   Shield, 
   Warning, 
@@ -404,9 +405,9 @@ export function ComplianceDashboard() {
         </Card>
       </div>
 
-      {/* Webhook Integration Status */}
+      {/* Webhook Integration Status with AI Insights */}
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-1">
           <WebhookStatusWidget 
             showDetails={true}
             onViewAll={() => {
@@ -415,6 +416,10 @@ export function ComplianceDashboard() {
               window.dispatchEvent(new CustomEvent('navigate-to-webhooks'))
             }}
           />
+        </div>
+        
+        <div className="lg:col-span-1">
+          <AIInsightsPanel className="h-full" />
         </div>
 
         <Card>

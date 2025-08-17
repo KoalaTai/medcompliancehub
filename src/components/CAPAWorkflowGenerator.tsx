@@ -39,6 +39,7 @@ import { useKV } from '@github/spark/hooks'
 import { WorkflowTemplateManager } from '@/components/WorkflowTemplateManager'
 import { AutomatedWorkflowConfiguration } from '@/components/AutomatedWorkflowConfiguration'
 import { FrameworkConfigurationStatus } from '@/components/FrameworkConfigurationStatus'
+import { AITemplateOptimizer } from '@/components/AITemplateOptimizer'
 import { toast } from 'sonner'
 
 interface CAPAWorkflow {
@@ -1704,12 +1705,13 @@ export function CAPAWorkflowGenerator() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="generator">Auto-Generate</TabsTrigger>
           <TabsTrigger value="workflows">Active Workflows</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
+          <TabsTrigger value="optimizer">AI Optimizer</TabsTrigger>
           <TabsTrigger value="template-manager">Template Manager</TabsTrigger>
           <TabsTrigger value="automation-config">Automation Config</TabsTrigger>
         </TabsList>
@@ -2266,6 +2268,10 @@ export function CAPAWorkflowGenerator() {
               </Card>
             )}
           </div>
+        </TabsContent>
+
+        <TabsContent value="optimizer" className="mt-6">
+          <AITemplateOptimizer />
         </TabsContent>
 
         <TabsContent value="template-manager" className="mt-6">
