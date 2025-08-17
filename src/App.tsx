@@ -14,9 +14,10 @@ import { ResourceAllocation } from '@/components/ResourceAllocation'
 import { TemplateOptimizationEngine } from '@/components/TemplateOptimizationEngine'
 import { SkillGapAnalyzer } from '@/components/SkillGapAnalyzer'
 import { TeamSkillComparison } from '@/components/TeamSkillComparison'
+import { CareerPathRecommendations } from '@/components/CareerPathRecommendations'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -44,17 +45,23 @@ function App() {
       setActiveSection('team-comparison')
     }
 
+    const handleNavigateToCareerPaths = () => {
+      setActiveSection('career-paths')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
     window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     window.addEventListener('navigate-to-resources', handleNavigateToResources)
     window.addEventListener('navigate-to-skills', handleNavigateToSkills)
     window.addEventListener('navigate-to-team-comparison', handleNavigateToTeamComparison)
+    window.addEventListener('navigate-to-career-paths', handleNavigateToCareerPaths)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
       window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
       window.removeEventListener('navigate-to-resources', handleNavigateToResources)
       window.removeEventListener('navigate-to-skills', handleNavigateToSkills)
       window.removeEventListener('navigate-to-team-comparison', handleNavigateToTeamComparison)
+      window.removeEventListener('navigate-to-career-paths', handleNavigateToCareerPaths)
     }
   }, [setActiveSection])
 
@@ -82,6 +89,8 @@ function App() {
         return <SkillGapAnalyzer />
       case 'team-comparison':
         return <TeamSkillComparison />
+      case 'career-paths':
+        return <CareerPathRecommendations />
       case 'team':
         return (
           <div className="p-6">

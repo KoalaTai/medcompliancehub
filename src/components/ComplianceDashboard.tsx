@@ -19,6 +19,7 @@ import {
   Bell,
   Mail,
   ArrowRight,
+  MapPin,
   GitBranch as Workflow
 } from '@phosphor-icons/react'
 import { useNotificationService } from '@/hooks/useNotificationService'
@@ -596,6 +597,63 @@ export function ComplianceDashboard() {
                 <CheckCircle className="h-4 w-4" />
                 <span>AI optimization active</span>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-indigo-500/5 to-indigo-500/10 border-indigo-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-indigo-700">
+              <MapPin className="h-5 w-5" />
+              Career Development
+            </CardTitle>
+            <CardDescription>AI-powered individual career path recommendations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Promotion Ready</span>
+                <span className="text-2xl font-bold text-indigo-700">2</span>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>At Career Risk</span>
+                  <span className="font-medium text-destructive">1</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Avg Career Velocity</span>
+                  <span className="font-medium">24 months</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Market Alignment</span>
+                  <span className="font-medium text-accent">82%</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs">
+                  <span>Sarah Chen - Promotion Track</span>
+                  <span className="font-medium text-accent">Ready</span>
+                </div>
+                <Progress value={95} className="h-1.5" />
+                <div className="flex justify-between text-xs">
+                  <span>Emily Johnson - Development</span>
+                  <span className="font-medium">68%</span>
+                </div>
+                <Progress value={68} className="h-1.5" />
+              </div>
+
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-career-paths'))}
+              >
+                <MapPin className="h-3 w-3 mr-1" />
+                View Career Paths
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
             </div>
           </CardContent>
         </Card>
