@@ -4,6 +4,7 @@ import { ComplianceSidebar } from '@/components/ComplianceSidebar'
 import { ComplianceDashboard } from '@/components/ComplianceDashboard'
 import { AuditSimulations } from '@/components/AuditSimulations'
 import { EvidenceManager } from '@/components/EvidenceManager'
+import { RegulatoryIntelligence } from '@/components/RegulatoryIntelligence'
 
 type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'workflows' | 'intelligence' | 'team' | 'settings'
 
@@ -26,12 +27,7 @@ function App() {
           </div>
         )
       case 'intelligence':
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-2">Regulatory Intelligence</h2>
-            <p className="text-muted-foreground">Real-time regulatory updates and impact analysis coming soon.</p>
-          </div>
-        )
+        return <RegulatoryIntelligence />
       case 'team':
         return (
           <div className="p-6">

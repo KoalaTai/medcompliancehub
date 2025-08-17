@@ -13,8 +13,10 @@ import {
   Calendar,
   Brain,
   Zap,
-  Target
+  Target,
+  Bell
 } from '@phosphor-icons/react'
+import { useNotificationService } from '@/hooks/useNotificationService'
 
 interface ComplianceMetric {
   id: string
@@ -114,6 +116,10 @@ function getStatusBadge(status: string) {
 }
 
 export function ComplianceDashboard() {
+  const { notifications, getUnreadCount, getCriticalCount } = useNotificationService()
+  const unreadNotifications = getUnreadCount()
+  const criticalNotifications = getCriticalCount()
+  
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -150,6 +156,44 @@ export function ComplianceDashboard() {
           </Card>
         ))}
       </div>
+
+      {/* Regulatory Notifications Summary */}
+      {(unreadNotifications > 0 || criticalNotifications > 0) && (
+        <Card className="border-amber-200 bg-amber-50/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-amber-800">
+              <Bell className="h-5 w-5" />
+              Regulatory Update Notifications
+            </CardTitle>
+            <CardDescription className="text-amber-700">
+              Important regulatory changes that may affect your compliance status
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-amber-800">{unreadNotifications}</div>
+                  <p className="text-xs text-amber-600">Unread Updates</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-800">{criticalNotifications}</div>
+                  <p className="text-xs text-red-600">Critical Issues</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-amber-800">
+                    {notifications.filter(n => n.actionRequired && !n.dismissed).length}
+                  </div>
+                  <p className="text-xs text-amber-600">Require Action</p>
+                </div>
+              </div>
+              <Button variant="outline" className="border-amber-300 text-amber-800 hover:bg-amber-100">
+                View All Updates
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
