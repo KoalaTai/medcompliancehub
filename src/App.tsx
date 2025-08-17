@@ -10,9 +10,11 @@ import { DigestScheduler } from '@/components/DigestScheduler'
 import { WebhookIntegrations } from '@/components/WebhookIntegrations'
 import { WebhookNotificationSystem } from '@/components/WebhookNotificationSystem'
 import { CAPAWorkflowGenerator } from '@/components/CAPAWorkflowGenerator'
+import { ResourceAllocation } from '@/components/ResourceAllocation'
+import { TemplateOptimizationEngine } from '@/components/TemplateOptimizationEngine'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -28,11 +30,17 @@ function App() {
       setActiveSection('workflows')
     }
 
+    const handleNavigateToResources = () => {
+      setActiveSection('resources')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
     window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
+    window.addEventListener('navigate-to-resources', handleNavigateToResources)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
       window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
+      window.removeEventListener('navigate-to-resources', handleNavigateToResources)
     }
   }, [setActiveSection])
 
@@ -54,6 +62,8 @@ function App() {
         return <DigestScheduler />
       case 'webhooks':
         return <WebhookIntegrations />
+      case 'resources':
+        return <ResourceAllocation />
       case 'team':
         return (
           <div className="p-6">

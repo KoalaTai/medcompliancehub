@@ -9,7 +9,8 @@ import {
   Database,
   Calendar,
   Webhook,
-  Brain
+  Brain,
+  UsersThree
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -23,6 +24,7 @@ const navigationItems = [
   { id: 'intelligence', label: 'Regulatory Intelligence', icon: Database },
   { id: 'scheduler', label: 'Digest Scheduler', icon: Calendar },
   { id: 'webhooks', label: 'Webhook Integrations', icon: Webhook },
+  { id: 'resources', label: 'Resource Allocation', icon: UsersThree },
   { id: 'team', label: 'Team Management', icon: Users },
   { id: 'settings', label: 'Settings', icon: Gear },
 ]

@@ -448,6 +448,87 @@ export function ComplianceDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Resource Allocation Section */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="bg-gradient-to-br from-green-500/5 to-green-500/10 border-green-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-700">
+              <Users className="h-5 w-5" />
+              Resource Allocation
+            </CardTitle>
+            <CardDescription>AI-powered intelligent resource optimization</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Team Utilization</span>
+                <span className="text-2xl font-bold text-green-700">78%</span>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Active Allocations</span>
+                  <span className="font-medium">3</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Efficiency Score</span>
+                  <span className="font-medium">94%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>On-time Delivery</span>
+                  <span className="font-medium">98%</span>
+                </div>
+              </div>
+
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-resources'))}
+              >
+                <TrendUp className="h-3 w-3 mr-1" />
+                Optimize Resources
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="h-5 w-5" />
+              Performance Analytics
+            </CardTitle>
+            <CardDescription>Historical performance trends and insights</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Q3 Efficiency Improvement</span>
+                  <span className="font-medium text-green-600">+5%</span>
+                </div>
+                <Progress value={85} className="h-2" />
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Quality Score</span>
+                  <span className="font-medium">4.8/5.0</span>
+                </div>
+                <Progress value={96} className="h-2" />
+              </div>
+
+              <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-2 rounded">
+                <CheckCircle className="h-4 w-4" />
+                <span>AI optimization active</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
