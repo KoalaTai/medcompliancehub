@@ -14,7 +14,8 @@ import {
   Eye,
   Star,
   Archive,
-  Mail
+  Mail,
+  Timer
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -25,6 +26,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { EmailDigestManager } from '@/components/EmailDigestManager'
+import { AutomatedSchedules } from '@/components/AutomatedSchedules'
 
 interface RegulatoryUpdate {
   id: string
@@ -308,6 +310,7 @@ export function RegulatoryIntelligence() {
         <TabsList>
           <TabsTrigger value="updates">Updates</TabsTrigger>
           <TabsTrigger value="email-digest">Email Digest</TabsTrigger>
+          <TabsTrigger value="automation">Automation</TabsTrigger>
         </TabsList>
 
         <TabsContent value="updates" className="mt-6">
@@ -414,6 +417,10 @@ export function RegulatoryIntelligence() {
 
         <TabsContent value="email-digest" className="mt-6">
           <EmailDigestManager />
+        </TabsContent>
+
+        <TabsContent value="automation" className="mt-6">
+          <AutomatedSchedules />
         </TabsContent>
       </Tabs>
     </div>

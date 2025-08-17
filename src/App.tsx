@@ -5,8 +5,9 @@ import { ComplianceDashboard } from '@/components/ComplianceDashboard'
 import { AuditSimulations } from '@/components/AuditSimulations'
 import { EvidenceManager } from '@/components/EvidenceManager'
 import { RegulatoryIntelligence } from '@/components/RegulatoryIntelligence'
+import { DigestScheduler } from '@/components/DigestScheduler'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'workflows' | 'intelligence' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'workflows' | 'intelligence' | 'scheduler' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -28,6 +29,8 @@ function App() {
         )
       case 'intelligence':
         return <RegulatoryIntelligence />
+      case 'scheduler':
+        return <DigestScheduler />
       case 'team':
         return (
           <div className="p-6">

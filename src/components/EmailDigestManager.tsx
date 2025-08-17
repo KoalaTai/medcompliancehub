@@ -585,14 +585,14 @@ export function EmailDigestManager() {
         <TabsContent value="settings" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Digest Generation Settings</CardTitle>
-              <CardDescription>Configure how and when digests are automatically generated</CardDescription>
+              <CardTitle>Automated Digest Generation</CardTitle>
+              <CardDescription>Configure automatic digest creation and delivery schedules</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-sm font-medium">Auto-generate weekly digests</Label>
-                  <p className="text-xs text-muted-foreground">Automatically create digests every Monday at 9 AM</p>
+                  <p className="text-xs text-muted-foreground">Automatically create digests every Monday at 9 AM EST</p>
                 </div>
                 <Switch defaultChecked />
               </div>
@@ -612,19 +612,154 @@ export function EmailDigestManager() {
                 </div>
                 <Switch defaultChecked />
               </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium">Smart scheduling optimization</Label>
+                  <p className="text-xs text-muted-foreground">Automatically adjust delivery times based on engagement metrics</p>
+                </div>
+                <Switch />
+              </div>
+              
+              <Separator className="my-4" />
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="generation-time">Default generation time</Label>
+                  <Input id="generation-time" type="time" defaultValue="09:00" />
+                </div>
+                <div>
+                  <Label htmlFor="timezone">Timezone</Label>
+                  <Select defaultValue="America/New_York">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="America/New_York">Eastern Time</SelectItem>
+                      <SelectItem value="America/Chicago">Central Time</SelectItem>
+                      <SelectItem value="America/Denver">Mountain Time</SelectItem>
+                      <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
+                      <SelectItem value="UTC">UTC</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
+              <CardTitle>Weekly Delivery Schedules</CardTitle>
+              <CardDescription>Set up recurring delivery schedules for different subscriber groups</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-7 gap-2 text-center text-sm">
+                <div className="font-medium">Sun</div>
+                <div className="font-medium">Mon</div>
+                <div className="font-medium">Tue</div>
+                <div className="font-medium">Wed</div>
+                <div className="font-medium">Thu</div>
+                <div className="font-medium">Fri</div>
+                <div className="font-medium">Sat</div>
+                
+                <div className="p-2 border rounded bg-muted/30">
+                  <div className="text-xs text-muted-foreground">No schedule</div>
+                </div>
+                <div className="p-2 border rounded bg-blue-50 border-blue-200">
+                  <div className="text-xs font-medium text-blue-700">Executive</div>
+                  <div className="text-xs text-blue-600">9:00 AM</div>
+                </div>
+                <div className="p-2 border rounded bg-green-50 border-green-200">
+                  <div className="text-xs font-medium text-green-700">Full Team</div>
+                  <div className="text-xs text-green-600">10:30 AM</div>
+                </div>
+                <div className="p-2 border rounded bg-muted/30">
+                  <div className="text-xs text-muted-foreground">No schedule</div>
+                </div>
+                <div className="p-2 border rounded bg-muted/30">
+                  <div className="text-xs text-muted-foreground">No schedule</div>
+                </div>
+                <div className="p-2 border rounded bg-purple-50 border-purple-200">
+                  <div className="text-xs font-medium text-purple-700">Monthly</div>
+                  <div className="text-xs text-purple-600">2:00 PM</div>
+                </div>
+                <div className="p-2 border rounded bg-muted/30">
+                  <div className="text-xs text-muted-foreground">No schedule</div>
+                </div>
+              </div>
+              
+              <div className="text-center pt-2">
+                <Button variant="outline" size="sm">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Manage Schedules
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Quality & Safety Controls</CardTitle>
+              <CardDescription>Automated checks and safeguards for digest delivery</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium">Content validation</Label>
+                  <p className="text-xs text-muted-foreground">Verify digest content before sending</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium">Duplicate detection</Label>
+                  <p className="text-xs text-muted-foreground">Prevent sending duplicate content to subscribers</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium">Delivery confirmation</Label>
+                  <p className="text-xs text-muted-foreground">Require delivery confirmation for critical updates</p>
+                </div>
+                <Switch />
+              </div>
+              
+              <Separator className="my-4" />
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="max-recipients">Max recipients per digest</Label>
+                  <Input id="max-recipients" type="number" defaultValue="500" />
+                </div>
+                <div>
+                  <Label htmlFor="retry-attempts">Delivery retry attempts</Label>
+                  <Input id="retry-attempts" type="number" defaultValue="3" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Notification Preferences</CardTitle>
               <CardDescription>Control when you receive notifications about digest activities</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
+                  <Label className="text-sm font-medium">Successful deliveries</Label>
+                  <p className="text-xs text-muted-foreground">Daily summary of successful digest deliveries</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
                   <Label className="text-sm font-medium">Digest generation failures</Label>
-                  <p className="text-xs text-muted-foreground">Notify when automatic digest generation fails</p>
+                  <p className="text-xs text-muted-foreground">Immediate notification when automatic generation fails</p>
                 </div>
                 <Switch defaultChecked />
               </div>
@@ -635,6 +770,22 @@ export function EmailDigestManager() {
                   <p className="text-xs text-muted-foreground">Alert when subscriber count increases by >20%</p>
                 </div>
                 <Switch defaultChecked />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium">Critical regulatory alerts</Label>
+                  <p className="text-xs text-muted-foreground">Immediate notification of high-priority regulatory changes</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium">Weekly performance reports</Label>
+                  <p className="text-xs text-muted-foreground">Weekly summary of digest engagement and metrics</p>
+                </div>
+                <Switch />
               </div>
             </CardContent>
           </Card>

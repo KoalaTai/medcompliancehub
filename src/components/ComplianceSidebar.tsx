@@ -6,7 +6,8 @@ import {
   FlaskConical,
   Shield,
   TrendUp,
-  Database
+  Database,
+  Calendar
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -17,6 +18,7 @@ const navigationItems = [
   { id: 'evidence', label: 'Evidence Manager', icon: FileText },
   { id: 'workflows', label: 'Compliance Workflows', icon: TrendUp },
   { id: 'intelligence', label: 'Regulatory Intelligence', icon: Database },
+  { id: 'scheduler', label: 'Digest Scheduler', icon: Calendar },
   { id: 'team', label: 'Team Management', icon: Users },
   { id: 'settings', label: 'Settings', icon: Gear },
 ]
