@@ -132,6 +132,35 @@ interface NotificationRule {
   active: boolean
 }
 
+interface WorkflowTemplate {
+  id: string
+  name: string
+  description: string
+  framework: string
+  category: 'design-control' | 'risk-management' | 'quality-management' | 'corrective-action' | 'validation'
+  difficulty: 'basic' | 'intermediate' | 'advanced'
+  
+  defaultActions: {
+    corrective: Omit<CAPAAction, 'id' | 'assignedTo' | 'dueDate' | 'evidence' | 'status'>[]
+    preventive: Omit<CAPAAction, 'id' | 'assignedTo' | 'dueDate' | 'evidence' | 'status'>[]
+  }
+  
+  automatedChecks: Omit<AutomatedCheck, 'id' | 'nextRun' | 'lastRun'>[]
+  notifications: Omit<NotificationRule, 'id'>[]
+  
+  requiredRoles: string[]
+  estimatedDuration: number // days
+  criticality: 'low' | 'medium' | 'high' | 'critical'
+  
+  metadata: {
+    version: string
+    lastUpdated: string
+    usage: number
+    effectiveness: number // percentage
+    tags: string[]
+  }
+}
+
 interface User {
   id: string
   name: string
@@ -161,14 +190,476 @@ const statusColors = {
   cancelled: 'bg-destructive/20 text-destructive'
 }
 
+// Framework-specific workflow templates
+const workflowTemplates: WorkflowTemplate[] = [
+  {
+    id: 'iso13485-design-control',
+    name: 'ISO 13485 Design Control CAPA',
+    description: 'Comprehensive template for design control deficiencies under ISO 13485',
+    framework: 'ISO 13485',
+    category: 'design-control',
+    difficulty: 'intermediate',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Complete Design History File (DHF)',
+          description: 'Identify and compile all missing DHF documentation including design inputs, outputs, reviews, and verification/validation records',
+          dependencies: [],
+          verificationCriteria: [
+            'All design inputs documented and traceable',
+            'Design outputs complete and verified',
+            'Design reviews conducted at appropriate stages',
+            'Design verification and validation documented'
+          ],
+          estimatedHours: 32
+        },
+        {
+          type: 'corrective',
+          title: 'Update Design Control Procedures',
+          description: 'Revise existing procedures to ensure compliance with ISO 13485 Section 7.3 requirements',
+          dependencies: [],
+          verificationCriteria: [
+            'Procedures updated to current standards',
+            'Design control process clearly defined',
+            'Responsibilities and authorities assigned',
+            'Document control integrated'
+          ],
+          estimatedHours: 16
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Implement Design Control Checklist',
+          description: 'Create and deploy standardized checklists for each design phase to prevent future gaps',
+          dependencies: [],
+          verificationCriteria: [
+            'Checklist covers all design phases',
+            'Templates created for consistent documentation',
+            'Staff trained on new process',
+            'Integration with existing systems complete'
+          ],
+          estimatedHours: 20
+        },
+        {
+          type: 'preventive',
+          title: 'Establish Design Review Schedule',
+          description: 'Create automated scheduling system for mandatory design reviews at critical milestones',
+          dependencies: [],
+          verificationCriteria: [
+            'Review schedule defined and documented',
+            'Automated reminders configured',
+            'Review criteria standardized',
+            'Escalation procedures established'
+          ],
+          estimatedHours: 12
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'DHF Completeness Check',
+        description: 'Weekly verification that all required DHF elements are present',
+        type: 'document-review',
+        frequency: 'weekly',
+        status: 'active',
+        parameters: { requiredDocuments: ['design_inputs', 'design_outputs', 'design_review', 'verification', 'validation'] }
+      },
+      {
+        name: 'Design Review Schedule Monitor',
+        description: 'Monitor upcoming design review deadlines and send reminders',
+        type: 'deadline-monitor',
+        frequency: 'daily',
+        status: 'active',
+        parameters: { advanceNotice: 5, milestones: ['concept_review', 'detailed_review', 'final_review'] }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['design-team', 'quality-manager'],
+        advanceNotice: 7,
+        message: 'Design control CAPA milestone approaching: {action} due in {days} days',
+        active: true
+      },
+      {
+        trigger: 'milestone-reached',
+        recipients: ['quality-manager', 'regulatory-affairs'],
+        message: 'Design control CAPA milestone completed: {milestone}',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Quality Manager', 'Design Engineer', 'Regulatory Affairs'],
+    estimatedDuration: 45,
+    criticality: 'high',
+    
+    metadata: {
+      version: '2.1',
+      lastUpdated: '2024-01-15',
+      usage: 23,
+      effectiveness: 89,
+      tags: ['design-control', 'dhf', 'iso13485', 'documentation']
+    }
+  },
+  
+  {
+    id: 'fda-qsr-risk-management',
+    name: 'FDA QSR Risk Management CAPA',
+    description: 'Template for risk management process improvements under FDA 21 CFR 820',
+    framework: 'FDA 21 CFR 820',
+    category: 'risk-management',
+    difficulty: 'advanced',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Complete Risk Analysis Documentation',
+          description: 'Document comprehensive risk analysis covering all device hazards and use scenarios',
+          dependencies: [],
+          verificationCriteria: [
+            'All potential hazards identified',
+            'Risk analysis covers intended use and reasonably foreseeable misuse',
+            'Risk evaluation criteria defined',
+            'Risk acceptability determined for each hazard'
+          ],
+          estimatedHours: 40
+        },
+        {
+          type: 'corrective',
+          title: 'Implement Risk Control Measures',
+          description: 'Deploy identified risk control measures and verify their effectiveness',
+          dependencies: [],
+          verificationCriteria: [
+            'Risk control measures implemented',
+            'Residual risk evaluated',
+            'Risk control effectiveness verified',
+            'Risk-benefit analysis completed where applicable'
+          ],
+          estimatedHours: 56
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Establish Risk Management Process',
+          description: 'Create systematic risk management process for ongoing product lifecycle',
+          dependencies: [],
+          verificationCriteria: [
+            'Risk management process documented',
+            'Risk management plan template created',
+            'Periodic risk review schedule established',
+            'Post-market surveillance integration defined'
+          ],
+          estimatedHours: 28
+        },
+        {
+          type: 'preventive',
+          title: 'Deploy Risk Management Training',
+          description: 'Train relevant personnel on risk management requirements and procedures',
+          dependencies: [],
+          verificationCriteria: [
+            'Training program developed',
+            'All relevant personnel trained',
+            'Training effectiveness verified',
+            'Ongoing training schedule established'
+          ],
+          estimatedHours: 16
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'Risk File Completeness',
+        description: 'Monitor risk management file for completeness and currency',
+        type: 'document-review',
+        frequency: 'monthly',
+        status: 'active',
+        parameters: { requiredSections: ['risk_analysis', 'risk_evaluation', 'risk_control', 'residual_risk'] }
+      },
+      {
+        name: 'Risk Review Schedule',
+        description: 'Automated scheduling of periodic risk reviews',
+        type: 'deadline-monitor',
+        frequency: 'weekly',
+        status: 'active',
+        parameters: { reviewFrequency: 'quarterly', advanceNotice: 14 }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['risk-manager', 'quality-assurance'],
+        advanceNotice: 10,
+        message: 'Risk management CAPA action due: {action} requires completion in {days} days',
+        active: true
+      },
+      {
+        trigger: 'approval-needed',
+        recipients: ['regulatory-affairs', 'quality-manager'],
+        message: 'Risk management CAPA requires regulatory review and approval',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Risk Manager', 'Quality Assurance', 'Regulatory Affairs', 'Engineering'],
+    estimatedDuration: 60,
+    criticality: 'critical',
+    
+    metadata: {
+      version: '1.8',
+      lastUpdated: '2024-01-10',
+      usage: 15,
+      effectiveness: 94,
+      tags: ['risk-management', 'fda-qsr', 'hazard-analysis', 'risk-control']
+    }
+  },
+  
+  {
+    id: 'eu-mdr-validation',
+    name: 'EU MDR Validation CAPA',
+    description: 'Template for addressing validation deficiencies under EU MDR requirements',
+    framework: 'EU MDR',
+    category: 'validation',
+    difficulty: 'intermediate',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Complete Clinical Evaluation Update',
+          description: 'Update clinical evaluation to comply with EU MDR requirements including post-market data',
+          dependencies: [],
+          verificationCriteria: [
+            'Clinical evaluation report updated',
+            'Literature review conducted per MEDDEV 2.7.1',
+            'Post-market clinical data incorporated',
+            'Clinical evidence sufficiency demonstrated'
+          ],
+          estimatedHours: 80
+        },
+        {
+          type: 'corrective',
+          title: 'Update Technical Documentation',
+          description: 'Align technical documentation with EU MDR Annex II and III requirements',
+          dependencies: [],
+          verificationCriteria: [
+            'Technical documentation structure compliant',
+            'All required sections completed',
+            'Supporting evidence provided',
+            'Notified body requirements addressed'
+          ],
+          estimatedHours: 64
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Establish Clinical Evidence Plan',
+          description: 'Create systematic approach for ongoing clinical evidence generation',
+          dependencies: [],
+          verificationCriteria: [
+            'Clinical evidence plan documented',
+            'Data collection procedures established',
+            'Clinical evaluation update schedule defined',
+            'Post-market surveillance integration planned'
+          ],
+          estimatedHours: 24
+        },
+        {
+          type: 'preventive',
+          title: 'Implement MDR Compliance Monitoring',
+          description: 'Deploy systematic monitoring for ongoing EU MDR compliance',
+          dependencies: [],
+          verificationCriteria: [
+            'Compliance monitoring system established',
+            'Key performance indicators defined',
+            'Automated alerts configured',
+            'Regular compliance reviews scheduled'
+          ],
+          estimatedHours: 20
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'Clinical Evaluation Currency',
+        description: 'Monitor clinical evaluation update requirements based on MDR timelines',
+        type: 'deadline-monitor',
+        frequency: 'monthly',
+        status: 'active',
+        parameters: { updateFrequency: 'annual', criticalDevices: 'continuous' }
+      },
+      {
+        name: 'MDR Documentation Check',
+        description: 'Verify technical documentation completeness against MDR requirements',
+        type: 'document-review',
+        frequency: 'weekly',
+        status: 'active',
+        parameters: { requiredSections: ['device_description', 'clinical_evaluation', 'risk_management', 'design_verification'] }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['regulatory-affairs', 'clinical-affairs'],
+        advanceNotice: 30,
+        message: 'EU MDR compliance deadline approaching: {action} due in {days} days',
+        active: true
+      },
+      {
+        trigger: 'milestone-reached',
+        recipients: ['quality-manager', 'regulatory-affairs'],
+        message: 'EU MDR CAPA milestone achieved: {milestone} completed successfully',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Regulatory Affairs', 'Clinical Affairs', 'Quality Manager', 'Notified Body Liaison'],
+    estimatedDuration: 90,
+    criticality: 'critical',
+    
+    metadata: {
+      version: '3.0',
+      lastUpdated: '2024-01-12',
+      usage: 8,
+      effectiveness: 86,
+      tags: ['eu-mdr', 'clinical-evaluation', 'validation', 'technical-documentation']
+    }
+  },
+  
+  {
+    id: 'iso14971-basic',
+    name: 'ISO 14971 Basic Risk Management',
+    description: 'Foundational template for implementing ISO 14971 risk management processes',
+    framework: 'ISO 14971',
+    category: 'risk-management',
+    difficulty: 'basic',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Establish Risk Management Policy',
+          description: 'Define organizational risk management policy and acceptance criteria',
+          dependencies: [],
+          verificationCriteria: [
+            'Risk management policy documented',
+            'Risk acceptability criteria defined',
+            'Roles and responsibilities assigned',
+            'Management approval obtained'
+          ],
+          estimatedHours: 16
+        },
+        {
+          type: 'corrective',
+          title: 'Create Risk Management File Structure',
+          description: 'Establish standardized risk management file organization and templates',
+          dependencies: [],
+          verificationCriteria: [
+            'Risk management file structure defined',
+            'Document templates created',
+            'Version control procedures established',
+            'Access controls implemented'
+          ],
+          estimatedHours: 12
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Deploy Risk Assessment Training',
+          description: 'Train team members on risk assessment methodologies and tools',
+          dependencies: [],
+          verificationCriteria: [
+            'Training materials developed',
+            'Key personnel trained',
+            'Competency assessments completed',
+            'Refresher training scheduled'
+          ],
+          estimatedHours: 20
+        },
+        {
+          type: 'preventive',
+          title: 'Implement Risk Review Process',
+          description: 'Establish regular risk review meetings and update procedures',
+          dependencies: [],
+          verificationCriteria: [
+            'Review meeting schedule established',
+            'Review criteria documented',
+            'Update procedures defined',
+            'Communication protocols established'
+          ],
+          estimatedHours: 8
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'Risk Management File Monitor',
+        description: 'Basic monitoring of risk management file completeness',
+        type: 'document-review',
+        frequency: 'monthly',
+        status: 'active',
+        parameters: { requiredDocuments: ['risk_policy', 'risk_analysis', 'risk_evaluation'] }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['project-manager', 'quality-team'],
+        advanceNotice: 5,
+        message: 'Risk management task due soon: {action}',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Project Manager', 'Quality Team', 'Engineering'],
+    estimatedDuration: 30,
+    criticality: 'medium',
+    
+    metadata: {
+      version: '1.2',
+      lastUpdated: '2024-01-08',
+      usage: 42,
+      effectiveness: 78,
+      tags: ['iso14971', 'risk-management', 'basic', 'foundation']
+    }
+  }
+]
+
 export function CAPAWorkflowGenerator() {
   const [workflows, setWorkflows] = useKV<CAPAWorkflow[]>('capa-workflows', [])
   const [selectedWorkflow, setSelectedWorkflow] = useState<CAPAWorkflow | null>(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<WorkflowTemplate | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [activeTab, setActiveTab] = useState('overview')
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [filterPriority, setFilterPriority] = useState<string>('all')
+  const [templateFilter, setTemplateFilter] = useState<string>('all')
+  const [frameworkFilter, setFrameworkFilter] = useState<string>('all')
+
+  // Template configuration state
+  const [templateConfig, setTemplateConfig] = useState({
+    title: '',
+    description: '',
+    priority: 'medium' as CAPAWorkflow['priority'],
+    assignedTo: '',
+    dueDate: '',
+    customizations: {} as Record<string, any>
+  })
 
   // Sample data - would be populated from gap analysis
   const sampleGaps = [
@@ -195,6 +686,112 @@ export function CAPAWorkflowGenerator() {
     const priorityMatch = filterPriority === 'all' || workflow.priority === filterPriority
     return statusMatch && priorityMatch
   })
+
+  const filteredTemplates = workflowTemplates.filter(template => {
+    const frameworkMatch = frameworkFilter === 'all' || template.framework === frameworkFilter
+    const categoryMatch = templateFilter === 'all' || template.category === templateFilter
+    return frameworkMatch && categoryMatch
+  })
+
+  const createWorkflowFromTemplate = async (template: WorkflowTemplate, config: typeof templateConfig) => {
+    setIsGenerating(true)
+    
+    try {
+      // Simulate AI-powered customization
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      const baseDate = new Date(config.dueDate || new Date(Date.now() + template.estimatedDuration * 24 * 60 * 60 * 1000))
+      
+      // Generate actions with proper IDs and assignments
+      const correctiveActions: CAPAAction[] = template.defaultActions.corrective.map((action, index) => ({
+        ...action,
+        id: `ca-${Date.now()}-${index}`,
+        assignedTo: config.assignedTo || 'unassigned',
+        dueDate: new Date(baseDate.getTime() - (template.defaultActions.corrective.length - index) * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'not-started' as const,
+        evidence: []
+      }))
+      
+      const preventiveActions: CAPAAction[] = template.defaultActions.preventive.map((action, index) => ({
+        ...action,
+        id: `pa-${Date.now()}-${index}`,
+        assignedTo: config.assignedTo || 'unassigned',
+        dueDate: new Date(baseDate.getTime() + index * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'not-started' as const,
+        evidence: []
+      }))
+
+      // Generate automated checks with proper IDs
+      const automatedChecks: AutomatedCheck[] = template.automatedChecks.map((check, index) => ({
+        ...check,
+        id: `check-${Date.now()}-${index}`,
+        nextRun: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        lastRun: undefined
+      }))
+
+      // Generate notification rules with proper IDs
+      const notifications: NotificationRule[] = template.notifications.map((notif, index) => ({
+        ...notif,
+        id: `notif-${Date.now()}-${index}`
+      }))
+
+      const newWorkflow: CAPAWorkflow = {
+        id: `capa-${Date.now()}`,
+        title: config.title || `${template.name} - ${new Date().toLocaleDateString()}`,
+        description: config.description || template.description,
+        priority: config.priority,
+        status: 'draft',
+        sourceType: 'manual',
+        
+        rootCause: `Root cause analysis to be completed using ${template.framework} methodology`,
+        correctiveActions,
+        preventiveActions,
+        
+        assignedTo: config.assignedTo || 'unassigned',
+        reviewerIds: template.requiredRoles.slice(1).map((role, index) => `reviewer-${index}`),
+        dueDate: baseDate.toISOString().split('T')[0],
+        startDate: new Date().toISOString().split('T')[0],
+        
+        totalSteps: correctiveActions.length + preventiveActions.length,
+        completedSteps: 0,
+        
+        regulatoryFrameworks: [template.framework],
+        riskLevel: template.criticality,
+        
+        dependsOn: [],
+        blocks: [],
+        
+        automatedChecks,
+        notifications,
+        
+        metadata: {
+          createdAt: new Date().toISOString(),
+          createdBy: 'template-system',
+          lastUpdated: new Date().toISOString(),
+          estimatedEffort: `${template.estimatedDuration} days`,
+          tags: [...template.metadata.tags, 'template-generated', template.framework.toLowerCase().replace(/\s+/g, '-')]
+        }
+      }
+
+      setWorkflows(current => [...current, newWorkflow])
+      setSelectedWorkflow(newWorkflow)
+      setSelectedTemplate(null)
+      setTemplateConfig({
+        title: '',
+        description: '',
+        priority: 'medium',
+        assignedTo: '',
+        dueDate: '',
+        customizations: {}
+      })
+      toast.success(`CAPA workflow created from ${template.name}`)
+      
+    } catch (error) {
+      toast.error('Failed to create workflow from template')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   const generateWorkflowFromGap = async (gapId: string) => {
     setIsGenerating(true)
@@ -841,32 +1438,142 @@ export function CAPAWorkflowGenerator() {
 
         <TabsContent value="templates" className="mt-6">
           <div className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">ISO 13485 Design Control CAPA</CardTitle>
-                  <CardDescription>Template for design control related CAPAs</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full">
-                    <FileText className="h-4 w-4 mr-2" />
-                    Use Template
-                  </Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Risk Management CAPA</CardTitle>
-                  <CardDescription>Template for risk management process gaps</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full">
-                    <FileText className="h-4 w-4 mr-2" />
-                    Use Template
-                  </Button>
-                </CardContent>
-              </Card>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold">Framework-Specific Templates</h3>
+                <p className="text-sm text-muted-foreground">
+                  Pre-configured CAPA workflows for different regulatory frameworks
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Select value={frameworkFilter} onValueChange={setFrameworkFilter}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Framework" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Frameworks</SelectItem>
+                    <SelectItem value="ISO 13485">ISO 13485</SelectItem>
+                    <SelectItem value="FDA 21 CFR 820">FDA QSR</SelectItem>
+                    <SelectItem value="EU MDR">EU MDR</SelectItem>
+                    <SelectItem value="ISO 14971">ISO 14971</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={templateFilter} onValueChange={setTemplateFilter}>
+                  <SelectTrigger className="w-36">
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="design-control">Design Control</SelectItem>
+                    <SelectItem value="risk-management">Risk Management</SelectItem>
+                    <SelectItem value="validation">Validation</SelectItem>
+                    <SelectItem value="quality-management">Quality Management</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {filteredTemplates.map((template) => (
+                <Card key={template.id} className="cursor-pointer hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <CardTitle className="text-base">{template.name}</CardTitle>
+                          <Badge variant="outline">{template.framework}</Badge>
+                          <Badge 
+                            variant={template.difficulty === 'basic' ? 'secondary' : template.difficulty === 'intermediate' ? 'default' : 'destructive'}
+                          >
+                            {template.difficulty}
+                          </Badge>
+                        </div>
+                        <CardDescription>{template.description}</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid gap-2 md:grid-cols-2 text-sm">
+                      <div>
+                        <span className="font-medium text-muted-foreground">Category:</span>
+                        <div className="capitalize">{template.category.replace('-', ' ')}</div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-muted-foreground">Duration:</span>
+                        <div>{template.estimatedDuration} days</div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-muted-foreground">Effectiveness:</span>
+                        <div>{template.metadata.effectiveness}%</div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-muted-foreground">Usage:</span>
+                        <div>{template.metadata.usage} times</div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="text-sm">
+                        <span className="font-medium text-muted-foreground">Actions:</span>
+                        <div className="flex gap-4 mt-1">
+                          <span className="text-xs">
+                            <Target className="h-3 w-3 inline mr-1 text-destructive" />
+                            {template.defaultActions.corrective.length} corrective
+                          </span>
+                          <span className="text-xs">
+                            <Shield className="h-3 w-3 inline mr-1 text-secondary" />
+                            {template.defaultActions.preventive.length} preventive
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-sm">
+                        <span className="font-medium text-muted-foreground">Required Roles:</span>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {template.requiredRoles.slice(0, 2).map((role) => (
+                            <Badge key={role} variant="outline" className="text-xs">
+                              {role}
+                            </Badge>
+                          ))}
+                          {template.requiredRoles.length > 2 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{template.requiredRoles.length - 2} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1">
+                      {template.metadata.tags.slice(0, 3).map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <Button 
+                      className="w-full" 
+                      onClick={() => setSelectedTemplate(template)}
+                    >
+                      <FileText className="h-4 w-4 mr-2" />
+                      Use Template
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {filteredTemplates.length === 0 && (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No Templates Found</h3>
+                  <p className="text-muted-foreground">
+                    No templates match the current filters. Try adjusting your framework or category selection.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </TabsContent>
       </Tabs>
@@ -995,6 +1702,180 @@ export function CAPAWorkflowGenerator() {
               <Button onClick={() => generateEffectivenessReport(selectedWorkflow.id)}>
                 <TrendUp className="h-4 w-4 mr-2" />
                 Generate Report
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Template Configuration Modal */}
+      {selectedTemplate && (
+        <Dialog open={!!selectedTemplate} onOpenChange={() => setSelectedTemplate(null)}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Configure {selectedTemplate.name}
+              </DialogTitle>
+              <DialogDescription>
+                Customize the template parameters before creating your CAPA workflow
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-6">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="template-title">Workflow Title</Label>
+                  <Input
+                    id="template-title"
+                    value={templateConfig.title}
+                    onChange={(e) => setTemplateConfig(prev => ({ ...prev, title: e.target.value }))}
+                    placeholder={`${selectedTemplate.name} - ${new Date().toLocaleDateString()}`}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="template-priority">Priority</Label>
+                  <Select 
+                    value={templateConfig.priority} 
+                    onValueChange={(value: CAPAWorkflow['priority']) => 
+                      setTemplateConfig(prev => ({ ...prev, priority: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="critical">Critical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="template-description">Description</Label>
+                <Textarea
+                  id="template-description"
+                  value={templateConfig.description}
+                  onChange={(e) => setTemplateConfig(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder={selectedTemplate.description}
+                  rows={3}
+                />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="template-assignee">Assigned To</Label>
+                  <Select 
+                    value={templateConfig.assignedTo} 
+                    onValueChange={(value) => 
+                      setTemplateConfig(prev => ({ ...prev, assignedTo: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select assignee" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {mockUsers.map((user) => (
+                        <SelectItem key={user.id} value={user.id}>
+                          {user.name} - {user.role}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="template-due-date">Due Date</Label>
+                  <Input
+                    id="template-due-date"
+                    type="date"
+                    value={templateConfig.dueDate}
+                    onChange={(e) => setTemplateConfig(prev => ({ ...prev, dueDate: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              {/* Template Overview */}
+              <Card className="bg-muted/50">
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Brain className="h-4 w-4" />
+                    Template Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <span className="text-sm font-medium">Framework:</span>
+                      <div className="text-sm text-muted-foreground">{selectedTemplate.framework}</div>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium">Category:</span>
+                      <div className="text-sm text-muted-foreground capitalize">{selectedTemplate.category.replace('-', ' ')}</div>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium">Estimated Duration:</span>
+                      <div className="text-sm text-muted-foreground">{selectedTemplate.estimatedDuration} days</div>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium">Criticality:</span>
+                      <div className="text-sm text-muted-foreground capitalize">{selectedTemplate.criticality}</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-sm font-medium">Included Actions:</span>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Target className="h-4 w-4 text-destructive" />
+                        <span className="text-sm">{selectedTemplate.defaultActions.corrective.length} Corrective Actions</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-secondary" />
+                        <span className="text-sm">{selectedTemplate.defaultActions.preventive.length} Preventive Actions</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Repeat className="h-4 w-4 text-primary" />
+                        <span className="text-sm">{selectedTemplate.automatedChecks.length} Automated Checks</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-sm font-medium">Required Roles:</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {selectedTemplate.requiredRoles.map((role) => (
+                        <Badge key={role} variant="outline" className="text-xs">
+                          {role}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setSelectedTemplate(null)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => createWorkflowFromTemplate(selectedTemplate, templateConfig)}
+                disabled={isGenerating || !templateConfig.assignedTo}
+              >
+                {isGenerating ? (
+                  <>
+                    <Brain className="h-4 w-4 mr-2 animate-pulse" />
+                    Creating Workflow...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create CAPA Workflow
+                  </>
+                )}
               </Button>
             </DialogFooter>
           </DialogContent>
