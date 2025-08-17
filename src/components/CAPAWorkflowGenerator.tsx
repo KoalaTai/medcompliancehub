@@ -36,6 +36,9 @@ import {
   Filter
 } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
+import { WorkflowTemplateManager } from '@/components/WorkflowTemplateManager'
+import { AutomatedWorkflowConfiguration } from '@/components/AutomatedWorkflowConfiguration'
+import { FrameworkConfigurationStatus } from '@/components/FrameworkConfigurationStatus'
 import { toast } from 'sonner'
 
 interface CAPAWorkflow {
@@ -636,6 +639,684 @@ const workflowTemplates: WorkflowTemplate[] = [
       effectiveness: 78,
       tags: ['iso14971', 'risk-management', 'basic', 'foundation']
     }
+  },
+  
+  // Additional Framework Templates for Enhanced Coverage
+  {
+    id: 'fda-510k-predicate',
+    name: 'FDA 510(k) Predicate Analysis CAPA',
+    description: 'Template for addressing 510(k) predicate comparison and substantial equivalence gaps',
+    framework: 'FDA 21 CFR 807',
+    category: 'validation',
+    difficulty: 'advanced',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Complete Predicate Device Analysis',
+          description: 'Conduct comprehensive comparison with predicate devices including technological characteristics',
+          dependencies: [],
+          verificationCriteria: [
+            'Predicate devices identified and justified',
+            'Technological comparison completed',
+            'Substantial equivalence demonstrated',
+            'Clinical data requirements assessed'
+          ],
+          estimatedHours: 48
+        },
+        {
+          type: 'corrective',
+          title: 'Update 510(k) Submission Package',
+          description: 'Revise submission to address FDA feedback and regulatory requirements',
+          dependencies: [],
+          verificationCriteria: [
+            'Device description updated',
+            'Indications for use clarified',
+            'Performance testing completed',
+            'Labeling requirements addressed'
+          ],
+          estimatedHours: 72
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Establish Pre-Submission Strategy',
+          description: 'Develop systematic pre-submission consultation process for future devices',
+          dependencies: [],
+          verificationCriteria: [
+            'Pre-submission process documented',
+            'FDA guidance interpretation protocols established',
+            'Internal review checkpoints defined',
+            'External consultant network established'
+          ],
+          estimatedHours: 24
+        },
+        {
+          type: 'preventive',
+          title: 'Implement Regulatory Intelligence System',
+          description: 'Deploy monitoring system for FDA guidance updates and industry trends',
+          dependencies: [],
+          verificationCriteria: [
+            'Automated FDA guidance monitoring',
+            'Industry trend analysis process',
+            'Internal notification system active',
+            'Quarterly regulatory review meetings scheduled'
+          ],
+          estimatedHours: 32
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: '510(k) Submission Completeness',
+        description: 'Monitor submission package completeness against FDA requirements',
+        type: 'document-review',
+        frequency: 'weekly',
+        status: 'active',
+        parameters: { requiredSections: ['device_description', 'predicate_comparison', 'performance_data', 'labeling'] }
+      },
+      {
+        name: 'FDA Guidance Update Monitor',
+        description: 'Track FDA guidance document updates relevant to device classification',
+        type: 'document-review',
+        frequency: 'weekly',
+        status: 'active',
+        parameters: { guidanceCategories: ['510k', 'medical_devices', 'quality_systems'] }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['regulatory-affairs', 'product-development'],
+        advanceNotice: 21,
+        message: '510(k) CAPA milestone due: {action} requires completion in {days} days',
+        active: true
+      },
+      {
+        trigger: 'approval-needed',
+        recipients: ['regulatory-director', 'quality-manager'],
+        message: '510(k) submission package requires executive review and approval',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Regulatory Affairs Specialist', 'Product Development', 'Quality Assurance', 'Clinical Affairs'],
+    estimatedDuration: 75,
+    criticality: 'critical',
+    
+    metadata: {
+      version: '2.3',
+      lastUpdated: '2024-01-14',
+      usage: 12,
+      effectiveness: 91,
+      tags: ['fda-510k', 'predicate-analysis', 'substantial-equivalence', 'regulatory-submission']
+    }
+  },
+
+  {
+    id: 'iso13485-management-review',
+    name: 'ISO 13485 Management Review CAPA',
+    description: 'Template for addressing management review process deficiencies and improvements',
+    framework: 'ISO 13485',
+    category: 'quality-management',
+    difficulty: 'basic',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Establish Management Review Process',
+          description: 'Define and implement systematic management review process per ISO 13485 requirements',
+          dependencies: [],
+          verificationCriteria: [
+            'Management review process documented',
+            'Review frequency established (minimum annually)',
+            'Input requirements defined per Section 5.6.2',
+            'Output requirements defined per Section 5.6.3'
+          ],
+          estimatedHours: 20
+        },
+        {
+          type: 'corrective',
+          title: 'Complete Outstanding Management Reviews',
+          description: 'Conduct overdue management reviews and document results',
+          dependencies: [],
+          verificationCriteria: [
+            'All overdue reviews completed',
+            'Review minutes documented',
+            'Action items identified and assigned',
+            'Follow-up schedule established'
+          ],
+          estimatedHours: 16
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Implement Review Scheduling System',
+          description: 'Deploy automated scheduling and reminder system for management reviews',
+          dependencies: [],
+          verificationCriteria: [
+            'Automated calendar invites configured',
+            'Pre-review data collection automated',
+            'Review agenda templates created',
+            'Post-review action tracking system active'
+          ],
+          estimatedHours: 12
+        },
+        {
+          type: 'preventive',
+          title: 'Develop KPI Dashboard',
+          description: 'Create management dashboard for ongoing QMS performance monitoring',
+          dependencies: [],
+          verificationCriteria: [
+            'Key performance indicators defined',
+            'Real-time data visualization implemented',
+            'Trend analysis capabilities deployed',
+            'Exception reporting configured'
+          ],
+          estimatedHours: 28
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'Management Review Schedule Monitor',
+        description: 'Track management review schedule compliance',
+        type: 'deadline-monitor',
+        frequency: 'monthly',
+        status: 'active',
+        parameters: { reviewFrequency: 'annual', warningDays: 60 }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['quality-manager', 'executive-team'],
+        advanceNotice: 30,
+        message: 'Management review due: {action} scheduled in {days} days',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Quality Manager', 'Executive Team', 'Department Heads'],
+    estimatedDuration: 21,
+    criticality: 'medium',
+    
+    metadata: {
+      version: '1.5',
+      lastUpdated: '2024-01-11',
+      usage: 38,
+      effectiveness: 82,
+      tags: ['management-review', 'qms', 'iso13485', 'governance']
+    }
+  },
+
+  {
+    id: 'eu-mdr-post-market-surveillance',
+    name: 'EU MDR Post-Market Surveillance CAPA',
+    description: 'Comprehensive template for establishing post-market surveillance system under EU MDR',
+    framework: 'EU MDR',
+    category: 'quality-management',
+    difficulty: 'advanced',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Establish Post-Market Surveillance System',
+          description: 'Implement comprehensive PMS system compliant with EU MDR Article 83-87',
+          dependencies: [],
+          verificationCriteria: [
+            'PMS plan documented per MDR requirements',
+            'Data collection procedures established',
+            'Adverse event reporting system implemented',
+            'Periodic Safety Update Report (PSUR) process defined'
+          ],
+          estimatedHours: 60
+        },
+        {
+          type: 'corrective',
+          title: 'Conduct Literature Review',
+          description: 'Perform systematic literature review for post-market clinical evidence',
+          dependencies: [],
+          verificationCriteria: [
+            'Search strategy documented',
+            'Literature review completed',
+            'Clinical evidence gaps identified',
+            'PMCF study requirements assessed'
+          ],
+          estimatedHours: 40
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Deploy PMCF Study Framework',
+          description: 'Establish Post-Market Clinical Follow-up study infrastructure',
+          dependencies: [],
+          verificationCriteria: [
+            'PMCF study protocol templates created',
+            'Ethics approval process defined',
+            'Data collection systems deployed',
+            'Statistical analysis plan established'
+          ],
+          estimatedHours: 48
+        },
+        {
+          type: 'preventive',
+          title: 'Implement Vigilance System',
+          description: 'Deploy automated vigilance reporting and trend analysis system',
+          dependencies: [],
+          verificationCriteria: [
+            'Incident reporting system configured',
+            'Trend analysis algorithms implemented',
+            'Regulatory reporting automation active',
+            'Risk signal detection operational'
+          ],
+          estimatedHours: 36
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'PSUR Generation Monitor',
+        description: 'Track Periodic Safety Update Report generation requirements',
+        type: 'deadline-monitor',
+        frequency: 'monthly',
+        status: 'active',
+        parameters: { reportFrequency: 'annual', dataCollectionDays: 90 }
+      },
+      {
+        name: 'Vigilance Reporting Compliance',
+        description: 'Monitor incident reporting timeline compliance',
+        type: 'deadline-monitor',
+        frequency: 'daily',
+        status: 'active',
+        parameters: { reportingDeadlines: { serious: 15, others: 30 } }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['post-market-team', 'regulatory-affairs'],
+        advanceNotice: 30,
+        message: 'PMS activity due: {action} requires completion in {days} days',
+        active: true
+      },
+      {
+        trigger: 'milestone-reached',
+        recipients: ['quality-manager', 'notified-body'],
+        message: 'PMS milestone completed: {milestone} - notification to NB required',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Post-Market Surveillance Team', 'Clinical Affairs', 'Regulatory Affairs', 'Quality Assurance'],
+    estimatedDuration: 90,
+    criticality: 'critical',
+    
+    metadata: {
+      version: '3.2',
+      lastUpdated: '2024-01-16',
+      usage: 6,
+      effectiveness: 88,
+      tags: ['eu-mdr', 'post-market-surveillance', 'vigilance', 'pmcf', 'clinical-evidence']
+    }
+  },
+
+  {
+    id: 'fda-qsr-corrective-preventive',
+    name: 'FDA QSR CAPA Process Implementation',
+    description: 'Template for establishing comprehensive CAPA process under FDA 21 CFR 820.100',
+    framework: 'FDA 21 CFR 820',
+    category: 'corrective-action',
+    difficulty: 'intermediate',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Establish CAPA Process Documentation',
+          description: 'Document comprehensive CAPA process per 21 CFR 820.100 requirements',
+          dependencies: [],
+          verificationCriteria: [
+            'CAPA procedure documented and approved',
+            'Investigation methodology defined',
+            'Root cause analysis process established',
+            'Effectiveness evaluation criteria defined'
+          ],
+          estimatedHours: 24
+        },
+        {
+          type: 'corrective',
+          title: 'Implement CAPA Database System',
+          description: 'Deploy electronic system for CAPA tracking and management',
+          dependencies: [],
+          verificationCriteria: [
+            'CAPA database system configured',
+            'Workflow automation implemented',
+            'Reporting capabilities established',
+            'User access controls configured'
+          ],
+          estimatedHours: 40
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Deploy Trend Analysis System',
+          description: 'Implement systematic trend analysis for proactive issue identification',
+          dependencies: [],
+          verificationCriteria: [
+            'Statistical trend analysis tools deployed',
+            'Automated data collection configured',
+            'Alert thresholds established',
+            'Investigation trigger protocols defined'
+          ],
+          estimatedHours: 32
+        },
+        {
+          type: 'preventive',
+          title: 'Establish CAPA Training Program',
+          description: 'Develop comprehensive training program for CAPA process participants',
+          dependencies: [],
+          verificationCriteria: [
+            'Training curriculum developed',
+            'Role-based training modules created',
+            'Competency assessment tools established',
+            'Refresher training schedule implemented'
+          ],
+          estimatedHours: 28
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'CAPA Closure Timeline Monitor',
+        description: 'Monitor CAPA closure timelines and escalation requirements',
+        type: 'deadline-monitor',
+        frequency: 'daily',
+        status: 'active',
+        parameters: { escalationDays: [30, 60, 90], criticalEscalation: 14 }
+      },
+      {
+        name: 'Effectiveness Review Scheduler',
+        description: 'Schedule and track CAPA effectiveness reviews',
+        type: 'deadline-monitor',
+        frequency: 'weekly',
+        status: 'active',
+        parameters: { reviewPeriods: [30, 90, 180], followUpRequired: true }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['quality-team', 'capa-owners'],
+        advanceNotice: 7,
+        message: 'CAPA action overdue: {action} requires immediate attention',
+        active: true
+      },
+      {
+        trigger: 'effectiveness-check',
+        recipients: ['quality-manager', 'process-owners'],
+        advanceNotice: 0,
+        message: 'CAPA effectiveness review due: {capa_id} - {title}',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Quality Assurance', 'Process Owners', 'Management Representative', 'CAPA Coordinator'],
+    estimatedDuration: 45,
+    criticality: 'high',
+    
+    metadata: {
+      version: '2.0',
+      lastUpdated: '2024-01-13',
+      usage: 28,
+      effectiveness: 85,
+      tags: ['fda-qsr', 'capa-process', 'quality-system', 'corrective-action', 'trend-analysis']
+    }
+  },
+
+  {
+    id: 'iso27001-isms',
+    name: 'ISO 27001 ISMS Implementation CAPA',
+    description: 'Template for Information Security Management System implementation and compliance',
+    framework: 'ISO 27001',
+    category: 'quality-management',
+    difficulty: 'advanced',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Conduct Information Security Risk Assessment',
+          description: 'Perform comprehensive risk assessment of information assets and security controls',
+          dependencies: [],
+          verificationCriteria: [
+            'Asset inventory completed',
+            'Threat and vulnerability assessment conducted',
+            'Risk assessment methodology documented',
+            'Risk treatment plan developed'
+          ],
+          estimatedHours: 56
+        },
+        {
+          type: 'corrective',
+          title: 'Implement Security Control Framework',
+          description: 'Deploy selected security controls from ISO 27001 Annex A',
+          dependencies: [],
+          verificationCriteria: [
+            'Security controls implemented per SoA',
+            'Control implementation verified',
+            'Security policies documented and approved',
+            'Incident response procedures established'
+          ],
+          estimatedHours: 80
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Establish Security Monitoring Program',
+          description: 'Deploy continuous monitoring and measurement of ISMS effectiveness',
+          dependencies: [],
+          verificationCriteria: [
+            'Security metrics defined and tracked',
+            'Automated monitoring tools deployed',
+            'Regular security assessments scheduled',
+            'Management review process integrated'
+          ],
+          estimatedHours: 40
+        },
+        {
+          type: 'preventive',
+          title: 'Implement Security Awareness Training',
+          description: 'Develop and deploy comprehensive security awareness program',
+          dependencies: [],
+          verificationCriteria: [
+            'Training program developed',
+            'Role-based training modules created',
+            'Training effectiveness measured',
+            'Annual refresh training scheduled'
+          ],
+          estimatedHours: 32
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'Security Control Assessment',
+        description: 'Periodic assessment of security control effectiveness',
+        type: 'effectiveness-check',
+        frequency: 'monthly',
+        status: 'active',
+        parameters: { controlCategories: ['access_control', 'cryptography', 'physical_security', 'operations_security'] }
+      },
+      {
+        name: 'Compliance Gap Monitor',
+        description: 'Monitor compliance gaps against ISO 27001 requirements',
+        type: 'document-review',
+        frequency: 'weekly',
+        status: 'active',
+        parameters: { complianceFramework: 'ISO27001', gapThreshold: 90 }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['security-team', 'it-department'],
+        advanceNotice: 14,
+        message: 'Security control implementation due: {action} in {days} days',
+        active: true
+      },
+      {
+        trigger: 'approval-needed',
+        recipients: ['ciso', 'management-team'],
+        message: 'ISMS documentation requires executive approval: {document}',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['CISO', 'Security Team', 'IT Department', 'Risk Manager', 'Legal/Compliance'],
+    estimatedDuration: 120,
+    criticality: 'high',
+    
+    metadata: {
+      version: '1.9',
+      lastUpdated: '2024-01-12',
+      usage: 18,
+      effectiveness: 87,
+      tags: ['iso27001', 'information-security', 'isms', 'risk-assessment', 'security-controls']
+    }
+  },
+
+  {
+    id: 'gdpr-privacy-compliance',
+    name: 'GDPR Privacy Compliance CAPA',
+    description: 'Template for addressing GDPR compliance gaps and privacy by design implementation',
+    framework: 'GDPR',
+    category: 'quality-management',
+    difficulty: 'intermediate',
+    
+    defaultActions: {
+      corrective: [
+        {
+          type: 'corrective',
+          title: 'Complete Data Protection Impact Assessment',
+          description: 'Conduct DPIA for high-risk processing activities per Article 35',
+          dependencies: [],
+          verificationCriteria: [
+            'DPIA completed for identified processing activities',
+            'Privacy risks assessed and mitigated',
+            'Consultation with DPA completed if required',
+            'DPIA review and approval process established'
+          ],
+          estimatedHours: 40
+        },
+        {
+          type: 'corrective',
+          title: 'Update Privacy Policies and Notices',
+          description: 'Revise privacy notices to meet GDPR transparency requirements',
+          dependencies: [],
+          verificationCriteria: [
+            'Privacy notices updated per Articles 13-14',
+            'Lawful basis clearly identified',
+            'Data subject rights information provided',
+            'Contact details for DPO included'
+          ],
+          estimatedHours: 24
+        }
+      ],
+      preventive: [
+        {
+          type: 'preventive',
+          title: 'Implement Data Subject Rights Management',
+          description: 'Deploy system for handling data subject requests and rights',
+          dependencies: [],
+          verificationCriteria: [
+            'Request handling procedures documented',
+            'Automated response system implemented',
+            'Identity verification process established',
+            'Response time tracking configured'
+          ],
+          estimatedHours: 36
+        },
+        {
+          type: 'preventive',
+          title: 'Establish Breach Response Procedures',
+          description: 'Create incident response plan for personal data breaches',
+          dependencies: [],
+          verificationCriteria: [
+            'Breach detection procedures implemented',
+            '72-hour notification process established',
+            'Individual notification criteria defined',
+            'Breach register system deployed'
+          ],
+          estimatedHours: 28
+        }
+      ]
+    },
+    
+    automatedChecks: [
+      {
+        name: 'Data Subject Request Monitor',
+        description: 'Track data subject request response timelines',
+        type: 'deadline-monitor',
+        frequency: 'daily',
+        status: 'active',
+        parameters: { responseDeadline: 30, complexRequestExtension: 60 }
+      },
+      {
+        name: 'Consent Management Audit',
+        description: 'Periodic audit of consent records and validity',
+        type: 'document-review',
+        frequency: 'monthly',
+        status: 'active',
+        parameters: { consentAuditCriteria: ['validity', 'specificity', 'withdrawal_capability'] }
+      }
+    ],
+    
+    notifications: [
+      {
+        trigger: 'deadline-approaching',
+        recipients: ['dpo', 'privacy-team'],
+        advanceNotice: 5,
+        message: 'Data subject request deadline approaching: {request_type} due in {days} days',
+        active: true
+      },
+      {
+        trigger: 'approval-needed',
+        recipients: ['dpo', 'legal-team'],
+        message: 'Privacy impact assessment requires DPO review: {assessment}',
+        active: true
+      }
+    ],
+    
+    requiredRoles: ['Data Protection Officer', 'Privacy Team', 'Legal Department', 'IT Security'],
+    estimatedDuration: 60,
+    criticality: 'high',
+    
+    metadata: {
+      version: '2.1',
+      lastUpdated: '2024-01-15',
+      usage: 22,
+      effectiveness: 83,
+      tags: ['gdpr', 'privacy', 'data-protection', 'dpia', 'consent-management']
+    }
   }
 ]
 
@@ -1023,12 +1704,14 @@ export function CAPAWorkflowGenerator() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="generator">Auto-Generate</TabsTrigger>
           <TabsTrigger value="workflows">Active Workflows</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
+          <TabsTrigger value="template-manager">Template Manager</TabsTrigger>
+          <TabsTrigger value="automation-config">Automation Config</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -1171,6 +1854,11 @@ export function CAPAWorkflowGenerator() {
                   </Card>
                 ))}
               </div>
+            </div>
+
+            {/* Framework Configuration Status */}
+            <div className="mt-8">
+              <FrameworkConfigurationStatus />
             </div>
           </div>
         </TabsContent>
@@ -1454,8 +2142,11 @@ export function CAPAWorkflowGenerator() {
                     <SelectItem value="all">All Frameworks</SelectItem>
                     <SelectItem value="ISO 13485">ISO 13485</SelectItem>
                     <SelectItem value="FDA 21 CFR 820">FDA QSR</SelectItem>
+                    <SelectItem value="FDA 21 CFR 807">FDA 510(k)</SelectItem>
                     <SelectItem value="EU MDR">EU MDR</SelectItem>
                     <SelectItem value="ISO 14971">ISO 14971</SelectItem>
+                    <SelectItem value="ISO 27001">ISO 27001</SelectItem>
+                    <SelectItem value="GDPR">GDPR</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={templateFilter} onValueChange={setTemplateFilter}>
@@ -1575,6 +2266,14 @@ export function CAPAWorkflowGenerator() {
               </Card>
             )}
           </div>
+        </TabsContent>
+
+        <TabsContent value="template-manager" className="mt-6">
+          <WorkflowTemplateManager />
+        </TabsContent>
+
+        <TabsContent value="automation-config" className="mt-6">
+          <AutomatedWorkflowConfiguration />
         </TabsContent>
       </Tabs>
 
