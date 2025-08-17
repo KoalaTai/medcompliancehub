@@ -10,7 +10,10 @@ import {
   TrendUp,
   FileText,
   Users,
-  Calendar
+  Calendar,
+  Brain,
+  Zap,
+  Target
 } from '@phosphor-icons/react'
 
 interface ComplianceMetric {
@@ -216,6 +219,87 @@ export function ComplianceDashboard() {
                   </div>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* AI-Powered Features Section */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <Brain className="h-5 w-5" />
+              AI Gap Detection
+            </CardTitle>
+            <CardDescription>Automated compliance gap identification</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Critical Gaps Detected</span>
+                <span className="text-2xl font-bold text-destructive">3</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Recommendations Generated</span>
+                <span className="text-2xl font-bold text-secondary">12</span>
+              </div>
+              <Button size="sm" variant="outline" className="w-full">
+                <Target className="h-3 w-3 mr-1" />
+                View Gap Analysis
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-secondary/5 to-secondary/10 border-secondary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-secondary">
+              <Zap className="h-5 w-5" />
+              Smart Automation
+            </CardTitle>
+            <CardDescription>Intelligent compliance monitoring</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Active Rules</span>
+                <span className="text-2xl font-bold text-secondary">4</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Success Rate</span>
+                <span className="text-2xl font-bold text-secondary">94%</span>
+              </div>
+              <Button size="sm" variant="outline" className="w-full">
+                <Zap className="h-3 w-3 mr-1" />
+                Manage Automation
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-accent/5 to-accent/10 border-accent/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-accent">
+              <Brain className="h-5 w-5" />
+              Document Intelligence
+            </CardTitle>
+            <CardDescription>AI-powered document analysis</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Documents Analyzed</span>
+                <span className="text-2xl font-bold text-accent">47</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Avg Compliance Score</span>
+                <span className="text-2xl font-bold text-accent">87%</span>
+              </div>
+              <Button size="sm" variant="outline" className="w-full">
+                <FileText className="h-3 w-3 mr-1" />
+                Analyze Documents
+              </Button>
             </div>
           </CardContent>
         </Card>
