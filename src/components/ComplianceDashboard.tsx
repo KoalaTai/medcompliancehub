@@ -18,7 +18,7 @@ import {
   Bell,
   Mail,
   ArrowRight,
-  Workflow
+  GitBranch as Workflow
 } from '@phosphor-icons/react'
 import { useNotificationService } from '@/hooks/useNotificationService'
 

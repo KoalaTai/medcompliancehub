@@ -21,6 +21,7 @@ import {
   Lightning,
   Network,
   GitBranch,
+  GitBranch as Workflow,
   Hierarchy,
   Graph,
   Eye,

@@ -11,7 +11,7 @@ import {
   AlertTriangle,
   Clock,
   GitBranch,
-  Workflow,
+  GitBranch as Workflow,
   Lightbulb,
   Network,
   Eye,
