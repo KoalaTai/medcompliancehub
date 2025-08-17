@@ -403,6 +403,37 @@ export function ComplianceDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        <Card className="bg-gradient-to-br from-purple-500/5 to-purple-500/10 border-purple-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-purple-600">
+              <Brain className="h-5 w-5" />
+              Skill Development
+            </CardTitle>
+            <CardDescription>AI-powered skill gap analysis</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Critical Skill Gaps</span>
+                <span className="text-2xl font-bold text-purple-600">2</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Training Recommendations</span>
+                <span className="text-2xl font-bold text-purple-600">5</span>
+              </div>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-skills'))}
+              >
+                <Brain className="h-3 w-3 mr-1" />
+                Analyze Skills
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Webhook Integration Status with AI Insights */}

@@ -12,9 +12,10 @@ import { WebhookNotificationSystem } from '@/components/WebhookNotificationSyste
 import { CAPAWorkflowGenerator } from '@/components/CAPAWorkflowGenerator'
 import { ResourceAllocation } from '@/components/ResourceAllocation'
 import { TemplateOptimizationEngine } from '@/components/TemplateOptimizationEngine'
+import { SkillGapAnalyzer } from '@/components/SkillGapAnalyzer'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -34,13 +35,19 @@ function App() {
       setActiveSection('resources')
     }
 
+    const handleNavigateToSkills = () => {
+      setActiveSection('skills')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
     window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     window.addEventListener('navigate-to-resources', handleNavigateToResources)
+    window.addEventListener('navigate-to-skills', handleNavigateToSkills)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
       window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
       window.removeEventListener('navigate-to-resources', handleNavigateToResources)
+      window.removeEventListener('navigate-to-skills', handleNavigateToSkills)
     }
   }, [setActiveSection])
 
@@ -64,6 +71,8 @@ function App() {
         return <WebhookIntegrations />
       case 'resources':
         return <ResourceAllocation />
+      case 'skills':
+        return <SkillGapAnalyzer />
       case 'team':
         return (
           <div className="p-6">
