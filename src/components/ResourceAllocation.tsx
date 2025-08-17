@@ -906,7 +906,7 @@ export function ResourceAllocation() {
                   <div className="relative">
                     <Shuffle className="h-8 w-8 text-blue-600" />
                     <div className="absolute -top-1 -right-1 h-3 w-3 bg-purple-500 rounded-full flex items-center justify-center">
-                      <Zap className="h-2 w-2 text-white" />
+                    <p className="text-2xl font-bold">98%</p>
                     </div>
                   </div>
                 </div>
@@ -1103,200 +1103,198 @@ export function ResourceAllocation() {
                 <div className="flex items-end">
                   <Button 
                     onClick={() => selectedProject && generateOptimalAllocation(selectedProject)}
-                    disabled={!selectedProject || isOptimizing}
-                    className="w-full"
+        <TabsContent value="balancing" className="space-y-6">
                   >
-                    {isOptimizing ? (
+            <div>
                       <>
                         <Zap className="h-4 w-4 mr-2 animate-spin" />
-                        Optimizing...
+            </div>
                       </>
-                    ) : (
+            <Button
                       <>
-                        <Brain className="h-4 w-4 mr-2" />
+              disabled={isRebalancing}r-2" />
                         Generate Allocation
-                      </>
+            >
                     )}
-                  </Button>
+                <>
                 </div>
               </div>
 
-              <Separator />
-
+              ) : (
+                <>
               <div className="space-y-4">
                 <h4 className="font-semibold">Pending Projects</h4>
-                {projects.filter(p => p.status === 'pending').map(project => (
+                </>ojects.filter(p => p.status === 'pending').map(project => (
                   <div key={project.id} className="border rounded-lg p-4">
                     <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h5 className="font-medium">{project.name}</h5>
+          </div>
+name}</h5>
                         <p className="text-sm text-muted-foreground">{project.framework}</p>
-                      </div>
-                      <Badge className={getPriorityColor(project.priority)}>
-                        {project.priority}
+          <Card>
+            <CardHeader>yColor(project.priority)}>
+              <CardTitle className="flex items-center gap-2">
                       </Badge>
-                    </div>
-                    
+                Regulatory Framework Distribution
+              </CardTitle>
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Complexity:</span> {project.complexity}/10
-                      </div>
-                      <div>
+            <CardContent>xity}/10
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {frameworkWorkloads.map(framework => (
                         <span className="text-muted-foreground">Hours:</span> {project.estimatedHours}h
-                      </div>
-                      <div>
+                    framework.criticalPath ? 'border-red-200 bg-red-50' :
+                    framework.teamUtilization > 80 ? 'border-orange-200 bg-orange-50' :
                         <span className="text-muted-foreground">Deadline:</span> {project.deadline}
-                      </div>
-                      <div>
+                  }`}>
+                    <div className="flex items-center justify-between mb-3">
                         <span className="text-muted-foreground">Risk:</span> {project.riskLevel}/10
-                      </div>
-                    </div>
+                      <div className="flex items-center gap-2">
+                        {framework.criticalPath && (
                     
                     <div className="mt-2">
-                      <p className="text-sm text-muted-foreground">Required Expertise:</p>
+                        <Badge variant={framework.teamUtilization > 85 ? 'destructive' : 
                       <div className="flex flex-wrap gap-1 mt-1">
                         {project.requiredExpertise.map(expertise => (
-                          <Badge key={expertise} variant="secondary" className="text-xs">
+                        </Badge>">
                             {expertise}
-                          </Badge>
-                        ))}
-                      </div>
                     </div>
-                  </div>
+                        ))}
+                    <div className="space-y-2 text-sm">
+                    </div>
                 ))}
-              </div>
-            </CardContent>
+                        <span className="font-medium">{framework.activeProjects}/{framework.totalProjects}</span>
+                      </div>
           </Card>
-        </TabsContent>
-
+                      <div className="flex justify-between">
+                        <span>Expertise Gap:</span>
         <TabsContent value="balancing" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold">Smart Workload Balancing</h2>
+                          framework.expertiseGap > 60 ? 'text-red-600' :
+                          framework.expertiseGap > 30 ? 'text-orange-600' : 'text-green-600'
+                        }`}>mart Workload Balancing</h2>
               <p className="text-muted-foreground">Intelligent framework-based workload distribution and optimization</p>
-            </div>
+                        </span>
             
-            <Button
-              onClick={performSmartRebalancing}
+                      
+                      <div className="flex justify-between">
               disabled={isRebalancing}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                        <span className={`font-medium flex items-center gap-1 ${e-700"
             >
-              {isRebalancing ? (
+                          framework.demandTrend > 0 ? 'text-green-600' : 'text-muted-foreground'
                 <>
                   <Brain className="h-4 w-4 mr-2 animate-pulse" />
                   Rebalancing...
                 </>
-              ) : (
+                      </div>
                 <>
                   <Zap className="h-4 w-4 mr-2" />
-                  Smart Rebalance
+                    </div>
                 </>
               )}
             </Button>
-          </div>
+            </CardContent>
 
-          {/* Framework Workload Overview */}
-          <Card>
+orkload Overview */}
+          {/* Team Workload Balance */}
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader>ter gap-2">
                 <BarChart3 className="h-5 w-5" />
-                Regulatory Framework Distribution
+                <Users className="h-5 w-5" />
               </CardTitle>
-              <CardDescription>Current workload distribution across regulatory frameworks</CardDescription>
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            </CardHeader>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {frameworkWorkloads.map(framework => (
                   <div key={framework.framework} className={`border rounded-lg p-4 ${
                     framework.criticalPath ? 'border-red-200 bg-red-50' :
-                    framework.teamUtilization > 80 ? 'border-orange-200 bg-orange-50' :
-                    'border-border bg-card'
-                  }`}>
+                  if (!member) return null
+                  
+                  return (
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-semibold">{framework.framework}</h4>
-                      <div className="flex items-center gap-2">
+                      balance.burnoutRisk === 'medium' ? 'border-orange-200 bg-orange-50' :
                         {framework.criticalPath && (
                           <AlertTriangle className="h-4 w-4 text-red-600" />
-                        )}
-                        <Badge variant={framework.teamUtilization > 85 ? 'destructive' : 
+                      <div className="flex items-start justify-between mb-4">
+                        <div>on > 85 ? 'destructive' : 
                                       framework.teamUtilization > 70 ? 'default' : 'secondary'}>
-                          {framework.teamUtilization}% utilized
-                        </Badge>
+                          <p className="text-sm text-muted-foreground">{member.role}</p>
+                        </div>
                       </div>
-                    </div>
+                          <Badge variant={
                     
-                    <div className="space-y-2 text-sm">
+                            balance.burnoutRisk === 'medium' ? 'default' : 'secondary'
                       <div className="flex justify-between">
-                        <span>Active Projects:</span>
+                            {balance.burnoutRisk} risk
                         <span className="font-medium">{framework.activeProjects}/{framework.totalProjects}</span>
-                      </div>
+                          <Badge variant="outline">
                       
                       <div className="flex justify-between">
                         <span>Expertise Gap:</span>
-                        <span className={`font-medium ${
-                          framework.expertiseGap > 60 ? 'text-red-600' :
+                      </div>
+                      ? 'text-red-600' :
                           framework.expertiseGap > 30 ? 'text-orange-600' : 'text-green-600'
-                        }`}>
+                        <div>
                           {framework.expertiseGap}%
                         </span>
                       </div>
-                      
-                      <div className="flex justify-between">
-                        <span>Demand Trend:</span>
-                        <span className={`font-medium flex items-center gap-1 ${
+                              <div key={index} className="flex-1 bg-muted rounded-t">
+                                <div 
+                                  className="bg-primary rounded-t transition-all"
+                                  style={{ height: `${(utilization / 100) * 48}px` }}
                           framework.demandTrend > 10 ? 'text-blue-600' : 
-                          framework.demandTrend > 0 ? 'text-green-600' : 'text-muted-foreground'
+                              </div>ext-muted-foreground'
                         }`}>
                           {framework.demandTrend > 0 ? <TrendingUp className="h-3 w-3" /> : ''}
                           {framework.demandTrend > 0 ? '+' : ''}{framework.demandTrend}%
                         </span>
                       </div>
-                      
+                          </div>
                       <Progress value={framework.teamUtilization} className="mt-2" />
-                    </div>
-                  </div>
+                        
+                        <div>
                 ))}
-              </div>
+                          <div className="space-y-1">
             </CardContent>
           </Card>
 
-          {/* Team Workload Balance */}
-          <Card>
+                                <span className="font-medium">{count} projects</span>
+                              </div>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+                            {Object.keys(balance.frameworkDistribution).length === 0 && (
                 <Users className="h-5 w-5" />
                 Team Workload Balance
-              </CardTitle>
-              <CardDescription>Individual workload analysis with burnout risk assessment</CardDescription>
+                          </div>
+                        </div> with burnout risk assessment</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {workloadBalance.map(balance => {
+                        <div>> {
                   const member = teamMembers.find(m => m.id === balance.memberId)
                   if (!member) return null
                   
                   return (
                     <div key={balance.memberId} className={`border rounded-lg p-4 ${
                       balance.burnoutRisk === 'high' ? 'border-red-200 bg-red-50' :
-                      balance.burnoutRisk === 'medium' ? 'border-orange-200 bg-orange-50' :
-                      'border-green-200 bg-green-50'
+                              </div>
+                            ))}
                     }`}>
                       <div className="flex items-start justify-between mb-4">
                         <div>
                           <h4 className="font-semibold">{member.name}</h4>
                           <p className="text-sm text-muted-foreground">{member.role}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge variant={
+                })}
+              </div>
+            </CardContent>
                             balance.burnoutRisk === 'high' ? 'destructive' :
                             balance.burnoutRisk === 'medium' ? 'default' : 'secondary'
                           }>
                             {balance.burnoutRisk} risk
-                          </Badge>
-                          <Badge variant="outline">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                             {balance.currentLoad}% vs {balance.optimalLoad}% optimal
                           </Badge>
-                        </div>
+              </CardTitle>
                       </div>
                       
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
@@ -1305,46 +1303,42 @@ export function ResourceAllocation() {
                           <div className="flex items-end gap-1 h-12">
                             {balance.utilizationTrend.map((utilization, index) => (
                               <div key={index} className="flex-1 bg-muted rounded-t">
-                                <div 
+                        <Switch
                                   className="bg-primary rounded-t transition-all"
                                   style={{ height: `${(utilization / 100) * 48}px` }}
-                                />
-                              </div>
+                            setAllocationRules(prev => prev.map(r => 
+                              r.id === rule.id ? { ...r, enabled } : r
                             ))}
                           </div>
                           <div className="flex justify-between text-xs text-muted-foreground mt-1">
                             <span>4 weeks ago</span>
                             <span>Current</span>
-                          </div>
-                        </div>
-                        
-                        <div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          Priority {rule.priority}
+                        </Badge>
                           <h5 className="font-medium text-sm mb-2">Framework Distribution</h5>
                           <div className="space-y-1">
                             {Object.entries(balance.frameworkDistribution).map(([framework, count]) => (
-                              <div key={framework} className="flex justify-between text-xs">
-                                <span>{framework}:</span>
+                      </div>="flex justify-between text-xs">
+                    </div>span>
                                 <span className="font-medium">{count} projects</span>
                               </div>
                             ))}
-                            {Object.keys(balance.frameworkDistribution).length === 0 && (
-                              <span className="text-xs text-muted-foreground">No current projects</span>
-                            )}
-                          </div>
                         </div>
                       </div>
-                      
+                      </div>
                       {balance.rebalanceRecommendations.length > 0 && (
                         <div>
-                          <h5 className="font-medium text-sm mb-2">Rebalancing Recommendations</h5>
-                          <div className="space-y-1">
+                        <p className="font-mono text-xs mt-1 p-2 bg-muted rounded">{rule.action}</p>
+                      </div>
                             {balance.rebalanceRecommendations.map((rec, index) => (
-                              <div key={index} className="flex items-center gap-2 text-xs p-2 bg-background rounded border">
+                  </div>Name="flex items-center gap-2 text-xs p-2 bg-background rounded border">
                                 <ArrowRight className="h-3 w-3 text-blue-600" />
                                 <span>{rec}</span>
                               </div>
                             ))}
-                          </div>
+        </TabsContent>
                         </div>
                       )}
                     </div>
@@ -1353,108 +1347,48 @@ export function ResourceAllocation() {
               </div>
             </CardContent>
           </Card>
-
+              <div className="space-y-6">
           {/* Smart Allocation Rules */}
-          <Card>
+                  <div key={member.id} className="border rounded-lg p-4">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+                      <div>
                 <Settings className="h-5 w-5" />
-                Smart Allocation Rules
-              </CardTitle>
-              <CardDescription>Automated balancing rules and success rates</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {allocationRules.map(rule => (
-                  <div key={rule.id} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={rule.enabled}
-                          onCheckedChange={(enabled) => {
-                            setAllocationRules(prev => prev.map(r => 
-                              r.id === rule.id ? { ...r, enabled } : r
-                            ))
-                          }}
-                        />
-                        <h4 className="font-semibold">{rule.name}</h4>
+                        <p className="text-sm text-muted-foreground">{member.role}</p>
                       </div>
+                      <Badge variant="outline">ing rules and success rates</CardDescription>
+            </CardHeader>
+                      </Badge>
+              <div className="space-y-4">
+
+                  <div key={rule.id} className="border rounded-lg p-4">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Efficiency</p>
+                        <Switch
+                          <Progress value={member.efficiency} className="flex-1" />
+                          <span className="text-sm font-medium">{member.efficiency}%</span>
+                        </div>
+                      </div>
+                            ))
+                      <div>
+                        <p className="text-sm text-muted-foreground">Current Workload</p>
+                        <div className="flex items-center gap-2">
+                          <Progress value={member.workload} className="flex-1" />
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">
+                        </div>
                           Priority {rule.priority}
-                        </Badge>
                         <Badge variant={rule.successRate > 90 ? 'default' : rule.successRate > 80 ? 'secondary' : 'outline'}>
                           {rule.successRate}% success
                         </Badge>
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
+                        </div>
                       <div>
-                        <span className="text-muted-foreground">Condition:</span>
-                        <p className="font-mono text-xs mt-1 p-2 bg-muted rounded">{rule.condition}</p>
+                      oreground">Condition:</span>
+                      <div>t-1 p-2 bg-muted rounded">{rule.condition}</p>
                       </div>
-                      <div>
+                        <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">Action:</span>
-                        <p className="font-mono text-xs mt-1 p-2 bg-muted rounded">{rule.action}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="team" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Team Performance Overview</CardTitle>
-              <CardDescription>Individual and collective performance metrics</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {teamMembers.map(member => (
-                  <div key={member.id} className="border rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h4 className="font-semibold">{member.name}</h4>
-                        <p className="text-sm text-muted-foreground">{member.role}</p>
-                      </div>
-                      <Badge variant="outline">
-                        {member.performanceScore}% performance score
-                      </Badge>
-                    </div>
-
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                      <div>
-                        <p className="text-sm text-muted-foreground">Efficiency</p>
-                        <div className="flex items-center gap-2">
-                          <Progress value={member.efficiency} className="flex-1" />
-                          <span className="text-sm font-medium">{member.efficiency}%</span>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm text-muted-foreground">Current Workload</p>
-                        <div className="flex items-center gap-2">
-                          <Progress value={member.workload} className="flex-1" />
-                          <span className="text-sm font-medium">{member.workload}%</span>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm text-muted-foreground">Availability</p>
-                        <div className="flex items-center gap-2">
-                          <Progress value={member.availability} className="flex-1" />
-                          <span className="text-sm font-medium">{member.availability}%</span>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm text-muted-foreground">Quality Rating</p>
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">⭐</span>
                           <span className="text-sm font-medium">{member.qualityRating}</span>
                         </div>
                       </div>
@@ -1464,108 +1398,165 @@ export function ResourceAllocation() {
                       <div>
                         <span className="text-muted-foreground">Completed Audits:</span> {member.completedAudits}
                       </div>
-                      <div>
+
                         <span className="text-muted-foreground">Avg. Time:</span> {member.averageTime}h
                       </div>
                       <div>
                         <span className="text-muted-foreground">Expertise:</span> {member.expertise.join(', ')}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="analytics" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                Performance Analytics
-              </CardTitle>
-              <CardDescription>Historical performance trends and predictive insights</CardDescription>
+              <CardDescription>Individual and collective performance metrics</CardDescription>
             </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {teamMembers.map(member => (
+                  <div key={member.id} className="border rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-4">
+        </TabsContent>
+    <h4 className="font-semibold">{member.name}</h4>
+                        <p className="text-sm text-muted-foreground">{member.role}</p>
+          <Card>
+                      <Badge variant="outline">
+              <CardTitle className="flex items-center gap-2">
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            </CardHeader>v>
             <CardContent>
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {performanceMetrics.map((metric, index) => (
-                    <div key={metric.period} className="border rounded-lg p-4">
-                      <h4 className="font-semibold mb-3">{metric.period}</h4>
-                      <div className="space-y-3">
+                        </div>
+                      </div>
+                      
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span>Efficiency</span>
-                            <span>{metric.efficiency}%</span>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <Progress value={member.workload} className="flex-1" />
+                          <span className="text-sm font-medium">{member.workload}%</span>
                           <Progress value={metric.efficiency} />
                         </div>
-                        
+                      
                         <div>
-                          <div className="flex justify-between text-sm mb-1">
+                        <p className="text-sm text-muted-foreground">Availability</p>
                             <span>On-Time Delivery</span>
                             <span>{metric.onTimeDelivery}%</span>
                           </div>
-                          <Progress value={metric.onTimeDelivery} />
+                        </div>
                         </div>
                         
                         <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span>Utilization</span>
-                            <span>{metric.utilization}%</span>
+                        <p className="text-sm text-muted-foreground">Quality Rating</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">⭐</span>
                           </div>
-                          <Progress value={metric.utilization} />
+                        </div>
                         </div>
                         
                         <div className="flex items-center justify-between text-sm">
-                          <span>Quality Rating</span>
-                          <div className="flex items-center gap-1">
-                            <span>⭐</span>
-                            <span>{metric.quality}</span>
+                    <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Completed Audits:</span> {member.completedAudits}
+                      </div>
                           </div>
-                        </div>
+                        <span className="text-muted-foreground">Avg. Time:</span> {member.averageTime}h
                       </div>
                     </div>
                   ))}
-                </div>
-
-                <Separator />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
+                      </div>
+           </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
                     <h4 className="font-semibold mb-4 flex items-center gap-2">
                       <Brain className="h-4 w-4" />
                       AI-Powered Allocation Insights
-                    </h4>
+                    </h4>ce-y-6">
                     <div className="space-y-3 text-sm">
-                      <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
+            <CardHeader>
                         <CheckCircle className="h-4 w-4 text-green-600" />
                         <span>98% of AI-optimized allocations completed on time in Q3</span>
-                      </div>
+                Performance Analytics
                       <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
-                        <TrendingUp className="h-4 w-4 text-blue-600" />
-                        <span>Team efficiency improved by 15% with intelligent matching</span>
+            </CardHeader>
+            <CardContent>
                       </div>
                       <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg">
                         <Zap className="h-4 w-4 text-purple-600" />
                         <span>Predictive analytics reduced planning time by 40%</span>
+                      <h4 className="font-semibold mb-3">{metric.period}</h4>
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Efficiency</span>
                       </div>
-                      <div className="flex items-center gap-2 p-3 bg-orange-50 rounded-lg">
-                        <AlertTriangle className="h-4 w-4 text-orange-600" />
-                        <span>High-complexity projects show 20% variance in completion times</span>
-                      </div>
-                    </div>
-                  </div>
+                          </div>
+                          <Progress value={metric.efficiency} />
 
-                  <div>
+                        
                     <h4 className="font-semibold mb-4 flex items-center gap-2">
                       <Target className="h-4 w-4" />
                       Performance-Based Optimization Recommendations
-                    </h4>
-                    <div className="space-y-3 text-sm">
+                            <span>{metric.onTimeDelivery}%</span>
+                          </div>
                       <div className="p-3 border rounded-lg">
                         <div className="font-medium mb-1 flex items-center gap-2">
+                        
+                        <div>
+                        </div>
+                            <span>Utilization</span>
+                          Develop FDA QSR expertise in 2 additional team members to improve allocation flexibility by 35%
+                          </div>
+                        <div className="flex items-center gap-2 mt-2">
+                        </div>
+                        
+                        <div className="flex items-center justify-between text-sm">
+                      </div>
+                      <div className="p-3 border rounded-lg">
+                        <div className="font-medium mb-1 flex items-center gap-2">
+                            <span>{metric.quality}</span>
+                          Workload Optimization Algorithm
+                        </div>
+                      </div>
+                          Implement dynamic workload balancing to maintain 75-85% utilization across all team members
+                        </p>
+                </div>
+                          <Badge variant="outline" className="text-xs">ROI: Medium</Badge>
+                          <Badge variant="outline" className="text-xs">Timeline: 2 weeks</Badge>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="p-3 border rounded-lg">
+                        <div className="font-medium mb-1 flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          Predictive Capacity Planning
+                        </div>
+                    <div className="space-y-3 text-sm">
+                          Add 1 specialized EU MDR consultant for Q4 compliance surge (projected 40% increase in MDR projects)
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <div className="flex items-center gap-2 mt-2">
+                      </div>
+                          <Badge variant="outline" className="text-xs">Timeline: 4 weeks</Badge>
+                        <TrendingUp className="h-4 w-4 text-blue-600" />
+                        <span>Team efficiency improved by 15% with intelligent matching</span>
+                    </div>
+                  </div>rple-50 rounded-lg">
+                </div>
+educed planning time by 40%</span>
+                <Separator />
+             <div className="flex items-center gap-2 p-3 bg-orange-50 rounded-lg">
+                        <AlertTriangle className="h-4 w-4 text-orange-600" />
+                        <span>High-complexity projects show 20% variance in completion times</span>
+                  <h4 className="font-semibold mb-4 flex items-center gap-2">
+                    </div>
+                    Advanced Performance Matrix
+
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <h4 className="font-semibold mb-4 flex items-center gap-2">
+                      <Target className="h-4 w-4" />
+                      Performance-Based Optimization Recommendations
+                        <div className="flex justify-between">
+                          <span>Expertise Match</span>
+                      <div className="p-3 border rounded-lg">
+                        </div>
                           <Users className="h-4 w-4" />
                           Cross-Functional Expertise Initiative
                         </div>
@@ -1573,221 +1564,221 @@ export function ResourceAllocation() {
                           Develop FDA QSR expertise in 2 additional team members to improve allocation flexibility by 35%
                         </p>
                         <div className="flex items-center gap-2 mt-2">
-                          <Badge variant="outline" className="text-xs">ROI: High</Badge>
+                        ge>
                           <Badge variant="outline" className="text-xs">Timeline: 8 weeks</Badge>
                         </div>
                       </div>
                       <div className="p-3 border rounded-lg">
                         <div className="font-medium mb-1 flex items-center gap-2">
                           <BarChart3 className="h-4 w-4" />
-                          Workload Optimization Algorithm
+                        <div className="flex justify-between">
                         </div>
-                        <p className="text-muted-foreground">
-                          Implement dynamic workload balancing to maintain 75-85% utilization across all team members
+                          <span className="font-medium">71% weight</span>
+                        </div>ers
                         </p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Badge variant="outline" className="text-xs">ROI: Medium</Badge>
-                          <Badge variant="outline" className="text-xs">Timeline: 2 weeks</Badge>
-                        </div>
-                      </div>
-                      <div className="p-3 border rounded-lg">
-                        <div className="font-medium mb-1 flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          Predictive Capacity Planning
-                        </div>
-                        <p className="text-muted-foreground">
-                          Add 1 specialized EU MDR consultant for Q4 compliance surge (projected 40% increase in MDR projects)
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Badge variant="outline" className="text-xs">ROI: High</Badge>
-                          <Badge variant="outline" className="text-xs">Timeline: 4 weeks</Badge>
-                        </div>
                       </div>
                     </div>
+                          <Badge variant="outline" className="text-xs">Timeline: 2 weeks</Badge>
+                        </div>
+                      <h5 className="font-medium mb-3">Risk Prediction Accuracy</h5>
+                      <div className="space-y-2 text-sm">
+                        <div className="font-medium mb-1 flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          <span className="text-green-600 font-medium">94% accurate</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Quality Risks</span>rge (projected 40% increase in MDR projects)
+                          <span className="text-green-600 font-medium">89% accurate</span>
+                        <div className="flex items-center gap-2 mt-2">
+                        <div className="flex justify-between">
+                          <span>Resource Conflicts</span></Badge>
+                          <span className="text-orange-600 font-medium">76% accurate</span>
+                        </div>
+                    </div>
                   </div>
-                </div>
+                          <span className="text-orange-600 font-medium">68% accurate</span>
 
                 <Separator />
 
                 {/* Performance Matrix */}
                 <div>
-                  <h4 className="font-semibold mb-4 flex items-center gap-2">
-                    <Activity className="h-4 w-4" />
-                    Advanced Performance Matrix
-                  </h4>
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    </div>
+                    
                     <div className="border rounded-lg p-4">
-                      <h5 className="font-medium mb-3">Allocation Success Factors</h5>
-                      <div className="space-y-2 text-sm">
+                      <h5 className="font-medium mb-3">Optimization Impact</h5>
+                      <div className="space-y-3 text-sm">
+                    <div className="border rounded-lg p-4">
+                          <div className="flex justify-between mb-1">
+                            <span>Time Savings</span>
                         <div className="flex justify-between">
                           <span>Expertise Match</span>
-                          <span className="font-medium">85% weight</span>
+                          <div className="text-xs text-muted-foreground">Planning time reduced from 8h to 4.8h per project</div>
                         </div>
-                        <Progress value={85} className="h-2" />
+                        2" />
                         
                         <div className="flex justify-between">
-                          <span>Team Availability</span>
+                            <span>Quality Improvement</span>
                           <span className="font-medium">78% weight</span>
                         </div>
-                        <Progress value={78} className="h-2" />
-                        
-                        <div className="flex justify-between">
-                          <span>Historical Performance</span>
-                          <span className="font-medium">92% weight</span>
+                          <div className="text-xs text-muted-foreground">Average quality score: 4.5 → 4.8</div>
                         </div>
-                        <Progress value={92} className="h-2" />
+                        
+                          <span>Historical Performance</span>
+                          <div className="flex justify-between mb-1">
+                        </div>
+                            <span className="font-medium">+12%</span>
                         
                         <div className="flex justify-between">
-                          <span>Collaboration Fit</span>
-                          <span className="font-medium">71% weight</span>
+                        </div>
+                        
                         </div>
                         <Progress value={71} className="h-2" />
                       </div>
                     </div>
                     
-                    <div className="border rounded-lg p-4">
+                          <div className="text-xs text-muted-foreground">Reduced overtime and external consulting</div>
                       <h5 className="font-medium mb-3">Risk Prediction Accuracy</h5>
                       <div className="space-y-2 text-sm">
+                    </div>tify-between">
+                  </div>
+                </div>
+              </div>
                         <div className="flex justify-between">
-                          <span>Timeline Risks</span>
-                          <span className="text-green-600 font-medium">94% accurate</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Quality Risks</span>
-                          <span className="text-green-600 font-medium">89% accurate</span>
+          </Card>
+        </TabsContent>
                         </div>
                         <div className="flex justify-between">
                           <span>Resource Conflicts</span>
                           <span className="text-orange-600 font-medium">76% accurate</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Scope Changes</span>
+                <CardTitle className="flex items-center gap-2">
                           <span className="text-orange-600 font-medium">68% accurate</span>
-                        </div>
-                      </div>
+                  Predictive Insights
+                </CardTitle>
                       <div className="mt-3 p-2 bg-blue-50 rounded text-xs">
-                        <strong>AI Learning:</strong> Model accuracy improves 2-3% monthly with new allocation data
+              </CardHeader> 2-3% monthly with new allocation data
                       </div>
                     </div>
-                    
+                  {predictiveInsights.length === 0 ? (
                     <div className="border rounded-lg p-4">
                       <h5 className="font-medium mb-3">Optimization Impact</h5>
                       <div className="space-y-3 text-sm">
-                        <div>
+                      <p className="text-sm">AI is analyzing team performance patterns</p>
                           <div className="flex justify-between mb-1">
                             <span>Time Savings</span>
-                            <span className="font-medium">40%</span>
-                          </div>
+                    <div className="space-y-4">
+                      {predictiveInsights.map((insight, index) => (
                           <div className="text-xs text-muted-foreground">Planning time reduced from 8h to 4.8h per project</div>
                         </div>
                         
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span>Quality Improvement</span>
-                            <span className="font-medium">+0.3 pts</span>
-                          </div>
-                          <div className="text-xs text-muted-foreground">Average quality score: 4.5 → 4.8</div>
-                        </div>
-                        
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span>Resource Utilization</span>
-                            <span className="font-medium">+12%</span>
-                          </div>
-                          <div className="text-xs text-muted-foreground">Optimal utilization: 66% → 78%</div>
-                        </div>
-                        
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span>Cost Efficiency</span>
-                            <span className="font-medium">+18%</span>
-                          </div>
-                          <div className="text-xs text-muted-foreground">Reduced overtime and external consulting</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="insights" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Predictive Insights */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5" />
-                  Predictive Insights
-                </CardTitle>
-                <CardDescription>AI-powered predictions and recommendations based on historical data</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-96">
-                  {predictiveInsights.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <Zap className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>Generating insights...</p>
-                      <p className="text-sm">AI is analyzing team performance patterns</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {predictiveInsights.map((insight, index) => (
-                        <div key={index} className={`border rounded-lg p-4 ${
-                          insight.type === 'risk' ? 'border-red-200 bg-red-50' :
-                          insight.type === 'opportunity' ? 'border-green-200 bg-green-50' :
                           'border-blue-200 bg-blue-50'
                         }`}>
                           <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center gap-2">
+                            <span className="font-medium">+0.3 pts</span>
                               {insight.type === 'risk' && <AlertTriangle className="h-4 w-4 text-red-600" />}
                               {insight.type === 'opportunity' && <TrendingUp className="h-4 w-4 text-green-600" />}
                               {insight.type === 'optimization' && <Zap className="h-4 w-4 text-blue-600" />}
-                              <h4 className="font-semibold text-sm">{insight.title}</h4>
+                        
                             </div>
                             <div className="flex items-center gap-2">
                               <Badge variant={insight.impact === 'high' ? 'destructive' : insight.impact === 'medium' ? 'default' : 'secondary'}>
-                                {insight.impact}
+                            <span className="font-medium">+12%</span>
                               </Badge>
-                              {insight.actionable && (
+                              {insight.actionable && (zation: 66% → 78%</div>
                                 <Badge variant="outline" className="text-xs">
-                                  Actionable
+                        
                                 </Badge>
-                              )}
+                          <div className="flex justify-between mb-1">
                             </div>
                           </div>
                           <p className="text-sm text-muted-foreground mb-2">{insight.description}</p>
                           <div className="flex items-center justify-between text-xs">
                             <span className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
+                      </div>
                               {insight.timeframe}
                             </span>
-                            {insight.actionable && (
+                </div>
                               <Button size="sm" variant="outline" className="h-6 text-xs">
                                 Take Action
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="insights" className="space-y-6">
+                      ))}"grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Predictive Insights */}
                   )}
                 </ScrollArea>
-              </CardContent>
+                <CardTitle className="flex items-center gap-2">
             </Card>
-
+ts
             {/* Capacity Forecast */}
+            <Card>owered predictions and recommendations based on historical data</CardDescription>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                <ScrollArea className="h-96">
+                  Capacity Forecast
+                </CardTitle>
+                      <Zap className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>Generating insights...</p>
+                      <p className="text-sm">AI is analyzing team performance patterns</p>
+                    </div>
+                  <div className="space-y-4">
+                    {capacityForecast.map(forecast => {
+                      const member = teamMembers.find(m => m.id === forecast.memberId)
+                      if (!member) return null
+                      
+                      return ( 'border-green-200 bg-green-50' :
+                          'border-blue-200 bg-blue-50'
+                        }`}>
+                            <div>tween mb-2">
+                              <h4 className="font-semibold text-sm">{member.name}</h4>
+                              <p className="text-xs text-muted-foreground">{member.role}</p>
+                            </div> className="h-4 w-4 text-green-600" />}
+                              {insight.type === 'optimization' && <Zap className="h-4 w-4 text-blue-600" />}
+                              {Math.round(forecast.currentCapacity)}% available
+                            </Badge>
+                          </div>
+                              <Badge variant={insight.impact === 'high' ? 'destructive' : insight.impact === 'medium' ? 'default' : 'secondary'}>
+                                {insight.impact}
+                            <div>
+                              {insight.actionable && (
+                                <span>Projected Capacity (4 weeks)</span>
+                                  Actionable
+                                </Badge>
+                                {forecast.projectedCapacity.map((capacity, weekIndex) => (
+                                  <div key={weekIndex} className="text-center">
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{insight.description}</p>
+                          <div className="flex items-center justify-between text-xs">
+                                  </div>
+                              <Clock className="h-3 w-3" />
+                              </div>
+                            </div>
+                            {insight.actionable && (
+                            {forecast.skillGaps.length > 0 && (xs">
+                              <div>
+                              </Button>
+                                <div className="flex flex-wrap gap-1">
+                          </div>
+                                    <Badge key={skill} variant="secondary" className="text-xs">
+                      ))}
+                                    </Badge>
+                  )}
+                                </div>
+                              </div>
+                            )}
+                            
+                            {forecast.developmentNeeds.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5" />
-                  Capacity Forecast
+                                  {forecast.developmentNeeds.map(need => (
+                                    <Badge key={need} variant="outline" className="text-xs border-orange-300">
                 </CardTitle>
-                <CardDescription>4-week capacity projection and skill development planning</CardDescription>
-              </CardHeader>
-              <CardContent>
+                                    </Badge>
+                                  ))}
+                              </div>
                 <ScrollArea className="h-96">
                   <div className="space-y-4">
                     {capacityForecast.map(forecast => {
@@ -1810,67 +1801,67 @@ export function ResourceAllocation() {
                             <div>
                               <div className="flex justify-between text-xs mb-1">
                                 <span>Projected Capacity (4 weeks)</span>
-                              </div>
-                              <div className="grid grid-cols-4 gap-1">
-                                {forecast.projectedCapacity.map((capacity, weekIndex) => (
-                                  <div key={weekIndex} className="text-center">
-                                    <div className="text-xs text-muted-foreground">W{weekIndex + 1}</div>
-                                    <Progress value={capacity} className="h-2" />
+                      <div className="flex items-center gap-2 mb-1">
+                    <div className="p-3 bg-green-50 rounded-lg">
+                        <span className="text-sm font-medium">Cross-Training ROI</span>
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      <p className="text-xs text-muted-foreground">
+                      </div>
                                     <div className="text-xs font-medium">{Math.round(capacity)}%</div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                            
-                            {forecast.skillGaps.length > 0 && (
-                              <div>
+                    <div className="p-3 bg-blue-50 rounded-lg">
+                      <div className="flex items-center gap-2 mb-1">
+                        <TrendingUp className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium">Efficiency Gains</span>
+                      <div className="flex items-center gap-2 mb-1">
+                        <TrendingUp className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium">Efficiency Gains</span>
                                 <p className="text-xs font-medium text-muted-foreground mb-1">Skill Development Opportunities:</p>
-                                <div className="flex flex-wrap gap-1">
-                                  {forecast.skillGaps.map(skill => (
-                                    <Badge key={skill} variant="secondary" className="text-xs">
-                                      {skill}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            
-                            {forecast.developmentNeeds.length > 0 && (
-                              <div>
-                                <p className="text-xs font-medium text-orange-600 mb-1">Development Focus:</p>
-                                <div className="flex flex-wrap gap-1">
-                                  {forecast.developmentNeeds.map(need => (
+                    </div>   <div className="flex flex-wrap gap-1">
+                        AI-optimized allocations show 15% faster project completion
+                </div>={skill} variant="secondary" className="text-xs">
+                    </div>
+                <div className="space-y-4">
+                </div>
+2">
+                <div className="space-y-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <AlertTriangle className="h-4 w-4 text-orange-600" />
+                        <span className="text-sm font-medium">Capacity Planning</span>
+                      <div className="flex items-center gap-2 mb-1">
+                      <p className="text-xs text-muted-foreground">
+                        Q4 demand surge may require 1-2 additional team members
+                      </p>
                                     <Badge key={need} variant="outline" className="text-xs border-orange-300">
-                                      {need}
-                                    </Badge>
-                                  ))}
+                        Q4 demand surge may require 1-2 additional team members
+                      </p>
+                    </div>
                                 </div>
                               </div>
                             )}
                           </div>
-                        </div>
-                      )
+                      </p>
+                    </div>
                     })}
                   </div>
                 </ScrollArea>
-              </CardContent>
+                  </div>
             </Card>
 
             {/* Resource Intelligence Summary */}
             <Card>
-              <CardHeader>
+                        <span className="text-sm font-medium">AI Enhancement</span>
                 <CardTitle>Resource Intelligence Summary</CardTitle>
-                <CardDescription>AI-driven insights for strategic resource planning</CardDescription>
+                      <p className="text-xs text-muted-foreground">
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      </div>
                   <div className="space-y-4">
                     <h4 className="font-semibold text-sm">Optimization Opportunities</h4>
                     <div className="space-y-2">
-                      <div className="p-3 bg-green-50 rounded-lg">
-                        <div className="flex items-center gap-2 mb-1">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span className="text-sm font-medium">Cross-Training ROI</span>
+                        <span className="text-sm font-medium">Performance Focus</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        <Target className="h-4 w-4 text-indigo-600" />
                         </div>
                         <p className="text-xs text-muted-foreground">
                           Enhanced team flexibility through strategic skill development
@@ -1881,7 +1872,7 @@ export function ResourceAllocation() {
                           <TrendingUp className="h-4 w-4 text-blue-600" />
                           <span className="text-sm font-medium">Efficiency Gains</span>
                         </div>
-                        <p className="text-xs text-muted-foreground">
+          <TemplateOptimizationEngine />und">
                           AI-optimized allocations show 15% faster project completion
                         </p>
                       </div>
