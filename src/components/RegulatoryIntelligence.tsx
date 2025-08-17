@@ -13,7 +13,8 @@ import {
   Download,
   Eye,
   Star,
-  Archive
+  Archive,
+  Mail
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
+import { EmailDigestManager } from '@/components/EmailDigestManager'
 
 interface RegulatoryUpdate {
   id: string
@@ -126,7 +128,8 @@ export function RegulatoryIntelligence() {
   const [searchTerm, setSearchTerm] = useState('')
   const [severityFilter, setSeverityFilter] = useState<string>('all')
   const [typeFilter, setTypeFilter] = useState<string>('all')
-  const [activeTab, setActiveTab] = useState('all')
+  const [activeTab, setActiveTab] = useState('updates')
+  const [updateFilter, setUpdateFilter] = useState('all')
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -165,7 +168,7 @@ export function RegulatoryIntelligence() {
     const matchesSeverity = severityFilter === 'all' || update.severity === severityFilter
     const matchesType = typeFilter === 'all' || update.type === typeFilter
     
-    switch (activeTab) {
+    switch (updateFilter) {
       case 'starred':
         return matchesSearch && matchesSeverity && matchesType && update.starred
       case 'action-required':
@@ -192,6 +195,10 @@ export function RegulatoryIntelligence() {
           <Button variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
             Export Report
+          </Button>
+          <Button size="sm">
+            <Mail className="h-4 w-4 mr-2" />
+            Email Digests
           </Button>
           <Button size="sm">
             <Bell className="h-4 w-4 mr-2" />
@@ -255,142 +262,158 @@ export function RegulatoryIntelligence() {
         </Card>
       </div>
 
-      {/* Filters and Search */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search updates..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
-          />
+      {/* Filters and Search - Only show for updates tab */}
+      {activeTab === 'updates' && (
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search updates..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <div className="flex gap-2">
+            <Select value={severityFilter} onValueChange={setSeverityFilter}>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="Severity" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Severity</SelectItem>
+                <SelectItem value="critical">Critical</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="new_rule">New Rules</SelectItem>
+                <SelectItem value="amendment">Amendments</SelectItem>
+                <SelectItem value="guidance">Guidance</SelectItem>
+                <SelectItem value="deadline">Deadlines</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Select value={severityFilter} onValueChange={setSeverityFilter}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Severity" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Severity</SelectItem>
-              <SelectItem value="critical">Critical</SelectItem>
-              <SelectItem value="high">High</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="low">Low</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="new_rule">New Rules</SelectItem>
-              <SelectItem value="amendment">Amendments</SelectItem>
-              <SelectItem value="guidance">Guidance</SelectItem>
-              <SelectItem value="deadline">Deadlines</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      )}
 
       {/* Tabs for different views */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">All Updates</TabsTrigger>
-          <TabsTrigger value="action-required">Action Required</TabsTrigger>
-          <TabsTrigger value="starred">Starred</TabsTrigger>
-          <TabsTrigger value="archived">Archived</TabsTrigger>
+          <TabsTrigger value="updates">Updates</TabsTrigger>
+          <TabsTrigger value="email-digest">Email Digest</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="mt-6">
-          <ScrollArea className="h-[600px]">
-            <div className="space-y-4">
-              {filteredUpdates.map((update) => (
-                <Card key={update.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="flex items-center gap-1">
-                            {getTypeIcon(update.type)}
-                            <Badge className={getSeverityColor(update.severity)} variant="outline">
-                              {update.severity}
-                            </Badge>
+        <TabsContent value="updates" className="mt-6">
+          {/* Sub-tabs for update filters */}
+          <Tabs value={updateFilter} onValueChange={setUpdateFilter}>
+            <TabsList>
+              <TabsTrigger value="all">All Updates</TabsTrigger>
+              <TabsTrigger value="action-required">Action Required</TabsTrigger>
+              <TabsTrigger value="starred">Starred</TabsTrigger>
+              <TabsTrigger value="archived">Archived</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value={updateFilter} className="mt-6">
+              <ScrollArea className="h-[600px]">
+                <div className="space-y-4">
+                  {filteredUpdates.map((update) => (
+                    <Card key={update.id} className="hover:shadow-md transition-shadow">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="flex items-center gap-1">
+                                {getTypeIcon(update.type)}
+                                <Badge className={getSeverityColor(update.severity)} variant="outline">
+                                  {update.severity}
+                                </Badge>
+                              </div>
+                              <Badge variant="secondary">{update.authority}</Badge>
+                              {update.actionRequired && (
+                                <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
+                                  Action Required
+                                </Badge>
+                              )}
+                              {update.starred && <Star className="h-4 w-4 text-yellow-500 fill-current" />}
+                            </div>
+                            <CardTitle className="text-lg leading-tight">{update.title}</CardTitle>
+                            <CardDescription className="text-sm mt-1">
+                              {update.regulation}
+                            </CardDescription>
                           </div>
-                          <Badge variant="secondary">{update.authority}</Badge>
-                          {update.actionRequired && (
-                            <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
-                              Action Required
-                            </Badge>
-                          )}
-                          {update.starred && <Star className="h-4 w-4 text-yellow-500 fill-current" />}
+                          <div className="flex flex-col items-end gap-2 text-sm text-muted-foreground">
+                            <span>Impact: {update.impactScore}/10</span>
+                            <span>Published {formatDate(update.publishedAt)}</span>
+                            {update.effectiveDate && (
+                              <span>Effective {formatDate(update.effectiveDate)}</span>
+                            )}
+                          </div>
                         </div>
-                        <CardTitle className="text-lg leading-tight">{update.title}</CardTitle>
-                        <CardDescription className="text-sm mt-1">
-                          {update.regulation}
-                        </CardDescription>
-                      </div>
-                      <div className="flex flex-col items-end gap-2 text-sm text-muted-foreground">
-                        <span>Impact: {update.impactScore}/10</span>
-                        <span>Published {formatDate(update.publishedAt)}</span>
-                        {update.effectiveDate && (
-                          <span>Effective {formatDate(update.effectiveDate)}</span>
-                        )}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {update.description}
-                    </p>
-                    
-                    <div className="space-y-3">
-                      <div>
-                        <h4 className="text-sm font-medium mb-1">Summary</h4>
-                        <p className="text-sm text-muted-foreground">{update.summary}</p>
-                      </div>
+                      </CardHeader>
                       
-                      <div>
-                        <h4 className="text-sm font-medium mb-2">Affected Systems</h4>
-                        <div className="flex flex-wrap gap-1">
-                          {update.affectedSystems.map((system) => (
-                            <Badge key={system} variant="outline" className="text-xs">
-                              {system}
-                            </Badge>
-                          ))}
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {update.description}
+                        </p>
+                        
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="text-sm font-medium mb-1">Summary</h4>
+                            <p className="text-sm text-muted-foreground">{update.summary}</p>
+                          </div>
+                          
+                          <div>
+                            <h4 className="text-sm font-medium mb-2">Affected Systems</h4>
+                            <div className="flex flex-wrap gap-1">
+                              {update.affectedSystems.map((system) => (
+                                <Badge key={system} variant="outline" className="text-xs">
+                                  {system}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <Separator />
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              <Globe className="h-3 w-3" />
+                              <span>Source: {update.source}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button variant="ghost" size="sm">
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </Button>
+                              <Button variant="ghost" size="sm">
+                                <Star className="h-4 w-4 mr-2" />
+                                Star
+                              </Button>
+                              <Button variant="ghost" size="sm">
+                                <Archive className="h-4 w-4 mr-2" />
+                                Archive
+                              </Button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Globe className="h-3 w-3" />
-                          <span>Source: {update.source}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-4 w-4 mr-2" />
-                            View Details
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Star className="h-4 w-4 mr-2" />
-                            Star
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Archive className="h-4 w-4 mr-2" />
-                            Archive
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </ScrollArea>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        <TabsContent value="email-digest" className="mt-6">
+          <EmailDigestManager />
         </TabsContent>
       </Tabs>
     </div>

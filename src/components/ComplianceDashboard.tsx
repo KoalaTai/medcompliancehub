@@ -14,7 +14,8 @@ import {
   Brain,
   Zap,
   Target,
-  Bell
+  Bell,
+  Mail
 } from '@phosphor-icons/react'
 import { useNotificationService } from '@/hooks/useNotificationService'
 
@@ -269,7 +270,7 @@ export function ComplianceDashboard() {
       </div>
 
       {/* AI-Powered Features Section */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-4">
         <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
@@ -343,6 +344,32 @@ export function ComplianceDashboard() {
               <Button size="sm" variant="outline" className="w-full">
                 <FileText className="h-3 w-3 mr-1" />
                 Analyze Documents
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-blue-500/5 to-blue-500/10 border-blue-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-600">
+              <Mail className="h-5 w-5" />
+              Email Digests
+            </CardTitle>
+            <CardDescription>Weekly regulatory update summaries</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Active Subscribers</span>
+                <span className="text-2xl font-bold text-blue-600">47</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">This Week's Updates</span>
+                <span className="text-2xl font-bold text-blue-600">12</span>
+              </div>
+              <Button size="sm" variant="outline" className="w-full">
+                <Mail className="h-3 w-3 mr-1" />
+                Manage Digests
               </Button>
             </div>
           </CardContent>
