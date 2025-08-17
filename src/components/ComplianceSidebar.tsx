@@ -8,7 +8,8 @@ import {
   TrendUp,
   Database,
   Calendar,
-  Webhook
+  Webhook,
+  Brain
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -17,6 +18,7 @@ const navigationItems = [
   { id: 'dashboard', label: 'Dashboard', icon: ChartLine, active: true },
   { id: 'simulations', label: 'Audit Simulations', icon: FlaskConical },
   { id: 'evidence', label: 'Evidence Manager', icon: FileText },
+  { id: 'gap-analysis', label: 'Gap Analysis', icon: Brain },
   { id: 'workflows', label: 'Compliance Workflows', icon: TrendUp },
   { id: 'intelligence', label: 'Regulatory Intelligence', icon: Database },
   { id: 'scheduler', label: 'Digest Scheduler', icon: Calendar },

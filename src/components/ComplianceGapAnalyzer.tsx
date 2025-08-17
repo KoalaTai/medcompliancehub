@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   Warning, 
   CheckCircle, 
@@ -13,9 +14,12 @@ import {
   Target,
   Brain,
   ArrowRight,
-  Refresh
+  Refresh,
+  Robot,
+  Lightning
 } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
+import { AutomatedGapDetection } from './AutomatedGapDetection'
 
 interface ComplianceGap {
   id: string
@@ -169,199 +173,232 @@ export function ComplianceGapAnalyzer() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold flex items-center gap-2">
-            <Brain className="h-5 w-5 text-primary" />
-            AI Compliance Gap Analysis
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Last analysis: {new Date(lastAnalysis).toLocaleDateString()}
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Brain className="h-6 w-6 text-primary" />
+            Compliance Gap Analysis
+          </h2>
+          <p className="text-muted-foreground">
+            AI-powered gap detection with automated regulatory change monitoring
           </p>
         </div>
-        <Button 
-          onClick={runGapAnalysis} 
-          disabled={isAnalyzing}
-          className="gap-2"
-        >
-          <Refresh className={`h-4 w-4 ${isAnalyzing ? 'animate-spin' : ''}`} />
-          {isAnalyzing ? 'Analyzing...' : 'Run Analysis'}
-        </Button>
       </div>
 
-      {/* Framework Overview */}
-      <div className="grid gap-4 md:grid-cols-3">
-        {frameworkStatus.map((framework) => (
-          <Card key={framework.name} className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium">{framework.name}</CardTitle>
-                {framework.criticalGaps > 0 && (
-                  <Badge className="bg-destructive text-destructive-foreground text-xs">
-                    {framework.criticalGaps} Critical
-                  </Badge>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Compliance Rate</span>
-                  <span className="font-medium">{framework.completionRate}%</span>
-                </div>
-                <Progress value={framework.completionRate} className="h-2" />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>{Math.round(framework.completionRate * framework.totalRequirements / 100)} of {framework.totalRequirements} requirements met</span>
-                  <span>{framework.lastAssessment}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Tabs defaultValue="automated" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="automated" className="flex items-center gap-2">
+            <Robot className="h-4 w-4" />
+            Automated Detection
+          </TabsTrigger>
+          <TabsTrigger value="manual" className="flex items-center gap-2">
+            <Lightning className="h-4 w-4" />
+            Manual Analysis
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Gap Summary */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-destructive" />
-              <div>
-                <p className="text-2xl font-bold">{criticalGapsCount}</p>
-                <p className="text-xs text-muted-foreground">Critical Gaps</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <FileX className="h-4 w-4 text-orange-500" />
-              <div>
-                <p className="text-2xl font-bold">{openGapsCount}</p>
-                <p className="text-xs text-muted-foreground">Open Gaps</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-primary" />
-              <div>
-                <p className="text-2xl font-bold">{filteredGaps.filter(g => g.status === 'in-progress').length}</p>
-                <p className="text-xs text-muted-foreground">In Progress</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <TrendUp className="h-4 w-4 text-secondary" />
-              <div>
-                <p className="text-2xl font-bold">96h</p>
-                <p className="text-xs text-muted-foreground">Est. Effort</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+        <TabsContent value="automated" className="mt-6">
+          <AutomatedGapDetection />
+        </TabsContent>
 
-      {/* Detailed Gap List */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h4 className="text-lg font-semibold">Identified Gaps</h4>
-          <div className="flex gap-2">
-            <Button 
-              variant={selectedFramework === 'all' ? 'default' : 'outline'} 
-              size="sm"
-              onClick={() => setSelectedFramework('all')}
-            >
-              All Frameworks
-            </Button>
-            {frameworkStatus.map((framework) => (
+        <TabsContent value="manual" className="mt-6">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  <Brain className="h-5 w-5 text-primary" />
+                  Manual Gap Analysis
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Last analysis: {new Date(lastAnalysis).toLocaleDateString()}
+                </p>
+              </div>
               <Button 
-                key={framework.name}
-                variant={selectedFramework === framework.name ? 'default' : 'outline'} 
-                size="sm"
-                onClick={() => setSelectedFramework(framework.name)}
+                onClick={runGapAnalysis} 
+                disabled={isAnalyzing}
+                className="gap-2"
               >
-                {framework.name}
+                <Refresh className={`h-4 w-4 ${isAnalyzing ? 'animate-spin' : ''}`} />
+                {isAnalyzing ? 'Analyzing...' : 'Run Analysis'}
               </Button>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <div className="space-y-4">
-          {filteredGaps.map((gap) => (
-            <Card key={gap.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
-                    {getStatusIcon(gap.status)}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <CardTitle className="text-base">{gap.requirement}</CardTitle>
-                        {getSeverityBadge(gap.severity)}
+            {/* Framework Overview */}
+            <div className="grid gap-4 md:grid-cols-3">
+              {frameworkStatus.map((framework) => (
+                <Card key={framework.name} className="cursor-pointer hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-sm font-medium">{framework.name}</CardTitle>
+                      {framework.criticalGaps > 0 && (
+                        <Badge className="bg-destructive text-destructive-foreground text-xs">
+                          {framework.criticalGaps} Critical
+                        </Badge>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Compliance Rate</span>
+                        <span className="font-medium">{framework.completionRate}%</span>
                       </div>
-                      <CardDescription className="flex items-center gap-2">
-                        <span>{gap.regulation}</span>
-                        <span>•</span>
-                        <span>{gap.framework}</span>
-                        <span>•</span>
-                        <span>Due: {gap.dueDate}</span>
-                        <span>•</span>
-                        <span>{gap.estimatedEffort}</span>
-                      </CardDescription>
+                      <Progress value={framework.completionRate} className="h-2" />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>{Math.round(framework.completionRate * framework.totalRequirements / 100)} of {framework.totalRequirements} requirements met</span>
+                        <span>{framework.lastAssessment}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Gap Summary */}
+            <div className="grid gap-4 md:grid-cols-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-destructive" />
+                    <div>
+                      <p className="text-2xl font-bold">{criticalGapsCount}</p>
+                      <p className="text-xs text-muted-foreground">Critical Gaps</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Target className="h-3 w-3 mr-1" />
-                    Create Action Plan
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2">
+                    <FileX className="h-4 w-4 text-orange-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{openGapsCount}</p>
+                      <p className="text-xs text-muted-foreground">Open Gaps</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-primary" />
+                    <div>
+                      <p className="text-2xl font-bold">{filteredGaps.filter(g => g.status === 'in-progress').length}</p>
+                      <p className="text-xs text-muted-foreground">In Progress</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2">
+                    <TrendUp className="h-4 w-4 text-secondary" />
+                    <div>
+                      <p className="text-2xl font-bold">96h</p>
+                      <p className="text-xs text-muted-foreground">Est. Effort</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Detailed Gap List */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-lg font-semibold">Identified Gaps</h4>
+                <div className="flex gap-2">
+                  <Button 
+                    variant={selectedFramework === 'all' ? 'default' : 'outline'} 
+                    size="sm"
+                    onClick={() => setSelectedFramework('all')}
+                  >
+                    All Frameworks
                   </Button>
+                  {frameworkStatus.map((framework) => (
+                    <Button 
+                      key={framework.name}
+                      variant={selectedFramework === framework.name ? 'default' : 'outline'} 
+                      size="sm"
+                      onClick={() => setSelectedFramework(framework.name)}
+                    >
+                      {framework.name}
+                    </Button>
+                  ))}
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
-                    <div className="flex items-start gap-2">
-                      <Brain className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-sm font-medium text-primary mb-1">AI Insight</p>
-                        <p className="text-sm text-muted-foreground">{gap.aiInsight}</p>
-                      </div>
-                    </div>
-                  </div>
+              </div>
 
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <h5 className="text-sm font-medium mb-2">Missing Documents</h5>
-                      <ul className="space-y-1">
-                        {gap.missingDocuments.map((doc, index) => (
-                          <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <FileX className="h-3 w-3 text-destructive" />
-                            {doc}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h5 className="text-sm font-medium mb-2">Recommended Actions</h5>
-                      <ul className="space-y-1">
-                        {gap.recommendedActions.map((action, index) => (
-                          <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <ArrowRight className="h-3 w-3 text-primary" />
-                            {action}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+              <div className="space-y-4">
+                {filteredGaps.map((gap) => (
+                  <Card key={gap.id}>
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3">
+                          {getStatusIcon(gap.status)}
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <CardTitle className="text-base">{gap.requirement}</CardTitle>
+                              {getSeverityBadge(gap.severity)}
+                            </div>
+                            <CardDescription className="flex items-center gap-2">
+                              <span>{gap.regulation}</span>
+                              <span>•</span>
+                              <span>{gap.framework}</span>
+                              <span>•</span>
+                              <span>Due: {gap.dueDate}</span>
+                              <span>•</span>
+                              <span>{gap.estimatedEffort}</span>
+                            </CardDescription>
+                          </div>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          <Target className="h-3 w-3 mr-1" />
+                          Create Action Plan
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+                          <div className="flex items-start gap-2">
+                            <Brain className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="text-sm font-medium text-primary mb-1">AI Insight</p>
+                              <p className="text-sm text-muted-foreground">{gap.aiInsight}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div>
+                            <h5 className="text-sm font-medium mb-2">Missing Documents</h5>
+                            <ul className="space-y-1">
+                              {gap.missingDocuments.map((doc, index) => (
+                                <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <FileX className="h-3 w-3 text-destructive" />
+                                  {doc}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h5 className="text-sm font-medium mb-2">Recommended Actions</h5>
+                            <ul className="space-y-1">
+                              {gap.recommendedActions.map((action, index) => (
+                                <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <ArrowRight className="h-3 w-3 text-primary" />
+                                  {action}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

@@ -284,16 +284,26 @@ export function ComplianceDashboard() {
           <CardContent>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm">Critical Gaps Detected</span>
-                <span className="text-2xl font-bold text-destructive">3</span>
+                <span className="text-sm">Automated Monitoring</span>
+                <Badge className="bg-secondary text-secondary-foreground">Active</Badge>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Recommendations Generated</span>
-                <span className="text-2xl font-bold text-secondary">12</span>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Gaps Detected Today</span>
+                  <span className="font-medium text-destructive">3</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Regulatory Changes</span>
+                  <span className="font-medium">2 new</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Confidence Level</span>
+                  <span className="font-medium">92%</span>
+                </div>
               </div>
               <Button size="sm" variant="outline" className="w-full">
                 <Target className="h-3 w-3 mr-1" />
-                View Gap Analysis
+                View Analysis
               </Button>
             </div>
           </CardContent>
@@ -303,23 +313,33 @@ export function ComplianceDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-secondary">
               <Zap className="h-5 w-5" />
-              Smart Automation
+              Auto-CAPA System
             </CardTitle>
-            <CardDescription>Intelligent compliance monitoring</CardDescription>
+            <CardDescription>Automated corrective actions</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm">Active Rules</span>
-                <span className="text-2xl font-bold text-secondary">4</span>
+                <span className="text-sm">Smart Workflow</span>
+                <Badge variant="outline" className="border-secondary text-secondary">Enabled</Badge>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Success Rate</span>
-                <span className="text-2xl font-bold text-secondary">94%</span>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Auto-Generated CAPAs</span>
+                  <span className="font-medium text-secondary">5</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Pending Review</span>
+                  <span className="font-medium">2</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Avg. Response Time</span>
+                  <span className="font-medium">4.2h</span>
+                </div>
               </div>
               <Button size="sm" variant="outline" className="w-full">
-                <Zap className="h-3 w-3 mr-1" />
-                Manage Automation
+                <ArrowRight className="h-3 w-3 mr-1" />
+                Review Queue
               </Button>
             </div>
           </CardContent>

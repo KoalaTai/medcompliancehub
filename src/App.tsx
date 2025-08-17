@@ -4,13 +4,14 @@ import { ComplianceSidebar } from '@/components/ComplianceSidebar'
 import { ComplianceDashboard } from '@/components/ComplianceDashboard'
 import { AuditSimulations } from '@/components/AuditSimulations'
 import { EvidenceManager } from '@/components/EvidenceManager'
+import { ComplianceGapAnalyzer } from '@/components/ComplianceGapAnalyzer'
 import { RegulatoryIntelligence } from '@/components/RegulatoryIntelligence'
 import { DigestScheduler } from '@/components/DigestScheduler'
 import { WebhookIntegrations } from '@/components/WebhookIntegrations'
 import { WebhookNotificationSystem } from '@/components/WebhookNotificationSystem'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -36,6 +37,8 @@ function App() {
         return <AuditSimulations />
       case 'evidence':
         return <EvidenceManager />
+      case 'gap-analysis':
+        return <ComplianceGapAnalyzer />
       case 'workflows':
         return (
           <div className="p-6">
