@@ -1289,4 +1289,3 @@ export function ResourceAllocation() {
   )
 }
 
-export { ResourceAllocation }
