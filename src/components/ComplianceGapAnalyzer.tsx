@@ -31,6 +31,7 @@ import {
 import { useKV } from '@github/spark/hooks'
 import { AutomatedGapDetection } from './AutomatedGapDetection'
 import { ComplianceArchitectureDiagram } from './ComplianceArchitectureDiagram'
+import { GapToCAPAIntegration } from './GapToCAPAIntegration'
 
 interface ComplianceGap {
   id: string
@@ -419,10 +420,14 @@ export function ComplianceGapAnalyzer() {
       </div>
 
       <Tabs defaultValue="knowledge-graph" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="knowledge-graph" className="flex items-center gap-2">
             <Network className="h-4 w-4" />
             Knowledge Graph
+          </TabsTrigger>
+          <TabsTrigger value="capa-integration" className="flex items-center gap-2">
+            <Workflow className="h-4 w-4" />
+            CAPA Integration
           </TabsTrigger>
           <TabsTrigger value="architecture" className="flex items-center gap-2">
             <Hierarchy className="h-4 w-4" />
@@ -592,6 +597,10 @@ export function ComplianceGapAnalyzer() {
               </div>
             </div>
           </div>
+        </TabsContent>
+
+        <TabsContent value="capa-integration" className="mt-6">
+          <GapToCAPAIntegration />
         </TabsContent>
 
         <TabsContent value="architecture" className="mt-6">

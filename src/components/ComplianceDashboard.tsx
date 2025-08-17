@@ -17,7 +17,8 @@ import {
   Target,
   Bell,
   Mail,
-  ArrowRight
+  ArrowRight,
+  Workflow
 } from '@phosphor-icons/react'
 import { useNotificationService } from '@/hooks/useNotificationService'
 
@@ -312,16 +313,16 @@ export function ComplianceDashboard() {
         <Card className="bg-gradient-to-br from-secondary/5 to-secondary/10 border-secondary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-secondary">
-              <Zap className="h-5 w-5" />
-              Auto-CAPA System
+              <Workflow className="h-5 w-5" />
+              CAPA Workflows
             </CardTitle>
-            <CardDescription>Automated corrective actions</CardDescription>
+            <CardDescription>Automated corrective & preventive actions</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm">Smart Workflow</span>
-                <Badge variant="outline" className="border-secondary text-secondary">Enabled</Badge>
+                <span className="text-sm">Smart Generation</span>
+                <Badge variant="outline" className="border-secondary text-secondary">Active</Badge>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
@@ -329,17 +330,22 @@ export function ComplianceDashboard() {
                   <span className="font-medium text-secondary">5</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Pending Review</span>
-                  <span className="font-medium">2</span>
+                  <span>Active Workflows</span>
+                  <span className="font-medium">3</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Avg. Response Time</span>
-                  <span className="font-medium">4.2h</span>
+                  <span>Avg. Resolution Time</span>
+                  <span className="font-medium">18.5 days</span>
                 </div>
               </div>
-              <Button size="sm" variant="outline" className="w-full">
-                <ArrowRight className="h-3 w-3 mr-1" />
-                Review Queue
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-workflows'))}
+              >
+                <Workflow className="h-3 w-3 mr-1" />
+                Manage CAPAs
               </Button>
             </div>
           </CardContent>

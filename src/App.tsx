@@ -9,6 +9,7 @@ import { RegulatoryIntelligence } from '@/components/RegulatoryIntelligence'
 import { DigestScheduler } from '@/components/DigestScheduler'
 import { WebhookIntegrations } from '@/components/WebhookIntegrations'
 import { WebhookNotificationSystem } from '@/components/WebhookNotificationSystem'
+import { CAPAWorkflowGenerator } from '@/components/CAPAWorkflowGenerator'
 import { useEffect } from 'react'
 
 type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'team' | 'settings'
@@ -23,9 +24,15 @@ function App() {
       setActiveSection('webhooks')
     }
 
+    const handleNavigateToWorkflows = () => {
+      setActiveSection('workflows')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
+    window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
+      window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     }
   }, [setActiveSection])
 
@@ -40,12 +47,7 @@ function App() {
       case 'gap-analysis':
         return <ComplianceGapAnalyzer />
       case 'workflows':
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-2">Compliance Workflows</h2>
-            <p className="text-muted-foreground">Automated CAPA, change control, and risk management workflows coming soon.</p>
-          </div>
-        )
+        return <CAPAWorkflowGenerator />
       case 'intelligence':
         return <RegulatoryIntelligence />
       case 'scheduler':
