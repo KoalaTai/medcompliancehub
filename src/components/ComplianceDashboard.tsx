@@ -408,19 +408,35 @@ export function ComplianceDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-purple-600">
               <Brain className="h-5 w-5" />
-              Skill Development
+              Learning Paths
             </CardTitle>
-            <CardDescription>AI-powered skill gap analysis</CardDescription>
+            <CardDescription>AI-optimized skill development tracking</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm">Critical Skill Gaps</span>
+                <span className="text-sm">Active Paths</span>
                 <span className="text-2xl font-bold text-purple-600">2</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm">Training Recommendations</span>
-                <span className="text-2xl font-bold text-purple-600">5</span>
+                <span className="text-sm">Completion Rate</span>
+                <span className="text-2xl font-bold text-purple-600">78%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Critical Gaps</span>
+                <span className="text-lg font-bold text-destructive">3</span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs">
+                  <span>SOX Preparation</span>
+                  <span className="font-medium">45%</span>
+                </div>
+                <Progress value={45} className="h-1.5" />
+                <div className="flex justify-between text-xs">
+                  <span>AI Act Readiness</span>
+                  <span className="font-medium">0%</span>
+                </div>
+                <Progress value={0} className="h-1.5" />
               </div>
               <Button 
                 size="sm" 
@@ -428,8 +444,8 @@ export function ComplianceDashboard() {
                 className="w-full"
                 onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-skills'))}
               >
-                <Brain className="h-3 w-3 mr-1" />
-                Analyze Skills
+                <Target className="h-3 w-3 mr-1" />
+                View Learning Paths
               </Button>
             </div>
           </CardContent>
