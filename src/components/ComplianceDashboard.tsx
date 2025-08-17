@@ -1,0 +1,225 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
+import { Button } from '@/components/ui/button'
+import { 
+  Shield, 
+  Warning, 
+  CheckCircle, 
+  Clock,
+  TrendUp,
+  FileText,
+  Users,
+  Calendar
+} from '@phosphor-icons/react'
+
+interface ComplianceMetric {
+  id: string
+  title: string
+  value: string
+  change: string
+  trend: 'up' | 'down' | 'neutral'
+  status: 'compliant' | 'warning' | 'critical'
+}
+
+const complianceMetrics: ComplianceMetric[] = [
+  {
+    id: 'overall',
+    title: 'Overall Compliance Score',
+    value: '94%',
+    change: '+2.1%',
+    trend: 'up',
+    status: 'compliant'
+  },
+  {
+    id: 'audits',
+    title: 'Active Audit Simulations',
+    value: '7',
+    change: '+3',
+    trend: 'up',
+    status: 'warning'
+  },
+  {
+    id: 'documents',
+    title: 'Documents Under Review',
+    value: '23',
+    change: '-5',
+    trend: 'down',
+    status: 'compliant'
+  },
+  {
+    id: 'findings',
+    title: 'Open Findings',
+    value: '12',
+    change: '-2',
+    trend: 'down',
+    status: 'warning'
+  }
+]
+
+const recentActivities = [
+  {
+    id: 1,
+    type: 'audit',
+    title: 'ISO 13485 Simulation Completed',
+    description: 'Quality Management System audit simulation finished with 3 minor findings',
+    timestamp: '2 hours ago',
+    status: 'completed'
+  },
+  {
+    id: 2,
+    type: 'document',
+    title: 'SOP-QM-001 Updated',
+    description: 'Quality Manual updated to reflect latest regulatory changes',
+    timestamp: '4 hours ago',
+    status: 'pending'
+  },
+  {
+    id: 3,
+    type: 'regulatory',
+    title: 'FDA Guidance Update',
+    description: 'New guidance on medical device cybersecurity requirements detected',
+    timestamp: '6 hours ago',
+    status: 'alert'
+  }
+]
+
+function getStatusIcon(status: string) {
+  switch (status) {
+    case 'compliant':
+      return <CheckCircle className="h-4 w-4 text-secondary" weight="fill" />
+    case 'warning':
+      return <Warning className="h-4 w-4 text-accent" weight="fill" />
+    case 'critical':
+      return <Shield className="h-4 w-4 text-destructive" weight="fill" />
+    default:
+      return <Clock className="h-4 w-4 text-muted-foreground" />
+  }
+}
+
+function getStatusBadge(status: string) {
+  switch (status) {
+    case 'completed':
+      return <Badge variant="secondary">Completed</Badge>
+    case 'pending':
+      return <Badge variant="outline">Pending Review</Badge>
+    case 'alert':
+      return <Badge className="bg-accent text-accent-foreground">Alert</Badge>
+    default:
+      return <Badge variant="outline">Unknown</Badge>
+  }
+}
+
+export function ComplianceDashboard() {
+  return (
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">Compliance Dashboard</h2>
+          <p className="text-muted-foreground">Monitor your regulatory compliance status and recent activities</p>
+        </div>
+        <Button className="gap-2">
+          <Calendar className="h-4 w-4" />
+          Schedule Audit
+        </Button>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {complianceMetrics.map((metric) => (
+          <Card key={metric.id}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{metric.title}</CardTitle>
+              {getStatusIcon(metric.status)}
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{metric.value}</div>
+              <p className={`text-xs flex items-center gap-1 ${
+                metric.trend === 'up' ? 'text-secondary' : 
+                metric.trend === 'down' ? 'text-muted-foreground' : 
+                'text-muted-foreground'
+              }`}>
+                <TrendUp className={`h-3 w-3 ${
+                  metric.trend === 'down' ? 'rotate-180' : ''
+                }`} />
+                {metric.change} from last month
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              Compliance Overview
+            </CardTitle>
+            <CardDescription>Current compliance status across key regulations</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span>FDA 21 CFR Part 820</span>
+                <span className="font-medium">96%</span>
+              </div>
+              <Progress value={96} className="h-2" />
+            </div>
+            <div>
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span>ISO 13485:2016</span>
+                <span className="font-medium">92%</span>
+              </div>
+              <Progress value={92} className="h-2" />
+            </div>
+            <div>
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span>EU MDR 2017/745</span>
+                <span className="font-medium">89%</span>
+              </div>
+              <Progress value={89} className="h-2" />
+            </div>
+            <div>
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span>ISO 14971:2019</span>
+                <span className="font-medium">98%</span>
+              </div>
+              <Progress value={98} className="h-2" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              Recent Activities
+            </CardTitle>
+            <CardDescription>Latest compliance activities and updates</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {recentActivities.map((activity) => (
+                <div key={activity.id} className="flex gap-4 p-3 rounded-lg border bg-card/30">
+                  <div className="mt-1">
+                    {activity.type === 'audit' && <FileText className="h-4 w-4 text-primary" />}
+                    {activity.type === 'document' && <FileText className="h-4 w-4 text-secondary" />}
+                    {activity.type === 'regulatory' && <Shield className="h-4 w-4 text-accent" />}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-medium">{activity.title}</h4>
+                      {getStatusBadge(activity.status)}
+                    </div>
+                    <p className="text-xs text-muted-foreground">{activity.description}</p>
+                    <p className="text-xs text-muted-foreground">{activity.timestamp}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
