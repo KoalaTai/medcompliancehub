@@ -15,9 +15,10 @@ import { TemplateOptimizationEngine } from '@/components/TemplateOptimizationEng
 import { SkillGapAnalyzer } from '@/components/SkillGapAnalyzer'
 import { TeamSkillComparison } from '@/components/TeamSkillComparison'
 import { CareerPathRecommendations } from '@/components/CareerPathRecommendations'
+import { LearningResourceIntegration } from '@/components/LearningResourceIntegration'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -49,12 +50,17 @@ function App() {
       setActiveSection('career-paths')
     }
 
+    const handleNavigateToLearningResources = () => {
+      setActiveSection('learning-resources')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
     window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     window.addEventListener('navigate-to-resources', handleNavigateToResources)
     window.addEventListener('navigate-to-skills', handleNavigateToSkills)
     window.addEventListener('navigate-to-team-comparison', handleNavigateToTeamComparison)
     window.addEventListener('navigate-to-career-paths', handleNavigateToCareerPaths)
+    window.addEventListener('navigate-to-learning-resources', handleNavigateToLearningResources)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
       window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
@@ -62,6 +68,7 @@ function App() {
       window.removeEventListener('navigate-to-skills', handleNavigateToSkills)
       window.removeEventListener('navigate-to-team-comparison', handleNavigateToTeamComparison)
       window.removeEventListener('navigate-to-career-paths', handleNavigateToCareerPaths)
+      window.removeEventListener('navigate-to-learning-resources', handleNavigateToLearningResources)
     }
   }, [setActiveSection])
 
@@ -91,6 +98,8 @@ function App() {
         return <TeamSkillComparison />
       case 'career-paths':
         return <CareerPathRecommendations />
+      case 'learning-resources':
+        return <LearningResourceIntegration />
       case 'team':
         return (
           <div className="p-6">

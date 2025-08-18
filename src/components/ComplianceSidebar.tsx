@@ -13,7 +13,8 @@ import {
   UsersThree,
   GraduationCap,
   ChartBar,
-  MapPin
+  MapPin,
+  BookOpen
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -31,6 +32,7 @@ const navigationItems = [
   { id: 'skills', label: 'Skill Development', icon: GraduationCap },
   { id: 'team-comparison', label: 'Team Benchmarks', icon: ChartBar },
   { id: 'career-paths', label: 'Career Paths', icon: MapPin },
+  { id: 'learning-resources', label: 'Learning Resources', icon: BookOpen },
   { id: 'team', label: 'Team Management', icon: Users },
   { id: 'settings', label: 'Settings', icon: Gear },
 ]

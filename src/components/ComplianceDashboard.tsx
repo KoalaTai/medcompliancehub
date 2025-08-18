@@ -20,6 +20,7 @@ import {
   Mail,
   ArrowRight,
   MapPin,
+  BookOpen,
   GitBranch as Workflow
 } from '@phosphor-icons/react'
 import { useNotificationService } from '@/hooks/useNotificationService'
@@ -522,7 +523,7 @@ export function ComplianceDashboard() {
       </div>
 
       {/* Resource Allocation Section */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-3">
         <Card className="bg-gradient-to-br from-green-500/5 to-green-500/10 border-green-500/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-green-700">
@@ -561,6 +562,50 @@ export function ComplianceDashboard() {
               >
                 <TrendUp className="h-3 w-3 mr-1" />
                 Optimize Resources
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-orange-500/5 to-orange-500/10 border-orange-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-orange-700">
+              <BookOpen className="h-5 w-5" />
+              Learning Resources
+            </CardTitle>
+            <CardDescription>External platform integrations and training</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Active Platforms</span>
+                <span className="text-2xl font-bold text-orange-700">4</span>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Available Courses</span>
+                  <span className="font-medium">2,682</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Completion Rate</span>
+                  <span className="font-medium">84%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>CPD Credits</span>
+                  <span className="font-medium">156</span>
+                </div>
+              </div>
+
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-learning-resources'))}
+              >
+                <BookOpen className="h-3 w-3 mr-1" />
+                Browse Resources
                 <ArrowRight className="h-3 w-3 ml-1" />
               </Button>
             </div>
