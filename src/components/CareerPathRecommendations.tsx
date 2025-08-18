@@ -33,7 +33,15 @@ import {
   Share,
   Download,
   Lightbulb,
-  Settings
+  Settings,
+  Books,
+  Certificate,
+  Play,
+  FileText,
+  Calendar as CalendarIcon,
+  CheckSquare,
+  Rocket,
+  ChartLine
 } from "@phosphor-icons/react"
 import { toast } from 'sonner'
 
@@ -111,13 +119,76 @@ interface CareerAnalytics {
   careerVelocity: number // months to next level
 }
 
+interface SkillDevelopmentPlan {
+  id: string
+  memberName: string
+  careerGoal: string
+  targetRole: string
+  timeline: number // months
+  prioritySkills: PrioritySkill[]
+  learningPath: LearningResource[]
+  progress: SkillProgress
+  recommendations: PersonalizedRecommendation[]
+  nextMilestone: string
+  estimatedCost: number
+}
+
+interface PrioritySkill {
+  skill: string
+  currentLevel: number
+  targetLevel: number
+  urgency: 'critical' | 'high' | 'medium' | 'low'
+  businessImpact: number // 1-10
+  marketDemand: number // 1-10
+  personalInterest: number // 1-10
+  estimatedHours: number
+  prerequisiteSkills: string[]
+}
+
+interface LearningResource {
+  type: 'course' | 'certification' | 'workshop' | 'mentoring' | 'project' | 'book'
+  title: string
+  provider: string
+  duration: string
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  cost: number
+  rating: number
+  skills: string[]
+  priority: number
+  completionDate?: string
+  status: 'not-started' | 'in-progress' | 'completed'
+  url?: string
+}
+
+interface SkillProgress {
+  overallProgress: number
+  skillsCompleted: number
+  skillsInProgress: number
+  skillsNotStarted: number
+  hoursInvested: number
+  certificationsEarned: number
+  lastUpdated: string
+}
+
+interface PersonalizedRecommendation {
+  type: 'immediate' | 'short-term' | 'long-term'
+  category: 'skill' | 'networking' | 'certification' | 'project' | 'mentoring'
+  title: string
+  description: string
+  impact: 'high' | 'medium' | 'low'
+  effort: number // 1-10
+  deadline?: string
+  resources: string[]
+}
+
 export function CareerPathRecommendations() {
   const [teamMembers] = useKV<TeamMember[]>('team-members', [])
   const [careerPaths, setCareerPaths] = useKV<CareerPath[]>('career-paths', [])
   const [careerAnalytics, setCareerAnalytics] = useKV<CareerAnalytics[]>('career-analytics', [])
+  const [skillDevelopmentPlans, setSkillDevelopmentPlans] = useKV<SkillDevelopmentPlan[]>('skill-development-plans', [])
   const [selectedMember, setSelectedMember] = useState<string>('all')
   const [isGenerating, setIsGenerating] = useState(false)
-  const [viewMode, setViewMode] = useState<'paths' | 'analytics' | 'market'>('paths')
+  const [viewMode, setViewMode] = useState<'paths' | 'analytics' | 'market' | 'development'>('paths')
 
   const generateCareerRecommendations = async () => {
     setIsGenerating(true)
@@ -187,13 +258,50 @@ export function CareerPathRecommendations() {
       }
 
       setCareerPaths(paths)
-      toast.success("Career recommendations generated successfully!")
+
+      // Generate personalized skill development plans
+      const developmentPrompt = spark.llmPrompt`
+        Create personalized skill development plans based on career goals:
+        
+        TEAM DATA: ${JSON.stringify(teamMembers)}
+        CAREER PATHS: ${JSON.stringify(paths)}
+        ANALYTICS: ${JSON.stringify(analytics)}
+        
+        For each team member, create a detailed skill development plan including:
+        1. Career goal alignment with market opportunities
+        2. Priority skills ranked by urgency, business impact, and market demand
+        3. Personalized learning path with specific resources (courses, certifications, projects)
+        4. Timeline and cost estimates
+        5. Progress tracking milestones
+        6. Immediate, short-term, and long-term recommendations
+        
+        Consider:
+        - Individual learning preferences and current skill levels
+        - Market demand for specific compliance skills
+        - Certification requirements for target roles
+        - Budget constraints and resource availability
+        - Personal interests and strengths
+        
+        Return as JSON array of skill development plan objects.
+      `
+
+      let developmentPlans = []
+      try {
+        const developmentResponse = await spark.llm(developmentPrompt, "gpt-4o", true)
+        developmentPlans = JSON.parse(developmentResponse)
+      } catch {
+        developmentPlans = generateFallbackDevelopmentPlans()
+      }
+
+      setSkillDevelopmentPlans(developmentPlans)
+      toast.success("Career recommendations and skill development plans generated successfully!")
     } catch (error) {
       console.error('Career generation error:', error)
       toast.error("Generation failed, using fallback recommendations")
       
       setCareerAnalytics(generateFallbackAnalytics())
       setCareerPaths(generateFallbackCareerPaths())
+      setSkillDevelopmentPlans(generateFallbackDevelopmentPlans())
     } finally {
       setIsGenerating(false)
     }
@@ -299,6 +407,139 @@ export function CareerPathRecommendations() {
     return paths
   }
 
+  const generateFallbackDevelopmentPlans = (): SkillDevelopmentPlan[] => {
+    return teamMembers.map((member, index) => {
+      const careerGoals = [
+        "Senior Compliance Analyst",
+        "Compliance Manager", 
+        "ESG Compliance Officer",
+        "AI Governance Specialist",
+        "Director of Compliance"
+      ]
+      
+      const targetRole = careerGoals[index % careerGoals.length]
+      const prioritySkills = member.skillAssessments
+        .filter(skill => skill.currentLevel < skill.targetLevel)
+        .slice(0, 5)
+        .map((skill, idx) => ({
+          skill: skill.skill,
+          currentLevel: skill.currentLevel,
+          targetLevel: skill.targetLevel + 1,
+          urgency: idx < 2 ? 'critical' as const : idx < 4 ? 'high' as const : 'medium' as const,
+          businessImpact: Math.max(7, 10 - idx),
+          marketDemand: Math.max(6, 9 - idx),
+          personalInterest: Math.floor(Math.random() * 4) + 7,
+          estimatedHours: (skill.targetLevel - skill.currentLevel + 1) * 15,
+          prerequisiteSkills: idx > 0 ? [member.skillAssessments[0]?.skill || 'Basic Compliance'] : []
+        }))
+
+      const learningResources: LearningResource[] = [
+        {
+          type: 'certification',
+          title: `${targetRole} Professional Certificate`,
+          provider: 'Compliance Institute',
+          duration: '3 months',
+          difficulty: 'intermediate',
+          cost: 2500,
+          rating: 4.8,
+          skills: prioritySkills.slice(0, 2).map(s => s.skill),
+          priority: 1,
+          status: 'not-started'
+        },
+        {
+          type: 'course',
+          title: 'Advanced Regulatory Framework Analysis',
+          provider: 'ComplianceEd',
+          duration: '6 weeks',
+          difficulty: 'advanced',
+          cost: 899,
+          rating: 4.6,
+          skills: [prioritySkills[0]?.skill || 'Regulatory Analysis'],
+          priority: 2,
+          status: 'not-started'
+        },
+        {
+          type: 'workshop',
+          title: 'Leadership in Compliance Teams',
+          provider: 'Leadership Academy',
+          duration: '2 days',
+          difficulty: 'intermediate',
+          cost: 1200,
+          rating: 4.7,
+          skills: ['Leadership', 'Team Management'],
+          priority: 3,
+          status: 'not-started'
+        },
+        {
+          type: 'mentoring',
+          title: 'Executive Mentorship Program',
+          provider: 'Internal',
+          duration: '6 months',
+          difficulty: 'advanced',
+          cost: 0,
+          rating: 4.9,
+          skills: ['Strategic Thinking', 'Executive Presence'],
+          priority: 2,
+          status: 'not-started'
+        }
+      ]
+
+      const recommendations: PersonalizedRecommendation[] = [
+        {
+          type: 'immediate',
+          category: 'skill',
+          title: `Start ${prioritySkills[0]?.skill || 'Priority Skills'} Development`,
+          description: 'Begin with highest-impact skill to accelerate career progression',
+          impact: 'high',
+          effort: 7,
+          deadline: '2 weeks',
+          resources: [`${prioritySkills[0]?.skill} Training Materials`]
+        },
+        {
+          type: 'short-term',
+          category: 'certification',
+          title: 'Pursue Industry Certification',
+          description: `Obtain ${targetRole} certification to validate expertise`,
+          impact: 'high',
+          effort: 8,
+          deadline: '4 months',
+          resources: ['Professional Study Guide', 'Practice Exams']
+        },
+        {
+          type: 'long-term',
+          category: 'networking',
+          title: 'Build Professional Network',
+          description: 'Establish connections in target role domain',
+          impact: 'medium',
+          effort: 5,
+          resources: ['Industry Events', 'LinkedIn Professional Groups']
+        }
+      ]
+
+      return {
+        id: `dev-plan-${member.id}`,
+        memberName: member.name,
+        careerGoal: `Advance to ${targetRole} within 18-24 months`,
+        targetRole,
+        timeline: 18,
+        prioritySkills,
+        learningPath: learningResources,
+        progress: {
+          overallProgress: Math.floor(Math.random() * 30),
+          skillsCompleted: 0,
+          skillsInProgress: 1,
+          skillsNotStarted: prioritySkills.length - 1,
+          hoursInvested: Math.floor(Math.random() * 50),
+          certificationsEarned: 0,
+          lastUpdated: new Date().toISOString().split('T')[0]
+        },
+        recommendations,
+        nextMilestone: recommendations[0]?.title || 'Complete Skills Assessment',
+        estimatedCost: learningResources.reduce((sum, resource) => sum + resource.cost, 0)
+      }
+    })
+  }
+
   const filteredPaths = selectedMember === 'all' 
     ? careerPaths 
     : careerPaths.filter(path => path.targetMember === selectedMember)
@@ -306,6 +547,10 @@ export function CareerPathRecommendations() {
   const filteredAnalytics = selectedMember === 'all'
     ? careerAnalytics
     : careerAnalytics.filter(analytics => analytics.memberName === selectedMember)
+
+  const filteredDevelopmentPlans = selectedMember === 'all'
+    ? skillDevelopmentPlans
+    : skillDevelopmentPlans.filter(plan => plan.memberName === selectedMember)
 
   const getTrajectoryColor = (trajectory: string) => {
     switch (trajectory) {
@@ -320,6 +565,28 @@ export function CareerPathRecommendations() {
     if (risk >= 70) return 'text-destructive'
     if (risk >= 40) return 'text-accent'
     return 'text-secondary'
+  }
+
+  const getUrgencyColor = (urgency: string) => {
+    switch (urgency) {
+      case 'critical': return 'bg-destructive text-destructive-foreground'
+      case 'high': return 'bg-accent text-accent-foreground'
+      case 'medium': return 'bg-secondary text-secondary-foreground'
+      case 'low': return 'bg-muted text-muted-foreground'
+      default: return 'bg-muted text-muted-foreground'
+    }
+  }
+
+  const getResourceTypeIcon = (type: string) => {
+    switch (type) {
+      case 'certification': return Certificate
+      case 'course': return Books
+      case 'workshop': return Users
+      case 'mentoring': return User
+      case 'project': return Briefcase
+      case 'book': return BookOpen
+      default: return FileText
+    }
   }
 
   return (
@@ -418,24 +685,250 @@ export function CareerPathRecommendations() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Career Paths</p>
+                <p className="text-sm font-medium text-muted-foreground">Active Development Plans</p>
                 <p className="text-2xl font-bold">
-                  {careerPaths.length}
+                  {skillDevelopmentPlans.length}
                 </p>
               </div>
-              <MapPin className="h-8 w-8 text-primary" />
+              <Rocket className="h-8 w-8 text-primary" />
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Tabs defaultValue="paths" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs defaultValue="development" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="development">Skill Development</TabsTrigger>
           <TabsTrigger value="paths">Career Paths</TabsTrigger>
           <TabsTrigger value="analytics">Team Analytics</TabsTrigger>
           <TabsTrigger value="market">Market Insights</TabsTrigger>
           <TabsTrigger value="recommendations">Action Items</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="development" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Rocket className="h-5 w-5" />
+                Personalized Skill Development Plans
+              </CardTitle>
+              <CardDescription>
+                AI-generated learning paths tailored to individual career goals and market demands
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[700px]">
+                <div className="space-y-6">
+                  {filteredDevelopmentPlans.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Rocket className="h-12 w-12 mx-auto mb-4" />
+                      <p>Generate recommendations to see personalized development plans</p>
+                    </div>
+                  ) : (
+                    filteredDevelopmentPlans.map((plan) => (
+                      <Card key={plan.id} className="border-l-4 border-l-primary">
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <h4 className="font-semibold text-lg">{plan.memberName}</h4>
+                                <Badge className="bg-primary text-primary-foreground">
+                                  {plan.targetRole}
+                                </Badge>
+                                <Badge variant="outline">
+                                  {plan.timeline} months
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-2">
+                                Career Goal: {plan.careerGoal}
+                              </p>
+                              <p className="text-sm mb-4">
+                                Next Milestone: {plan.nextMilestone}
+                              </p>
+                              
+                              <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                  <p className="text-sm font-medium text-muted-foreground">Progress</p>
+                                  <div className="flex items-center gap-2">
+                                    <Progress value={plan.progress.overallProgress} className="flex-1 h-2" />
+                                    <span className="text-sm font-bold">{plan.progress.overallProgress}%</span>
+                                  </div>
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-muted-foreground">Investment</p>
+                                  <p className="font-bold text-accent">${plan.estimatedCost.toLocaleString()}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center ml-4">
+                              <ChartLine className="h-8 w-8 text-primary" />
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            {/* Priority Skills */}
+                            <div>
+                              <h5 className="font-medium mb-3 flex items-center gap-2">
+                                <Target className="h-4 w-4" />
+                                Priority Skills Development
+                              </h5>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {plan.prioritySkills.slice(0, 6).map((skill, idx) => (
+                                  <div key={idx} className="p-3 bg-muted/30 rounded-lg">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <span className="text-sm font-medium">{skill.skill}</span>
+                                      <Badge className={getUrgencyColor(skill.urgency)}>
+                                        {skill.urgency}
+                                      </Badge>
+                                    </div>
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <span className="text-xs">{skill.currentLevel}</span>
+                                      <Progress 
+                                        value={(skill.currentLevel / skill.targetLevel) * 100} 
+                                        className="flex-1 h-2" 
+                                      />
+                                      <span className="text-xs">{skill.targetLevel}</span>
+                                    </div>
+                                    <div className="flex justify-between text-xs text-muted-foreground">
+                                      <span>{skill.estimatedHours}h training</span>
+                                      <span>Market: {skill.marketDemand}/10</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Learning Path */}
+                            <div>
+                              <h5 className="font-medium mb-3 flex items-center gap-2">
+                                <Books className="h-4 w-4" />
+                                Recommended Learning Path
+                              </h5>
+                              <div className="space-y-3">
+                                {plan.learningPath.slice(0, 4).map((resource, idx) => {
+                                  const IconComponent = getResourceTypeIcon(resource.type)
+                                  return (
+                                    <div key={idx} className="flex items-center gap-3 p-3 bg-accent/5 rounded-lg">
+                                      <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+                                        <IconComponent className="h-5 w-5 text-accent" />
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                          <p className="font-medium text-sm">{resource.title}</p>
+                                          <Badge variant="secondary" className="text-xs">
+                                            {resource.type}
+                                          </Badge>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground mb-1">
+                                          {resource.provider} • {resource.duration} • {resource.difficulty}
+                                        </p>
+                                        <div className="flex items-center gap-4 text-xs">
+                                          <span>${resource.cost}</span>
+                                          <div className="flex items-center gap-1">
+                                            <Star className="h-3 w-3 text-accent" />
+                                            <span>{resource.rating}</span>
+                                          </div>
+                                          <Badge 
+                                            variant={
+                                              resource.status === 'completed' ? 'default' :
+                                              resource.status === 'in-progress' ? 'secondary' : 'outline'
+                                            }
+                                            className="text-xs"
+                                          >
+                                            {resource.status.replace('-', ' ')}
+                                          </Badge>
+                                        </div>
+                                      </div>
+                                      <Button size="sm" variant="outline">
+                                        <Play className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+
+                            {/* Immediate Recommendations */}
+                            <div>
+                              <h5 className="font-medium mb-3 flex items-center gap-2">
+                                <Lightbulb className="h-4 w-4" />
+                                Immediate Action Items
+                              </h5>
+                              <div className="space-y-2">
+                                {plan.recommendations.filter(rec => rec.type === 'immediate').map((rec, idx) => (
+                                  <div key={idx} className="flex items-start gap-3 p-3 bg-destructive/5 rounded-lg">
+                                    <AlertTriangle className="h-4 w-4 text-destructive mt-1" />
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <p className="font-medium text-sm">{rec.title}</p>
+                                        <Badge 
+                                          variant={rec.impact === 'high' ? 'destructive' : 'secondary'}
+                                          className="text-xs"
+                                        >
+                                          {rec.impact} impact
+                                        </Badge>
+                                        {rec.deadline && (
+                                          <Badge variant="outline" className="text-xs">
+                                            Due: {rec.deadline}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">{rec.description}</p>
+                                    </div>
+                                    <Button size="sm" variant="outline">
+                                      <CheckSquare className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Progress Summary */}
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-muted/20 rounded-lg">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-accent">{plan.progress.skillsCompleted}</div>
+                                <div className="text-xs text-muted-foreground">Skills Mastered</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-secondary">{plan.progress.skillsInProgress}</div>
+                                <div className="text-xs text-muted-foreground">In Progress</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-primary">{plan.progress.hoursInvested}</div>
+                                <div className="text-xs text-muted-foreground">Hours Invested</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-accent">{plan.progress.certificationsEarned}</div>
+                                <div className="text-xs text-muted-foreground">Certs Earned</div>
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex items-center justify-between pt-4 border-t">
+                              <div className="text-xs text-muted-foreground">
+                                Last updated: {plan.progress.lastUpdated}
+                              </div>
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="outline">
+                                  <CalendarIcon className="h-4 w-4 mr-1" />
+                                  Schedule
+                                </Button>
+                                <Button size="sm">
+                                  <ArrowRight className="h-4 w-4 mr-1" />
+                                  Start Learning
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="paths" className="space-y-4">
           <Card>
