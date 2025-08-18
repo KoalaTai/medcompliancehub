@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { toast } from 'sonner'
+import { LearningResourceNotifications } from '@/components/LearningResourceNotifications'
 import { 
   BookOpen, 
   ExternalLink, 
@@ -376,6 +377,17 @@ export function LearningResourceIntegration() {
     setApiEndpoint('')
     setWebhookSecret('')
     
+    // Trigger notification event for successful connection
+    const connectionEvent = new CustomEvent('learning-resource-sync', {
+      detail: {
+        platform: platformId,
+        resourcesAdded: 0,
+        resourcesUpdated: 0,
+        status: 'success'
+      }
+    })
+    window.dispatchEvent(connectionEvent)
+    
     // Log connection activity
     const activity: SyncActivity = {
       id: Date.now().toString(),
@@ -452,6 +464,18 @@ export function LearningResourceIntegration() {
       
       setResources(current => [...current, ...newResources])
       
+      // Trigger notification event for new resources
+      const syncEvent = new CustomEvent('learning-resource-sync', {
+        detail: {
+          platform: platformId || 'all',
+          resourcesAdded,
+          resourcesUpdated,
+          status: 'success',
+          resources: newResources
+        }
+      })
+      window.dispatchEvent(syncEvent)
+      
       // Log sync activity
       const activity: SyncActivity = {
         id: Date.now().toString(),
@@ -467,6 +491,18 @@ export function LearningResourceIntegration() {
       
       toast.success(`Synced ${resourcesAdded} new resources from ${platformName}`)
     } catch (error) {
+      // Trigger notification event for sync failure
+      const errorEvent = new CustomEvent('learning-resource-sync', {
+        detail: {
+          platform: platformId || 'all',
+          resourcesAdded: 0,
+          resourcesUpdated: 0,
+          status: 'error',
+          error: 'Failed to sync resources'
+        }
+      })
+      window.dispatchEvent(errorEvent)
+      
       const activity: SyncActivity = {
         id: Date.now().toString(),
         platform: platformId || 'all',
@@ -612,10 +648,11 @@ export function LearningResourceIntegration() {
       </div>
 
       <Tabs defaultValue="resources" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="platforms">Platforms</TabsTrigger>
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
@@ -1356,6 +1393,10 @@ export function LearningResourceIntegration() {
               </Alert>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-6">
+          <LearningResourceNotifications />
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-6">
