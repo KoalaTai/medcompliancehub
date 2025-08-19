@@ -767,7 +767,7 @@ export function EmailDigestManager() {
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-sm font-medium">High subscriber growth</Label>
-                  <p className="text-xs text-muted-foreground">Alert when subscriber count increases by >20%</p>
+                  <p className="text-xs text-muted-foreground">Alert when subscriber count increases by &gt;20%</p>
                 </div>
                 <Switch defaultChecked />
               </div>
