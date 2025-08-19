@@ -74,18 +74,28 @@ interface BrandingConfig {
   companyLogo?: string
   primaryColor: string
   secondaryColor: string
+  accentColor: string
   backgroundColor: string
   textColor: string
   linkColor: string
+  borderColor: string
+  buttonStyle: 'rounded' | 'square' | 'pill'
   fontFamily: string
   headerImage?: string
   footerText: string
+  footerLinks: Array<{ label: string; url: string }>
   socialLinks: {
     linkedin?: string
     twitter?: string
     website?: string
+    facebook?: string
+    instagram?: string
   }
   customCSS?: string
+  logoWidth?: number
+  headerHeight?: number
+  contentPadding: number
+  borderRadius: number
 }
 
 // Default variables available across all templates
@@ -205,12 +215,23 @@ const defaultBranding: BrandingConfig = {
   companyName: 'VirtualBackroom',
   primaryColor: '#2563eb',
   secondaryColor: '#64748b',
+  accentColor: '#f59e0b',
   backgroundColor: '#ffffff',
   textColor: '#1e293b',
   linkColor: '#2563eb',
+  borderColor: '#e2e8f0',
+  buttonStyle: 'rounded',
   fontFamily: 'Inter, system-ui, sans-serif',
   footerText: '© 2024 VirtualBackroom. All rights reserved.',
-  socialLinks: {}
+  footerLinks: [
+    { label: 'Privacy Policy', url: 'https://virtualbackroom.com/privacy' },
+    { label: 'Terms of Service', url: 'https://virtualbackroom.com/terms' }
+  ],
+  socialLinks: {},
+  logoWidth: 200,
+  headerHeight: 80,
+  contentPadding: 24,
+  borderRadius: 8
 }
 
 // Default email templates with branding
@@ -224,54 +245,227 @@ const defaultTemplates: EmailTemplate[] = [
     preheader: '{RESOURCE_COUNT} new resources have been synced to your library',
     htmlBody: `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{SUBJECT}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: {FONT_FAMILY};
+      background-color: {BACKGROUND_COLOR};
+      margin: 0;
+      padding: {CONTENT_PADDING}px;
+      line-height: 1.6;
+      color: {TEXT_COLOR};
+    }
+    
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: {BORDER_RADIUS}px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .email-header {
+      background: linear-gradient(135deg, {PRIMARY_COLOR} 0%, {ACCENT_COLOR} 100%);
+      color: white;
+      padding: {CONTENT_PADDING}px;
+      text-align: center;
+      min-height: {HEADER_HEIGHT}px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    
+    .company-logo {
+      width: {LOGO_WIDTH}px;
+      height: auto;
+      margin-bottom: 16px;
+    }
+    
+    .email-content {
+      padding: {CONTENT_PADDING}px;
+    }
+    
+    .highlight-box {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      padding: 20px;
+      border-radius: {BORDER_RADIUS}px;
+      border-left: 4px solid {ACCENT_COLOR};
+      margin: 24px 0;
+    }
+    
+    .cta-button {
+      background: linear-gradient(135deg, {PRIMARY_COLOR} 0%, {ACCENT_COLOR} 100%);
+      color: white;
+      padding: 14px 28px;
+      text-decoration: none;
+      border-radius: {BUTTON_RADIUS}px;
+      display: inline-block;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    
+    .stat-item {
+      text-align: center;
+      padding: 16px;
+      background-color: #f8fafc;
+      border-radius: {BORDER_RADIUS}px;
+      border: 1px solid {BORDER_COLOR};
+    }
+    
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: {PRIMARY_COLOR};
+      display: block;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: {SECONDARY_COLOR};
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .email-footer {
+      background-color: #f8fafc;
+      padding: 24px;
+      border-top: 1px solid {BORDER_COLOR};
+      text-align: center;
+    }
+    
+    .social-links {
+      margin: 16px 0;
+    }
+    
+    .social-links a {
+      display: inline-block;
+      margin: 0 8px;
+      padding: 8px;
+      background-color: {PRIMARY_COLOR};
+      color: white;
+      border-radius: 50%;
+      text-decoration: none;
+      width: 32px;
+      height: 32px;
+      line-height: 16px;
+      text-align: center;
+    }
+    
+    .footer-links {
+      margin: 12px 0;
+    }
+    
+    .footer-links a {
+      color: {LINK_COLOR};
+      text-decoration: none;
+      margin: 0 12px;
+      font-size: 12px;
+    }
+    
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+      
+      .email-header,
+      .email-content {
+        padding: 16px;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body style="font-family: {FONT_FAMILY}; background-color: {BACKGROUND_COLOR}; margin: 0; padding: 20px;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+<body>
+  <div class="email-container">
     
     <!-- Header -->
-    <div style="background-color: {PRIMARY_COLOR}; color: white; padding: 24px; border-radius: 8px 8px 0 0;">
-      <h1 style="margin: 0; font-size: 24px; font-weight: 600;">{COMPANY_NAME}</h1>
-      <p style="margin: 8px 0 0 0; opacity: 0.9;">Learning Resource Update</p>
+    <div class="email-header">
+      {COMPANY_LOGO}
+      <h1 style="margin: 0; font-size: 28px; font-weight: 700;">{COMPANY_NAME}</h1>
+      <p style="margin: 8px 0 0 0; opacity: 0.95; font-size: 16px;">Learning Resource Update</p>
     </div>
     
     <!-- Content -->
-    <div style="padding: 32px 24px;">
-      <h2 style="color: {TEXT_COLOR}; font-size: 20px; margin: 0 0 16px 0;">
+    <div class="email-content">
+      <h2 style="color: {TEXT_COLOR}; font-size: 24px; margin: 0 0 16px 0; font-weight: 600;">
         🎉 New Resources from {PLATFORM_NAME}
       </h2>
       
-      <p style="color: {TEXT_COLOR}; line-height: 1.6; margin: 0 0 24px 0;">
+      <p style="color: {TEXT_COLOR}; margin: 0 0 24px 0; font-size: 16px;">
         Hi {USER_NAME},
       </p>
       
-      <p style="color: {TEXT_COLOR}; line-height: 1.6; margin: 0 0 24px 0;">
-        We've just synced <strong>{RESOURCE_COUNT} new learning resources</strong> from {PLATFORM_NAME} to your VirtualBackroom library!
+      <p style="color: {TEXT_COLOR}; margin: 0 0 24px 0; font-size: 16px;">
+        We've just synced <strong style="color: {PRIMARY_COLOR};">{RESOURCE_COUNT} new learning resources</strong> from {PLATFORM_NAME} to your VirtualBackroom library!
       </p>
       
-      <div style="background-color: #f8fafc; padding: 20px; border-radius: 6px; margin: 24px 0;">
-        <h3 style="color: {TEXT_COLOR}; font-size: 16px; margin: 0 0 12px 0;">📚 New Resources:</h3>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number">{RESOURCE_COUNT}</span>
+          <span class="stat-label">Resources</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{PLATFORM_NAME}</span>
+          <span class="stat-label">Platform</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{SYNC_TIME}</span>
+          <span class="stat-label">Synced</span>
+        </div>
+      </div>
+      
+      <div class="highlight-box">
+        <h3 style="color: {TEXT_COLOR}; font-size: 18px; margin: 0 0 12px 0; font-weight: 600;">📚 New Resources:</h3>
         {RESOURCE_LIST}
       </div>
       
       <div style="text-align: center; margin: 32px 0;">
-        <a href="{DASHBOARD_URL}" style="background-color: {PRIMARY_COLOR}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 500;">
-          View All Resources
+        <a href="{DASHBOARD_URL}" class="cta-button">
+          Explore New Resources
         </a>
       </div>
       
-      <p style="color: {SECONDARY_COLOR}; font-size: 14px; line-height: 1.6; margin: 24px 0 0 0;">
-        Synced on {SYNC_TIME} • {RESOURCE_COUNT} resources added
+      <p style="color: {SECONDARY_COLOR}; font-size: 14px; margin: 24px 0 0 0; text-align: center; font-style: italic;">
+        Keep learning and stay compliant! 🚀
       </p>
     </div>
     
     <!-- Footer -->
-    <div style="background-color: #f8fafc; padding: 20px 24px; border-radius: 0 0 8px 8px; border-top: 1px solid #e2e8f0;">
-      <p style="color: {SECONDARY_COLOR}; font-size: 12px; text-align: center; margin: 0;">
+    <div class="email-footer">
+      <div class="social-links">
+        {SOCIAL_LINKS}
+      </div>
+      
+      <div class="footer-links">
+        {FOOTER_LINKS}
+      </div>
+      
+      <p style="color: {SECONDARY_COLOR}; font-size: 12px; margin: 12px 0 0 0;">
         {FOOTER_TEXT}
       </p>
     </div>
@@ -290,6 +484,312 @@ Synced on {SYNC_TIME}
 
 {FOOTER_TEXT}`,
     variables: [...commonVariables, ...categoryVariables.sync, ...categoryVariables.resources],
+    branding: defaultBranding,
+    isDefault: true,
+    isActive: true,
+    version: '1.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    usageCount: 0
+  },
+  
+  {
+    id: 'sync-error-alert',
+    name: 'Sync Error Alert',
+    description: 'Alert notification when resource sync fails',
+    category: 'alerts',
+    subject: 'Action Required: {PLATFORM_NAME} Sync Failed',
+    preheader: 'We encountered an issue syncing your learning resources',
+    htmlBody: `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{SUBJECT}</title>
+  <style>
+    body {
+      font-family: {FONT_FAMILY};
+      background-color: {BACKGROUND_COLOR};
+      margin: 0;
+      padding: {CONTENT_PADDING}px;
+      line-height: 1.6;
+      color: {TEXT_COLOR};
+    }
+    
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: {BORDER_RADIUS}px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      border-top: 4px solid #ef4444;
+    }
+    
+    .email-header {
+      background-color: #fef2f2;
+      color: #991b1b;
+      padding: {CONTENT_PADDING}px;
+      text-align: center;
+    }
+    
+    .alert-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    
+    .email-content {
+      padding: {CONTENT_PADDING}px;
+    }
+    
+    .error-box {
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      padding: 16px;
+      border-radius: {BORDER_RADIUS}px;
+      margin: 16px 0;
+    }
+    
+    .cta-button {
+      background-color: #ef4444;
+      color: white;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: {BUTTON_RADIUS}px;
+      display: inline-block;
+      font-weight: 600;
+    }
+    
+    .secondary-button {
+      background-color: transparent;
+      color: {PRIMARY_COLOR};
+      border: 2px solid {PRIMARY_COLOR};
+      padding: 10px 22px;
+      text-decoration: none;
+      border-radius: {BUTTON_RADIUS}px;
+      display: inline-block;
+      font-weight: 600;
+      margin-left: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <div class="alert-icon">⚠️</div>
+      <h1 style="margin: 0; font-size: 24px; font-weight: 600;">{COMPANY_NAME}</h1>
+      <p style="margin: 8px 0 0 0; font-size: 16px;">Sync Issue Alert</p>
+    </div>
+    
+    <div class="email-content">
+      <h2 style="color: #991b1b; font-size: 20px; margin: 0 0 16px 0;">
+        Sync Failed for {PLATFORM_NAME}
+      </h2>
+      
+      <p>Hi {USER_NAME},</p>
+      
+      <p>We encountered an issue while trying to sync learning resources from {PLATFORM_NAME}.</p>
+      
+      <div class="error-box">
+        <h4 style="margin: 0 0 8px 0; color: #991b1b;">Error Details:</h4>
+        <p style="margin: 0; font-family: monospace; font-size: 14px;">{ERROR_MESSAGE}</p>
+      </div>
+      
+      <h4>What to do next:</h4>
+      <p>{ACTION_REQUIRED}</p>
+      
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="{DASHBOARD_URL}" class="cta-button">Fix Integration</a>
+        <a href="{DASHBOARD_URL}" class="secondary-button">View Details</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
+    textBody: `Sync Failed for {PLATFORM_NAME}
+
+Hi {USER_NAME},
+
+We encountered an issue while syncing learning resources from {PLATFORM_NAME}.
+
+Error: {ERROR_MESSAGE}
+
+What to do: {ACTION_REQUIRED}
+
+Fix the issue: {DASHBOARD_URL}
+
+{FOOTER_TEXT}`,
+    variables: [...commonVariables, ...categoryVariables.alerts],
+    branding: defaultBranding,
+    isDefault: true,
+    isActive: true,
+    version: '1.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    usageCount: 0
+  },
+  
+  {
+    id: 'weekly-digest',
+    name: 'Weekly Learning Digest',
+    description: 'Weekly summary of learning progress and new resources',
+    category: 'reminders',
+    subject: 'Your Weekly Learning Digest - {CURRENT_DATE}',
+    preheader: 'This week\'s learning highlights and new resources',
+    htmlBody: `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{SUBJECT}</title>
+  <style>
+    body {
+      font-family: {FONT_FAMILY};
+      background-color: {BACKGROUND_COLOR};
+      margin: 0;
+      padding: {CONTENT_PADDING}px;
+      line-height: 1.6;
+      color: {TEXT_COLOR};
+    }
+    
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: {BORDER_RADIUS}px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .digest-header {
+      background: linear-gradient(135deg, {PRIMARY_COLOR} 0%, {SECONDARY_COLOR} 100%);
+      color: white;
+      padding: {CONTENT_PADDING}px;
+      text-align: center;
+    }
+    
+    .week-badge {
+      background-color: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+    
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+    
+    .metric-card {
+      background-color: #f8fafc;
+      padding: 16px;
+      border-radius: {BORDER_RADIUS}px;
+      text-align: center;
+      border: 1px solid {BORDER_COLOR};
+    }
+    
+    .metric-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: {ACCENT_COLOR};
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .section-header {
+      background-color: #f8fafc;
+      padding: 12px 16px;
+      margin: 24px -24px 16px -24px;
+      font-weight: 600;
+      color: {PRIMARY_COLOR};
+      border-left: 4px solid {ACCENT_COLOR};
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="digest-header">
+      {COMPANY_LOGO}
+      <div class="week-badge">Week of {CURRENT_DATE}</div>
+      <h1 style="margin: 0; font-size: 24px;">Weekly Learning Digest</h1>
+      <p style="margin: 8px 0 0 0; opacity: 0.9;">Your learning journey continues</p>
+    </div>
+    
+    <div style="padding: {CONTENT_PADDING}px;">
+      <p>Hi {USER_NAME},</p>
+      
+      <p>Here's your weekly learning summary and what's new in your library:</p>
+      
+      <div class="metric-grid">
+        <div class="metric-card">
+          <span class="metric-number">12</span>
+          <span style="font-size: 12px; color: {SECONDARY_COLOR};">New Resources</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-number">4</span>
+          <span style="font-size: 12px; color: {SECONDARY_COLOR};">Hours Learned</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-number">85%</span>
+          <span style="font-size: 12px; color: {SECONDARY_COLOR};">Completion Rate</span>
+        </div>
+      </div>
+      
+      <div class="section-header">🎯 This Week's Highlights</div>
+      <ul style="margin: 0 0 24px 16px; padding: 0;">
+        <li style="margin-bottom: 8px;">Completed 3 compliance training modules</li>
+        <li style="margin-bottom: 8px;">New ISO 27001 certification path available</li>
+        <li style="margin-bottom: 8px;">Updated GDPR training materials synced</li>
+      </ul>
+      
+      <div class="section-header">📚 New This Week</div>
+      <div style="background-color: #f8fafc; padding: 16px; border-radius: {BORDER_RADIUS}px; margin-bottom: 24px;">
+        {RESOURCE_LIST}
+      </div>
+      
+      <div style="text-align: center;">
+        <a href="{DASHBOARD_URL}" style="background: linear-gradient(135deg, {PRIMARY_COLOR} 0%, {ACCENT_COLOR} 100%); color: white; padding: 12px 24px; text-decoration: none; border-radius: {BUTTON_RADIUS}px; display: inline-block; font-weight: 600;">
+          View Full Dashboard
+        </a>
+      </div>
+      
+      <p style="text-align: center; color: {SECONDARY_COLOR}; font-size: 14px; margin-top: 24px;">
+        Keep up the great work! 🌟
+      </p>
+    </div>
+    
+    <div style="background-color: #f8fafc; padding: 16px; text-align: center; border-top: 1px solid {BORDER_COLOR};">
+      <p style="color: {SECONDARY_COLOR}; font-size: 12px; margin: 0;">
+        {FOOTER_TEXT}
+      </p>
+    </div>
+  </div>
+</body>
+</html>`,
+    textBody: `Weekly Learning Digest - {CURRENT_DATE}
+
+Hi {USER_NAME},
+
+This Week's Highlights:
+- Completed 3 compliance training modules
+- New ISO 27001 certification path available
+- Updated GDPR training materials synced
+
+New This Week:
+{RESOURCE_LIST}
+
+View your full dashboard: {DASHBOARD_URL}
+
+Keep up the great work!
+
+{FOOTER_TEXT}`,
+    variables: [...commonVariables, ...categoryVariables.resources],
     branding: defaultBranding,
     isDefault: true,
     isActive: true,
@@ -422,6 +922,74 @@ export function EmailTemplateManager() {
     setIsBrandingDialogOpen(false)
   }
 
+  const handleExportTemplates = () => {
+    const exportData = {
+      templates: templates,
+      branding: brandingSettings,
+      exportDate: new Date().toISOString(),
+      version: '1.0'
+    }
+    
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
+      type: 'application/json' 
+    })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `email-templates-${new Date().toISOString().split('T')[0]}.json`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    
+    toast.success('Templates exported successfully')
+  }
+
+  const handleImportTemplates = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      try {
+        const importData = JSON.parse(e.target?.result as string)
+        
+        if (importData.templates) {
+          const importedTemplates = importData.templates.map((template: EmailTemplate) => ({
+            ...template,
+            id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+            isDefault: false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            usageCount: 0
+          }))
+          
+          setTemplates(current => [...current, ...importedTemplates])
+          toast.success(`Imported ${importedTemplates.length} templates`)
+        }
+        
+        if (importData.branding) {
+          setBrandingSettings(importData.branding)
+          toast.success('Branding settings imported')
+        }
+      } catch (error) {
+        toast.error('Failed to import templates. Please check the file format.')
+      }
+    }
+    
+    reader.readAsText(file)
+  }
+
+  const handleSendTestEmail = async (template: EmailTemplate) => {
+    try {
+      // In a real application, this would send a test email
+      // For now, we'll just show a success message
+      toast.success(`Test email sent for template: ${template.name}`)
+    } catch (error) {
+      toast.error('Failed to send test email')
+    }
+  }
+
   const getTemplateVariables = (category: string, htmlBody: string, subject: string): TemplateVariable[] => {
     const combinedText = `${subject} ${htmlBody}`.toLowerCase()
     const foundVariables: TemplateVariable[] = []
@@ -459,11 +1027,51 @@ export function EmailTemplateManager() {
     preview = preview.replace(/\{COMPANY_NAME\}/g, template.branding.companyName)
     preview = preview.replace(/\{PRIMARY_COLOR\}/g, template.branding.primaryColor)
     preview = preview.replace(/\{SECONDARY_COLOR\}/g, template.branding.secondaryColor)
+    preview = preview.replace(/\{ACCENT_COLOR\}/g, template.branding.accentColor || template.branding.primaryColor)
     preview = preview.replace(/\{BACKGROUND_COLOR\}/g, template.branding.backgroundColor)
     preview = preview.replace(/\{TEXT_COLOR\}/g, template.branding.textColor)
     preview = preview.replace(/\{LINK_COLOR\}/g, template.branding.linkColor)
+    preview = preview.replace(/\{BORDER_COLOR\}/g, template.branding.borderColor || '#e2e8f0')
     preview = preview.replace(/\{FONT_FAMILY\}/g, template.branding.fontFamily)
     preview = preview.replace(/\{FOOTER_TEXT\}/g, template.branding.footerText)
+    preview = preview.replace(/\{CONTENT_PADDING\}/g, (template.branding.contentPadding || 24).toString())
+    preview = preview.replace(/\{BORDER_RADIUS\}/g, (template.branding.borderRadius || 8).toString())
+    preview = preview.replace(/\{LOGO_WIDTH\}/g, (template.branding.logoWidth || 200).toString())
+    preview = preview.replace(/\{HEADER_HEIGHT\}/g, (template.branding.headerHeight || 80).toString())
+    
+    // Handle button style
+    let buttonRadius = template.branding.borderRadius || 8
+    if (template.branding.buttonStyle === 'pill') buttonRadius = 50
+    if (template.branding.buttonStyle === 'square') buttonRadius = 0
+    preview = preview.replace(/\{BUTTON_RADIUS\}/g, buttonRadius.toString())
+    
+    // Handle company logo
+    const logoHtml = template.branding.companyLogo 
+      ? `<img src="${template.branding.companyLogo}" alt="${template.branding.companyName}" class="company-logo" />` 
+      : ''
+    preview = preview.replace(/\{COMPANY_LOGO\}/g, logoHtml)
+    
+    // Handle social links
+    const socialLinksHtml = Object.entries(template.branding.socialLinks)
+      .filter(([_, url]) => url)
+      .map(([platform, url]) => {
+        const icons: Record<string, string> = {
+          website: '🌐',
+          linkedin: '💼',
+          twitter: '🐦',
+          facebook: '📘',
+          instagram: '📸'
+        }
+        return `<a href="${url}" title="${platform}">${icons[platform] || '🔗'}</a>`
+      })
+      .join('')
+    preview = preview.replace(/\{SOCIAL_LINKS\}/g, socialLinksHtml)
+    
+    // Handle footer links
+    const footerLinksHtml = template.branding.footerLinks
+      ?.map(link => `<a href="${link.url}">${link.label}</a>`)
+      .join('') || ''
+    preview = preview.replace(/\{FOOTER_LINKS\}/g, footerLinksHtml)
     
     // Replace sample variables
     template.variables.forEach(variable => {
@@ -490,6 +1098,13 @@ export function EmailTemplateManager() {
           >
             <Palette className="w-4 h-4 mr-2" />
             Branding
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleExportTemplates}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export
           </Button>
           <Button onClick={handleCreateTemplate}>
             <Plus className="w-4 h-4 mr-2" />
@@ -598,6 +1213,14 @@ export function EmailTemplateManager() {
                       <Button
                         variant="outline"
                         size="sm"
+                        onClick={() => handleSendTestEmail(template)}
+                        title="Send test email"
+                      >
+                        <Mail className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleDuplicateTemplate(template)}
                       >
                         <Copy className="w-4 h-4" />
@@ -654,6 +1277,57 @@ export function EmailTemplateManager() {
                 </Button>
               </div>
             )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Import Template Input (Hidden) */}
+      <input
+        type="file"
+        accept=".json"
+        onChange={handleImportTemplates}
+        style={{ display: 'none' }}
+        id="template-import"
+      />
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="w-5 h-5" />
+            Quick Actions
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              onClick={() => document.getElementById('template-import')?.click()}
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Import Templates
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleExportTemplates}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export All Templates
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                const activeTemplates = templates.filter(t => t.isActive)
+                if (activeTemplates.length > 0) {
+                  toast.success(`${activeTemplates.length} active templates ready to use`)
+                } else {
+                  toast.warning('No active templates found')
+                }
+              }}
+            >
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Check Active Templates
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -859,13 +1533,23 @@ export function EmailTemplateManager() {
                         <div className="grid grid-cols-1 gap-2">
                           {[
                             { name: 'COMPANY_NAME', description: 'Your company name from branding settings' },
+                            { name: 'COMPANY_LOGO', description: 'Company logo image HTML element' },
                             { name: 'PRIMARY_COLOR', description: 'Primary brand color' },
                             { name: 'SECONDARY_COLOR', description: 'Secondary brand color' },
+                            { name: 'ACCENT_COLOR', description: 'Accent/highlight color' },
                             { name: 'BACKGROUND_COLOR', description: 'Email background color' },
                             { name: 'TEXT_COLOR', description: 'Main text color' },
                             { name: 'LINK_COLOR', description: 'Link color' },
+                            { name: 'BORDER_COLOR', description: 'Border color for elements' },
                             { name: 'FONT_FAMILY', description: 'Email font family' },
-                            { name: 'FOOTER_TEXT', description: 'Footer text from branding settings' }
+                            { name: 'FOOTER_TEXT', description: 'Footer text from branding settings' },
+                            { name: 'SOCIAL_LINKS', description: 'Social media links HTML' },
+                            { name: 'FOOTER_LINKS', description: 'Footer navigation links' },
+                            { name: 'CONTENT_PADDING', description: 'Content padding in pixels' },
+                            { name: 'BORDER_RADIUS', description: 'Border radius for elements' },
+                            { name: 'BUTTON_RADIUS', description: 'Button border radius based on style' },
+                            { name: 'LOGO_WIDTH', description: 'Company logo width in pixels' },
+                            { name: 'HEADER_HEIGHT', description: 'Email header height in pixels' }
                           ].map(variable => (
                             <div key={variable.name} className="flex items-center justify-between p-2 border rounded">
                               <div>
@@ -946,162 +1630,405 @@ export function EmailTemplateManager() {
           </DialogHeader>
 
           <div className="space-y-6 max-h-[60vh] overflow-y-auto">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="company-name">Company Name</Label>
-                <Input
-                  id="company-name"
-                  value={brandingSettings.companyName}
-                  onChange={(e) => setBrandingSettings(prev => ({ ...prev, companyName: e.target.value }))}
-                />
-              </div>
+            <Tabs defaultValue="colors" className="w-full">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="colors">Colors</TabsTrigger>
+                <TabsTrigger value="layout">Layout</TabsTrigger>
+                <TabsTrigger value="content">Content</TabsTrigger>
+                <TabsTrigger value="social">Social</TabsTrigger>
+              </TabsList>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="primary-color">Primary Color</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="primary-color"
-                      type="color"
-                      value={brandingSettings.primaryColor}
-                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, primaryColor: e.target.value }))}
-                      className="w-16 h-10 p-1 border rounded"
-                    />
-                    <Input
-                      value={brandingSettings.primaryColor}
-                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, primaryColor: e.target.value }))}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="secondary-color">Secondary Color</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="secondary-color"
-                      type="color"
-                      value={brandingSettings.secondaryColor}
-                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, secondaryColor: e.target.value }))}
-                      className="w-16 h-10 p-1 border rounded"
-                    />
-                    <Input
-                      value={brandingSettings.secondaryColor}
-                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, secondaryColor: e.target.value }))}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="background-color">Background Color</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="background-color"
-                      type="color"
-                      value={brandingSettings.backgroundColor}
-                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, backgroundColor: e.target.value }))}
-                      className="w-16 h-10 p-1 border rounded"
-                    />
-                    <Input
-                      value={brandingSettings.backgroundColor}
-                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, backgroundColor: e.target.value }))}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="text-color">Text Color</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="text-color"
-                      type="color"
-                      value={brandingSettings.textColor}
-                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, textColor: e.target.value }))}
-                      className="w-16 h-10 p-1 border rounded"
-                    />
-                    <Input
-                      value={brandingSettings.textColor}
-                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, textColor: e.target.value }))}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="font-family">Font Family</Label>
-                <Select
-                  value={brandingSettings.fontFamily}
-                  onValueChange={(value) => setBrandingSettings(prev => ({ ...prev, fontFamily: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Inter, system-ui, sans-serif">Inter (Modern)</SelectItem>
-                    <SelectItem value="Arial, sans-serif">Arial (Classic)</SelectItem>
-                    <SelectItem value="Helvetica, Arial, sans-serif">Helvetica (Professional)</SelectItem>
-                    <SelectItem value="Georgia, serif">Georgia (Traditional)</SelectItem>
-                    <SelectItem value="'Times New Roman', serif">Times New Roman (Formal)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="footer-text">Footer Text</Label>
-                <Textarea
-                  id="footer-text"
-                  placeholder="© 2024 Your Company. All rights reserved."
-                  value={brandingSettings.footerText}
-                  onChange={(e) => setBrandingSettings(prev => ({ ...prev, footerText: e.target.value }))}
-                  rows={2}
-                />
-              </div>
-
-              <Separator />
-
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Social Links (Optional)</Label>
-                <div className="space-y-2">
+              <TabsContent value="colors" className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="website-url" className="text-xs">Website</Label>
-                    <Input
-                      id="website-url"
-                      placeholder="https://yourcompany.com"
-                      value={brandingSettings.socialLinks.website || ''}
-                      onChange={(e) => setBrandingSettings(prev => ({
-                        ...prev,
-                        socialLinks: { ...prev.socialLinks, website: e.target.value }
-                      }))}
-                    />
+                    <Label htmlFor="primary-color">Primary Color</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="primary-color"
+                        type="color"
+                        value={brandingSettings.primaryColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, primaryColor: e.target.value }))}
+                        className="w-16 h-10 p-1 border rounded"
+                      />
+                      <Input
+                        value={brandingSettings.primaryColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, primaryColor: e.target.value }))}
+                      />
+                    </div>
                   </div>
+
                   <div>
-                    <Label htmlFor="linkedin-url" className="text-xs">LinkedIn</Label>
-                    <Input
-                      id="linkedin-url"
-                      placeholder="https://linkedin.com/company/yourcompany"
-                      value={brandingSettings.socialLinks.linkedin || ''}
-                      onChange={(e) => setBrandingSettings(prev => ({
-                        ...prev,
-                        socialLinks: { ...prev.socialLinks, linkedin: e.target.value }
-                      }))}
-                    />
+                    <Label htmlFor="secondary-color">Secondary Color</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="secondary-color"
+                        type="color"
+                        value={brandingSettings.secondaryColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, secondaryColor: e.target.value }))}
+                        className="w-16 h-10 p-1 border rounded"
+                      />
+                      <Input
+                        value={brandingSettings.secondaryColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, secondaryColor: e.target.value }))}
+                      />
+                    </div>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="twitter-url" className="text-xs">Twitter</Label>
+                    <Label htmlFor="accent-color">Accent Color</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="accent-color"
+                        type="color"
+                        value={brandingSettings.accentColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, accentColor: e.target.value }))}
+                        className="w-16 h-10 p-1 border rounded"
+                      />
+                      <Input
+                        value={brandingSettings.accentColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, accentColor: e.target.value }))}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">Used for buttons and highlights</p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="background-color">Background Color</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="background-color"
+                        type="color"
+                        value={brandingSettings.backgroundColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                        className="w-16 h-10 p-1 border rounded"
+                      />
+                      <Input
+                        value={brandingSettings.backgroundColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="text-color">Text Color</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="text-color"
+                        type="color"
+                        value={brandingSettings.textColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, textColor: e.target.value }))}
+                        className="w-16 h-10 p-1 border rounded"
+                      />
+                      <Input
+                        value={brandingSettings.textColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, textColor: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="link-color">Link Color</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="link-color"
+                        type="color"
+                        value={brandingSettings.linkColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, linkColor: e.target.value }))}
+                        className="w-16 h-10 p-1 border rounded"
+                      />
+                      <Input
+                        value={brandingSettings.linkColor}
+                        onChange={(e) => setBrandingSettings(prev => ({ ...prev, linkColor: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="border-color">Border Color</Label>
+                  <div className="flex gap-2">
                     <Input
-                      id="twitter-url"
-                      placeholder="https://twitter.com/yourcompany"
-                      value={brandingSettings.socialLinks.twitter || ''}
-                      onChange={(e) => setBrandingSettings(prev => ({
-                        ...prev,
-                        socialLinks: { ...prev.socialLinks, twitter: e.target.value }
-                      }))}
+                      id="border-color"
+                      type="color"
+                      value={brandingSettings.borderColor}
+                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, borderColor: e.target.value }))}
+                      className="w-16 h-10 p-1 border rounded"
+                    />
+                    <Input
+                      value={brandingSettings.borderColor}
+                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, borderColor: e.target.value }))}
                     />
                   </div>
                 </div>
-              </div>
-            </div>
+              </TabsContent>
+
+              <TabsContent value="layout" className="space-y-4">
+                <div>
+                  <Label htmlFor="font-family">Font Family</Label>
+                  <Select
+                    value={brandingSettings.fontFamily}
+                    onValueChange={(value) => setBrandingSettings(prev => ({ ...prev, fontFamily: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Inter, system-ui, sans-serif">Inter (Modern)</SelectItem>
+                      <SelectItem value="Arial, sans-serif">Arial (Classic)</SelectItem>
+                      <SelectItem value="Helvetica, Arial, sans-serif">Helvetica (Professional)</SelectItem>
+                      <SelectItem value="Georgia, serif">Georgia (Traditional)</SelectItem>
+                      <SelectItem value="'Times New Roman', serif">Times New Roman (Formal)</SelectItem>
+                      <SelectItem value="'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif">SF Pro (Apple-style)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="button-style">Button Style</Label>
+                  <Select
+                    value={brandingSettings.buttonStyle}
+                    onValueChange={(value: any) => setBrandingSettings(prev => ({ ...prev, buttonStyle: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="rounded">Rounded (8px radius)</SelectItem>
+                      <SelectItem value="pill">Pill (50px radius)</SelectItem>
+                      <SelectItem value="square">Square (0px radius)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="content-padding">Content Padding (px)</Label>
+                    <Input
+                      id="content-padding"
+                      type="number"
+                      min="8"
+                      max="48"
+                      value={brandingSettings.contentPadding}
+                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, contentPadding: parseInt(e.target.value) || 24 }))}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="border-radius">Border Radius (px)</Label>
+                    <Input
+                      id="border-radius"
+                      type="number"
+                      min="0"
+                      max="24"
+                      value={brandingSettings.borderRadius}
+                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, borderRadius: parseInt(e.target.value) || 8 }))}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="logo-width">Logo Width (px)</Label>
+                    <Input
+                      id="logo-width"
+                      type="number"
+                      min="100"
+                      max="400"
+                      value={brandingSettings.logoWidth}
+                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, logoWidth: parseInt(e.target.value) || 200 }))}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="header-height">Header Height (px)</Label>
+                    <Input
+                      id="header-height"
+                      type="number"
+                      min="60"
+                      max="200"
+                      value={brandingSettings.headerHeight}
+                      onChange={(e) => setBrandingSettings(prev => ({ ...prev, headerHeight: parseInt(e.target.value) || 80 }))}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="content" className="space-y-4">
+                <div>
+                  <Label htmlFor="company-name">Company Name</Label>
+                  <Input
+                    id="company-name"
+                    value={brandingSettings.companyName}
+                    onChange={(e) => setBrandingSettings(prev => ({ ...prev, companyName: e.target.value }))}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="company-logo">Company Logo URL</Label>
+                  <Input
+                    id="company-logo"
+                    placeholder="https://yourcompany.com/logo.png"
+                    value={brandingSettings.companyLogo || ''}
+                    onChange={(e) => setBrandingSettings(prev => ({ ...prev, companyLogo: e.target.value }))}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Optional: URL to your company logo image
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="footer-text">Footer Text</Label>
+                  <Textarea
+                    id="footer-text"
+                    placeholder="© 2024 Your Company. All rights reserved."
+                    value={brandingSettings.footerText}
+                    onChange={(e) => setBrandingSettings(prev => ({ ...prev, footerText: e.target.value }))}
+                    rows={2}
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">Footer Links</Label>
+                  <div className="space-y-2">
+                    {brandingSettings.footerLinks?.map((link, index) => (
+                      <div key={index} className="flex gap-2">
+                        <Input
+                          placeholder="Link label"
+                          value={link.label}
+                          onChange={(e) => {
+                            const newLinks = [...(brandingSettings.footerLinks || [])]
+                            newLinks[index] = { ...link, label: e.target.value }
+                            setBrandingSettings(prev => ({ ...prev, footerLinks: newLinks }))
+                          }}
+                        />
+                        <Input
+                          placeholder="https://..."
+                          value={link.url}
+                          onChange={(e) => {
+                            const newLinks = [...(brandingSettings.footerLinks || [])]
+                            newLinks[index] = { ...link, url: e.target.value }
+                            setBrandingSettings(prev => ({ ...prev, footerLinks: newLinks }))
+                          }}
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newLinks = brandingSettings.footerLinks?.filter((_, i) => i !== index) || []
+                            setBrandingSettings(prev => ({ ...prev, footerLinks: newLinks }))
+                          }}
+                        >
+                          <Trash className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    )) || []}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newLinks = [...(brandingSettings.footerLinks || []), { label: '', url: '' }]
+                        setBrandingSettings(prev => ({ ...prev, footerLinks: newLinks }))
+                      }}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Footer Link
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="social" className="space-y-4">
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Social Media Links</Label>
+                  <div className="space-y-2">
+                    <div>
+                      <Label htmlFor="website-url" className="text-xs">Website</Label>
+                      <Input
+                        id="website-url"
+                        placeholder="https://yourcompany.com"
+                        value={brandingSettings.socialLinks.website || ''}
+                        onChange={(e) => setBrandingSettings(prev => ({
+                          ...prev,
+                          socialLinks: { ...prev.socialLinks, website: e.target.value }
+                        }))}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="linkedin-url" className="text-xs">LinkedIn</Label>
+                      <Input
+                        id="linkedin-url"
+                        placeholder="https://linkedin.com/company/yourcompany"
+                        value={brandingSettings.socialLinks.linkedin || ''}
+                        onChange={(e) => setBrandingSettings(prev => ({
+                          ...prev,
+                          socialLinks: { ...prev.socialLinks, linkedin: e.target.value }
+                        }))}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="twitter-url" className="text-xs">Twitter</Label>
+                      <Input
+                        id="twitter-url"
+                        placeholder="https://twitter.com/yourcompany"
+                        value={brandingSettings.socialLinks.twitter || ''}
+                        onChange={(e) => setBrandingSettings(prev => ({
+                          ...prev,
+                          socialLinks: { ...prev.socialLinks, twitter: e.target.value }
+                        }))}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="facebook-url" className="text-xs">Facebook</Label>
+                      <Input
+                        id="facebook-url"
+                        placeholder="https://facebook.com/yourcompany"
+                        value={brandingSettings.socialLinks.facebook || ''}
+                        onChange={(e) => setBrandingSettings(prev => ({
+                          ...prev,
+                          socialLinks: { ...prev.socialLinks, facebook: e.target.value }
+                        }))}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="instagram-url" className="text-xs">Instagram</Label>
+                      <Input
+                        id="instagram-url"
+                        placeholder="https://instagram.com/yourcompany"
+                        value={brandingSettings.socialLinks.instagram || ''}
+                        onChange={(e) => setBrandingSettings(prev => ({
+                          ...prev,
+                          socialLinks: { ...prev.socialLinks, instagram: e.target.value }
+                        }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <Label htmlFor="custom-css">Custom CSS (Advanced)</Label>
+                  <Textarea
+                    id="custom-css"
+                    placeholder="/* Add custom CSS styles here */"
+                    value={brandingSettings.customCSS || ''}
+                    onChange={(e) => setBrandingSettings(prev => ({ ...prev, customCSS: e.target.value }))}
+                    rows={8}
+                    className="font-mono text-sm"
+                  />
+                  <Alert className="mt-2">
+                    <Code className="w-4 h-4" />
+                    <AlertDescription>
+                      Advanced: Add custom CSS to override default styling. Use with caution to maintain email compatibility.
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
 
           <DialogFooter>
