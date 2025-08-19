@@ -14,7 +14,8 @@ import {
   GraduationCap,
   ChartBar,
   MapPin,
-  BookOpen
+  BookOpen,
+  Mail
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -33,6 +34,7 @@ const navigationItems = [
   { id: 'team-comparison', label: 'Team Benchmarks', icon: ChartBar },
   { id: 'career-paths', label: 'Career Paths', icon: MapPin },
   { id: 'learning-resources', label: 'Learning Resources', icon: BookOpen },
+  { id: 'email-templates', label: 'Email Templates', icon: Mail },
   { id: 'team', label: 'Team Management', icon: Users },
   { id: 'settings', label: 'Settings', icon: Gear },
 ]

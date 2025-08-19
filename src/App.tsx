@@ -16,9 +16,10 @@ import { SkillGapAnalyzer } from '@/components/SkillGapAnalyzer'
 import { TeamSkillComparison } from '@/components/TeamSkillComparison'
 import { CareerPathRecommendations } from '@/components/CareerPathRecommendations'
 import { LearningResourceIntegration } from '@/components/LearningResourceIntegration'
+import { EmailTemplateManager } from '@/components/EmailTemplateManager'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'email-templates' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -54,6 +55,10 @@ function App() {
       setActiveSection('learning-resources')
     }
 
+    const handleNavigateToEmailTemplates = () => {
+      setActiveSection('email-templates')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
     window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     window.addEventListener('navigate-to-resources', handleNavigateToResources)
@@ -61,6 +66,7 @@ function App() {
     window.addEventListener('navigate-to-team-comparison', handleNavigateToTeamComparison)
     window.addEventListener('navigate-to-career-paths', handleNavigateToCareerPaths)
     window.addEventListener('navigate-to-learning-resources', handleNavigateToLearningResources)
+    window.addEventListener('navigate-to-email-templates', handleNavigateToEmailTemplates)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
       window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
@@ -69,6 +75,7 @@ function App() {
       window.removeEventListener('navigate-to-team-comparison', handleNavigateToTeamComparison)
       window.removeEventListener('navigate-to-career-paths', handleNavigateToCareerPaths)
       window.removeEventListener('navigate-to-learning-resources', handleNavigateToLearningResources)
+      window.removeEventListener('navigate-to-email-templates', handleNavigateToEmailTemplates)
     }
   }, [setActiveSection])
 
@@ -100,6 +107,8 @@ function App() {
         return <CareerPathRecommendations />
       case 'learning-resources':
         return <LearningResourceIntegration />
+      case 'email-templates':
+        return <EmailTemplateManager />
       case 'team':
         return (
           <div className="p-6">

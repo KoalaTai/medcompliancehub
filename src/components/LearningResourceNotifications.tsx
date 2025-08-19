@@ -279,9 +279,33 @@ export function LearningResourceNotifications() {
       const platform = platforms.find(p => p.id === data.platform)
       const platformName = platform?.name || data.platform
       
-      // Process template variables
+      // Get branding settings and templates from the new email template system
+      const brandingSettings = await spark.kv.get('email-branding') || {
+        companyName: 'VirtualBackroom',
+        primaryColor: '#2563eb',
+        secondaryColor: '#64748b',
+        backgroundColor: '#ffffff',
+        textColor: '#1e293b',
+        linkColor: '#2563eb',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        footerText: '© 2024 VirtualBackroom. All rights reserved.',
+        socialLinks: {}
+      }
+      
+      // Process template variables with branding
       let subject = rule.template.subject
       let body = rule.template.body
+      
+      // Replace branding variables
+      subject = subject.replace(/\{COMPANY_NAME\}/g, brandingSettings.companyName)
+      body = body.replace(/\{COMPANY_NAME\}/g, brandingSettings.companyName)
+      body = body.replace(/\{PRIMARY_COLOR\}/g, brandingSettings.primaryColor)
+      body = body.replace(/\{SECONDARY_COLOR\}/g, brandingSettings.secondaryColor)
+      body = body.replace(/\{BACKGROUND_COLOR\}/g, brandingSettings.backgroundColor)
+      body = body.replace(/\{TEXT_COLOR\}/g, brandingSettings.textColor)
+      body = body.replace(/\{LINK_COLOR\}/g, brandingSettings.linkColor)
+      body = body.replace(/\{FONT_FAMILY\}/g, brandingSettings.fontFamily)
+      body = body.replace(/\{FOOTER_TEXT\}/g, brandingSettings.footerText)
       
       // Replace common variables
       subject = subject.replace('{PLATFORM_NAME}', platformName)
@@ -291,6 +315,8 @@ export function LearningResourceNotifications() {
       body = body.replace('{RESOURCE_COUNT}', (data.resourcesAdded || 0).toString())
       body = body.replace('{SYNC_TIME}', new Date().toLocaleString())
       body = body.replace('{ERROR_MESSAGE}', data.error || 'N/A')
+      body = body.replace('{USER_NAME}', 'there') // Default greeting
+      body = body.replace('{DASHBOARD_URL}', '#') // Placeholder URL
       
       // Create resource list if available
       if (data.resources && data.resources.length > 0) {
@@ -880,6 +906,18 @@ export function LearningResourceNotifications() {
               <div className="flex items-center justify-between">
                 <Label className="text-sm font-medium">Email Template</Label>
                 <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      // Navigate to email templates manager
+                      window.dispatchEvent(new CustomEvent('navigate-to-email-templates'))
+                      setIsRuleDialogOpen(false)
+                    }}
+                  >
+                    <Settings className="w-4 h-4 mr-1" />
+                    Manage Templates
+                  </Button>
                   {emailTemplates.map(template => (
                     <Button
                       key={template.id}
@@ -921,6 +959,8 @@ export function LearningResourceNotifications() {
                 />
                 <div className="text-xs text-muted-foreground mt-1">
                   Available variables: {'{PLATFORM_NAME}'}, {'{RESOURCE_COUNT}'}, {'{SYNC_TIME}'}, {'{ERROR_MESSAGE}'}
+                  <br />
+                  Branding variables: {'{COMPANY_NAME}'}, {'{PRIMARY_COLOR}'}, {'{FOOTER_TEXT}'} (managed in Email Templates)
                 </div>
               </div>
             </div>
