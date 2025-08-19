@@ -532,6 +532,62 @@ export function ComplianceDashboard() {
         <Card className="bg-gradient-to-br from-indigo-500/5 to-indigo-500/10 border-indigo-500/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-indigo-700">
+              <Target className="h-5 w-5" />
+              Milestone Progress
+            </CardTitle>
+            <CardDescription>Key delivery dates and compliance milestones</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Active Milestones</span>
+                <span className="text-2xl font-bold text-indigo-700">8</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-600">3</div>
+                  <div className="text-xs text-muted-foreground">Completed</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-orange-600">2</div>
+                  <div className="text-xs text-muted-foreground">At Risk</div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>FDA Audit Prep</span>
+                  <span className="font-medium text-blue-600">82%</span>
+                </div>
+                <Progress value={82} className="h-2" />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>MDR Compliance Review</span>
+                  <span className="font-medium text-orange-600">45%</span>
+                </div>
+                <Progress value={45} className="h-2" />
+              </div>
+
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-milestones'))}
+              >
+                <Target className="h-3 w-3 mr-1" />
+                View All Milestones
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-indigo-500/5 to-indigo-500/10 border-indigo-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-indigo-700">
               <Code className="h-5 w-5" />
               Development Roadmap
             </CardTitle>

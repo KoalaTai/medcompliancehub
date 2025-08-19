@@ -19,9 +19,10 @@ import { LearningResourceIntegration } from '@/components/LearningResourceIntegr
 import { EmailTemplateManager } from '@/components/EmailTemplateManager'
 import { FeatureGapAnalyzer } from '@/components/FeatureGapAnalyzer'
 import { DevelopmentRoadmap } from '@/components/DevelopmentRoadmap'
+import { MilestoneTracker } from '@/components/MilestoneTracker'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'email-templates' | 'feature-gaps' | 'roadmap' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'email-templates' | 'feature-gaps' | 'roadmap' | 'milestones' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -69,6 +70,10 @@ function App() {
       setActiveSection('roadmap')
     }
 
+    const handleNavigateToMilestones = () => {
+      setActiveSection('milestones')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
     window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     window.addEventListener('navigate-to-resources', handleNavigateToResources)
@@ -79,6 +84,7 @@ function App() {
     window.addEventListener('navigate-to-email-templates', handleNavigateToEmailTemplates)
     window.addEventListener('navigate-to-feature-gaps', handleNavigateToFeatureGaps)
     window.addEventListener('navigate-to-roadmap', handleNavigateToRoadmap)
+    window.addEventListener('navigate-to-milestones', handleNavigateToMilestones)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
       window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
@@ -90,6 +96,7 @@ function App() {
       window.removeEventListener('navigate-to-email-templates', handleNavigateToEmailTemplates)
       window.removeEventListener('navigate-to-feature-gaps', handleNavigateToFeatureGaps)
       window.removeEventListener('navigate-to-roadmap', handleNavigateToRoadmap)
+      window.removeEventListener('navigate-to-milestones', handleNavigateToMilestones)
     }
   }, [setActiveSection])
 
@@ -127,6 +134,8 @@ function App() {
         return <FeatureGapAnalyzer />
       case 'roadmap':
         return <DevelopmentRoadmap />
+      case 'milestones':
+        return <MilestoneTracker />
       case 'team':
         return (
           <div className="p-6">
