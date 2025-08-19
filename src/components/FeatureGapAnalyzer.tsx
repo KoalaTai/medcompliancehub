@@ -39,7 +39,12 @@ import {
   FileText,
   Database,
   Cpu,
-  Shield
+  Shield,
+  Calendar,
+  MapPin,
+  Warning,
+  DollarSign,
+  Clock as ClockIcon
 } from '@phosphor-icons/react'
 
 interface FeatureAssessment {
@@ -57,6 +62,13 @@ interface FeatureAssessment {
   dependencies: string[]
   lastAssessed: string
   notes: string
+  businessValue: 'critical' | 'high' | 'medium' | 'low'
+  userImpact: 'high' | 'medium' | 'low'
+  technicalComplexity: 'low' | 'medium' | 'high'
+  riskLevel: 'low' | 'medium' | 'high'
+  estimatedHours: number
+  blockedBy: string[]
+  blocking: string[]
 }
 
 interface GapAnalysisReport {
@@ -71,6 +83,32 @@ interface GapAnalysisReport {
   categoryBreakdown: Record<string, { score: number; count: number }>
   priorityBreakdown: Record<string, number>
   recommendations: string[]
+  developmentRoadmap: RoadmapItem[]
+  riskAssessment: RiskAssessment[]
+  resourceRequirements: ResourceRequirement[]
+}
+
+interface RoadmapItem {
+  phase: number
+  title: string
+  features: string[]
+  estimatedWeeks: number
+  dependencies: string[]
+  value: 'critical' | 'high' | 'medium' | 'low'
+}
+
+interface RiskAssessment {
+  category: string
+  risk: string
+  impact: 'high' | 'medium' | 'low'
+  probability: 'high' | 'medium' | 'low'
+  mitigation: string
+}
+
+interface ResourceRequirement {
+  skillSet: string
+  hoursRequired: number
+  priority: 'immediate' | 'short-term' | 'medium-term' | 'long-term'
 }
 
 // Initial feature assessments based on the codebase analysis
@@ -105,7 +143,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'medium',
     dependencies: ['email-service-integration'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Highly functional with comprehensive templating system'
+    notes: 'Highly functional with comprehensive templating system',
+    businessValue: 'high',
+    userImpact: 'high',
+    technicalComplexity: 'medium',
+    riskLevel: 'low',
+    estimatedHours: 16,
+    blockedBy: [],
+    blocking: []
   },
   {
     id: 'webhook-integrations',
@@ -140,7 +185,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'high',
     dependencies: ['http-client-service'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Good UI but needs backend integration for full functionality'
+    notes: 'Good UI but needs backend integration for full functionality',
+    businessValue: 'critical',
+    userImpact: 'high',
+    technicalComplexity: 'high',
+    riskLevel: 'medium',
+    estimatedHours: 40,
+    blockedBy: ['http-client-service'],
+    blocking: ['automated-notifications']
   },
   {
     id: 'compliance-dashboard',
@@ -169,7 +221,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'medium',
     dependencies: ['data-service'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Good foundation with room for data integration'
+    notes: 'Good foundation with room for data integration',
+    businessValue: 'critical',
+    userImpact: 'high',
+    technicalComplexity: 'medium',
+    riskLevel: 'low',
+    estimatedHours: 24,
+    blockedBy: ['data-service'],
+    blocking: []
   },
   {
     id: 'audit-simulations',
@@ -203,7 +262,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'high',
     dependencies: ['ai-service', 'simulation-engine'],
     lastAssessed: new Date().toISOString(),
-    notes: 'UI framework ready but needs core simulation logic'
+    notes: 'UI framework ready but needs core simulation logic',
+    businessValue: 'critical',
+    userImpact: 'high',
+    technicalComplexity: 'high',
+    riskLevel: 'high',
+    estimatedHours: 80,
+    blockedBy: ['ai-service', 'simulation-engine'],
+    blocking: ['compliance-training']
   },
   {
     id: 'resource-allocation',
@@ -237,7 +303,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'high',
     dependencies: ['ai-service', 'analytics-engine'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Strong UI foundation but needs intelligent backend'
+    notes: 'Strong UI foundation but needs intelligent backend',
+    businessValue: 'high',
+    userImpact: 'high',
+    technicalComplexity: 'high',
+    riskLevel: 'medium',
+    estimatedHours: 60,
+    blockedBy: ['ai-service'],
+    blocking: []
   },
   {
     id: 'skill-gap-analyzer',
@@ -271,7 +344,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'high',
     dependencies: ['ai-service', 'learning-analytics'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Good tracking interface but needs intelligent analysis'
+    notes: 'Good tracking interface but needs intelligent analysis',
+    businessValue: 'high',
+    userImpact: 'high',
+    technicalComplexity: 'high',
+    riskLevel: 'medium',
+    estimatedHours: 50,
+    blockedBy: ['ai-service'],
+    blocking: ['career-planning']
   },
   {
     id: 'regulatory-intelligence',
@@ -306,7 +386,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'high',
     dependencies: ['regulatory-data-api', 'ai-service'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Mostly placeholder with significant development needed'
+    notes: 'Mostly placeholder with significant development needed',
+    businessValue: 'critical',
+    userImpact: 'high',
+    technicalComplexity: 'high',
+    riskLevel: 'high',
+    estimatedHours: 120,
+    blockedBy: ['regulatory-data-api', 'ai-service'],
+    blocking: ['compliance-alerts']
   },
   {
     id: 'capa-workflow',
@@ -341,7 +428,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'high',
     dependencies: ['ai-service', 'workflow-engine'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Basic UI only, needs core workflow functionality'
+    notes: 'Basic UI only, needs core workflow functionality',
+    businessValue: 'critical',
+    userImpact: 'high',
+    technicalComplexity: 'high',
+    riskLevel: 'high',
+    estimatedHours: 100,
+    blockedBy: ['ai-service', 'workflow-engine'],
+    blocking: ['process-automation']
   },
   {
     id: 'evidence-manager',
@@ -375,7 +469,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'high',
     dependencies: ['file-storage-service', 'ocr-service'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Good interface design but needs backend services'
+    notes: 'Good interface design but needs backend services',
+    businessValue: 'high',
+    userImpact: 'medium',
+    technicalComplexity: 'high',
+    riskLevel: 'medium',
+    estimatedHours: 70,
+    blockedBy: ['file-storage-service'],
+    blocking: []
   },
   {
     id: 'team-settings',
@@ -406,7 +507,14 @@ const defaultAssessments: FeatureAssessment[] = [
     effort: 'high',
     dependencies: ['auth-service', 'user-management'],
     lastAssessed: new Date().toISOString(),
-    notes: 'Completely missing - placeholder in navigation only'
+    notes: 'Completely missing - placeholder in navigation only',
+    businessValue: 'medium',
+    userImpact: 'medium',
+    technicalComplexity: 'high',
+    riskLevel: 'low',
+    estimatedHours: 90,
+    blockedBy: ['auth-service'],
+    blocking: ['collaboration-features']
   }
 ]
 
@@ -487,18 +595,29 @@ export function FeatureGapAnalyzer() {
       overallScore: metrics.overallScore,
       categoryBreakdown: metrics.categoryBreakdown,
       priorityBreakdown: metrics.priorityBreakdown,
-      recommendations: generateRecommendations()
+      recommendations: generateRecommendations(),
+      developmentRoadmap: generateRoadmap(),
+      riskAssessment: generateRiskAssessment(),
+      resourceRequirements: generateResourceRequirements()
     }
     
     setReports(current => [report, ...current])
     setCurrentReport(report)
     setIsReportDialogOpen(true)
     
-    toast.success('Gap analysis report generated')
+    toast.success('Comprehensive gap analysis report generated')
   }
 
   const generateRecommendations = (): string[] => {
     const recommendations: string[] = []
+    
+    // Critical business value gaps
+    const criticalGaps = assessments.filter(a => 
+      a.businessValue === 'critical' && a.functionalityScore < 70
+    )
+    if (criticalGaps.length > 0) {
+      recommendations.push(`Immediately address ${criticalGaps.length} critical business value gaps`)
+    }
     
     // High-priority gaps
     const highPriorityGaps = assessments.filter(a => a.priority === 'high' && a.functionalityScore < 80)
@@ -506,19 +625,10 @@ export function FeatureGapAnalyzer() {
       recommendations.push(`Address ${highPriorityGaps.length} high-priority feature gaps to improve core functionality`)
     }
     
-    // Missing features
-    const missingFeatures = assessments.filter(a => a.status === 'missing')
-    if (missingFeatures.length > 0) {
-      recommendations.push(`Implement ${missingFeatures.length} missing features to complete the platform`)
-    }
-    
-    // Placeholder features with high impact
-    const criticalPlaceholders = assessments.filter(a => 
-      a.status === 'placeholder' && 
-      (a.category === 'core' || a.category === 'automation')
-    )
-    if (criticalPlaceholders.length > 0) {
-      recommendations.push(`Convert ${criticalPlaceholders.length} critical placeholder features to functional implementations`)
+    // Blocking dependencies
+    const blockingFeatures = assessments.filter(a => a.blocking.length > 0 && a.functionalityScore < 80)
+    if (blockingFeatures.length > 0) {
+      recommendations.push(`Prioritize ${blockingFeatures.length} features that are blocking other developments`)
     }
     
     // AI service dependencies
@@ -526,7 +636,15 @@ export function FeatureGapAnalyzer() {
       a.dependencies.includes('ai-service') && a.functionalityScore < 70
     )
     if (aiDependentFeatures.length > 0) {
-      recommendations.push(`Prioritize AI service integration to unlock ${aiDependentFeatures.length} intelligent features`)
+      recommendations.push(`Establish AI service foundation to unlock ${aiDependentFeatures.length} intelligent features`)
+    }
+    
+    // High-effort, low-value features warning
+    const inefficientFeatures = assessments.filter(a => 
+      a.effort === 'high' && a.businessValue === 'low'
+    )
+    if (inefficientFeatures.length > 0) {
+      recommendations.push(`Consider deferring ${inefficientFeatures.length} high-effort, low-value features`)
     }
     
     // Category-specific recommendations
@@ -612,6 +730,88 @@ export function FeatureGapAnalyzer() {
           </Button>
         </div>
       </div>
+
+      {/* Priority Analysis */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-red-600" />
+              Critical Gaps
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">
+              {assessments.filter(a => a.businessValue === 'critical' && a.functionalityScore < 70).length}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Critical business value features with low functionality
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <XCircle className="w-4 h-4 text-orange-600" />
+              Blocked Features
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">
+              {assessments.filter(a => a.blockedBy.length > 0).length}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Features waiting on dependencies
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Warning className="w-4 h-4 text-yellow-600" />
+              High Risk
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-yellow-600">
+              {assessments.filter(a => a.riskLevel === 'high').length}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Features with high implementation risk
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <ClockIcon className="w-4 h-4 text-blue-600" />
+              Total Effort
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">
+              {assessments.reduce((sum, a) => a.functionalityScore < 90 ? sum + a.estimatedHours : sum, 0)}h
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Estimated development hours remaining
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* High Priority Features Alert */}
+      {assessments.filter(a => a.businessValue === 'critical' && a.functionalityScore < 70).length > 0 && (
+        <Alert>
+          <AlertTriangle className="w-4 h-4" />
+          <AlertDescription>
+            <strong>Immediate attention required:</strong> {assessments.filter(a => a.businessValue === 'critical' && a.functionalityScore < 70).length} critical business features are significantly incomplete. 
+            These should be prioritized for immediate development.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Overview Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -832,6 +1032,18 @@ export function FeatureGapAnalyzer() {
                               {assessment.effort} effort
                             </span>
                           </div>
+                          <div className="flex items-center gap-1">
+                            <DollarSign className="w-3 h-3" />
+                            <span className="text-xs font-medium capitalize">
+                              {assessment.businessValue} value
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <ClockIcon className="w-3 h-3" />
+                            <span className="text-xs text-muted-foreground">
+                              {assessment.estimatedHours}h
+                            </span>
+                          </div>
                         </div>
                       </div>
                       
@@ -853,11 +1065,13 @@ export function FeatureGapAnalyzer() {
                     )}
 
                     <Tabs defaultValue="gaps" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4">
+                      <TabsList className="grid w-full grid-cols-6">
                         <TabsTrigger value="gaps">Gaps</TabsTrigger>
                         <TabsTrigger value="functional">Functional</TabsTrigger>
                         <TabsTrigger value="actions">Actions</TabsTrigger>
                         <TabsTrigger value="deps">Dependencies</TabsTrigger>
+                        <TabsTrigger value="blocking">Blocking</TabsTrigger>
+                        <TabsTrigger value="details">Details</TabsTrigger>
                       </TabsList>
 
                       <TabsContent value="gaps" className="space-y-2 mt-4">
@@ -934,6 +1148,64 @@ export function FeatureGapAnalyzer() {
                           <p className="text-xs text-muted-foreground">No dependencies identified</p>
                         )}
                       </TabsContent>
+
+                      <TabsContent value="blocking" className="space-y-2 mt-4">
+                        {assessment.blocking.length > 0 ? (
+                          <ul className="space-y-1">
+                            {assessment.blocking.map((blocked, index) => (
+                              <li key={index} className="text-xs text-muted-foreground flex items-center gap-2">
+                                <XCircle className="w-3 h-3 text-orange-500" />
+                                {blocked}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-xs text-muted-foreground">No features blocked by this component</p>
+                        )}
+                      </TabsContent>
+
+                      <TabsContent value="details" className="space-y-3 mt-4">
+                        <div className="grid grid-cols-2 gap-4 text-xs">
+                          <div>
+                            <span className="font-medium">User Impact:</span>
+                            <Badge variant="outline" className="ml-2 capitalize">
+                              {assessment.userImpact}
+                            </Badge>
+                          </div>
+                          <div>
+                            <span className="font-medium">Technical Complexity:</span>
+                            <Badge variant="outline" className="ml-2 capitalize">
+                              {assessment.technicalComplexity}
+                            </Badge>
+                          </div>
+                          <div>
+                            <span className="font-medium">Risk Level:</span>
+                            <Badge variant={assessment.riskLevel === 'high' ? 'destructive' : 'outline'} className="ml-2 capitalize">
+                              {assessment.riskLevel}
+                            </Badge>
+                          </div>
+                          <div>
+                            <span className="font-medium">Last Assessed:</span>
+                            <span className="ml-2 text-muted-foreground">
+                              {new Date(assessment.lastAssessed).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {assessment.blockedBy.length > 0 && (
+                          <div>
+                            <h5 className="text-xs font-medium text-red-600 mb-2">Blocked By:</h5>
+                            <ul className="space-y-1">
+                              {assessment.blockedBy.map((blocker, index) => (
+                                <li key={index} className="text-xs text-muted-foreground flex items-center gap-2">
+                                  <AlertTriangle className="w-3 h-3 text-red-500" />
+                                  {blocker}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </TabsContent>
                     </Tabs>
                   </div>
                 )
@@ -966,68 +1238,186 @@ export function FeatureGapAnalyzer() {
           
           {currentReport && (
             <div className="space-y-6 overflow-y-auto max-h-[60vh]">
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">{currentReport.functionalFeatures}</div>
-                  <div className="text-xs text-muted-foreground">Functional</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-600">{currentReport.partialFeatures}</div>
-                  <div className="text-xs text-muted-foreground">Partial</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">{currentReport.placeholderFeatures}</div>
-                  <div className="text-xs text-muted-foreground">Placeholder</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-red-600">{currentReport.missingFeatures}</div>
-                  <div className="text-xs text-muted-foreground">Missing</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">{currentReport.overallScore.toFixed(0)}%</div>
-                  <div className="text-xs text-muted-foreground">Overall Score</div>
-                </div>
-              </div>
+              <Tabs defaultValue="overview" className="w-full">
+                <TabsList className="grid w-full grid-cols-5">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="roadmap">Roadmap</TabsTrigger>
+                  <TabsTrigger value="risks">Risks</TabsTrigger>
+                  <TabsTrigger value="resources">Resources</TabsTrigger>
+                  <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+                </TabsList>
 
-              <Separator />
-
-              <div>
-                <h4 className="font-semibold mb-3">Key Recommendations</h4>
-                <ul className="space-y-2">
-                  {currentReport.recommendations.map((rec, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <Lightbulb className="w-4 h-4 mt-0.5 text-yellow-500" />
-                      <span className="text-sm">{rec}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <Separator />
-
-              <div>
-                <h4 className="font-semibold mb-3">Category Breakdown</h4>
-                <div className="space-y-3">
-                  {Object.entries(currentReport.categoryBreakdown).map(([category, { score, count }]) => (
-                    <div key={category} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm capitalize font-medium">{category}</span>
-                        <Badge variant="outline" className="text-xs">{count} features</Badge>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Progress value={score} className="w-24" />
-                        <span className="text-sm font-semibold w-12 text-right">{score.toFixed(0)}%</span>
-                      </div>
+                <TabsContent value="overview" className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">{currentReport.functionalFeatures}</div>
+                      <div className="text-xs text-muted-foreground">Functional</div>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-yellow-600">{currentReport.partialFeatures}</div>
+                      <div className="text-xs text-muted-foreground">Partial</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-orange-600">{currentReport.placeholderFeatures}</div>
+                      <div className="text-xs text-muted-foreground">Placeholder</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-red-600">{currentReport.missingFeatures}</div>
+                      <div className="text-xs text-muted-foreground">Missing</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{currentReport.overallScore.toFixed(0)}%</div>
+                      <div className="text-xs text-muted-foreground">Overall Score</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-3">Category Breakdown</h4>
+                    <div className="space-y-3">
+                      {Object.entries(currentReport.categoryBreakdown).map(([category, { score, count }]) => (
+                        <div key={category} className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm capitalize font-medium">{category}</span>
+                            <Badge variant="outline" className="text-xs">{count} features</Badge>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Progress value={score} className="w-24" />
+                            <span className="text-sm font-semibold w-12 text-right">{score.toFixed(0)}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="roadmap" className="space-y-4 mt-4">
+                  <div className="space-y-4">
+                    {currentReport.developmentRoadmap.map((phase) => (
+                      <div key={phase.phase} className="border rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center justify-center w-8 h-8 bg-primary text-primary-foreground rounded-full text-sm font-bold">
+                              {phase.phase}
+                            </div>
+                            <div>
+                              <h4 className="font-semibold">{phase.title}</h4>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <Calendar className="w-3 h-3" />
+                                {phase.estimatedWeeks} weeks
+                                <Badge variant="outline" className="capitalize">
+                                  {phase.value} value
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <h5 className="text-sm font-medium mb-2">Features</h5>
+                            <ul className="space-y-1">
+                              {phase.features.map((feature, index) => (
+                                <li key={index} className="text-sm text-muted-foreground flex items-center gap-2">
+                                  <CheckCircle className="w-3 h-3 text-green-500" />
+                                  {feature}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          
+                          {phase.dependencies.length > 0 && (
+                            <div>
+                              <h5 className="text-sm font-medium mb-2">Dependencies</h5>
+                              <ul className="space-y-1">
+                                {phase.dependencies.map((dep, index) => (
+                                  <li key={index} className="text-sm text-muted-foreground flex items-center gap-2">
+                                    <GitBranch className="w-3 h-3 text-purple-500" />
+                                    {dep}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="risks" className="space-y-4 mt-4">
+                  <div className="space-y-3">
+                    {currentReport.riskAssessment.map((risk, index) => (
+                      <div key={index} className="border rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline">{risk.category}</Badge>
+                            <Badge variant={risk.impact === 'high' ? 'destructive' : risk.impact === 'medium' ? 'default' : 'secondary'}>
+                              {risk.impact} impact
+                            </Badge>
+                            <Badge variant={risk.probability === 'high' ? 'destructive' : 'outline'}>
+                              {risk.probability} probability
+                            </Badge>
+                          </div>
+                        </div>
+                        
+                        <h4 className="font-semibold mb-2">{risk.risk}</h4>
+                        
+                        <div className="space-y-2">
+                          <div>
+                            <span className="text-sm font-medium">Mitigation: </span>
+                            <span className="text-sm text-muted-foreground">{risk.mitigation}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="resources" className="space-y-4 mt-4">
+                  <div className="space-y-3">
+                    {currentReport.resourceRequirements.map((requirement, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <Users className="w-4 h-4" />
+                          <div>
+                            <h4 className="font-semibold">{requirement.skillSet}</h4>
+                            <Badge variant={
+                              requirement.priority === 'immediate' ? 'destructive' :
+                              requirement.priority === 'short-term' ? 'default' :
+                              'outline'
+                            } className="text-xs">
+                              {requirement.priority}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-semibold">{requirement.hoursRequired}h</div>
+                          <div className="text-xs text-muted-foreground">
+                            ~{Math.ceil(requirement.hoursRequired / 40)} weeks
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="recommendations" className="space-y-4 mt-4">
+                  <div className="space-y-3">
+                    {currentReport.recommendations.map((rec, index) => (
+                      <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
+                        <Lightbulb className="w-5 h-5 mt-0.5 text-yellow-500 flex-shrink-0" />
+                        <span className="text-sm">{rec}</span>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+              </Tabs>
 
               <Alert>
                 <TrendingUp className="w-4 h-4" />
                 <AlertDescription>
                   Report generated on {new Date(currentReport.createdAt).toLocaleString()}. 
-                  Focus on high-priority gaps and missing core functionality to improve overall platform maturity.
+                  This comprehensive analysis includes development roadmap, risk assessment, and resource planning.
                 </AlertDescription>
               </Alert>
             </div>
