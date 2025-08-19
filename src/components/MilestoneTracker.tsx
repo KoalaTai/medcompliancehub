@@ -11,7 +11,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { Calendar, Plus, Target, Clock, CheckCircle, Warning, Circle } from '@phosphor-icons/react'
+import { Calendar as CalendarIcon, Plus, Target, Clock, CheckCircle, Warning, Circle } from '@phosphor-icons/react'
 import { format, differenceInDays, isAfter, isBefore, addDays } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -289,7 +289,7 @@ export function MilestoneTracker() {
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" className="justify-start">
-                        <Calendar className="w-4 h-4 mr-2" />
+                        <CalendarIcon className="w-4 h-4 mr-2" />
                         {newMilestone.startDate ? format(newMilestone.startDate, 'MMM dd, yyyy') : 'Select date'}
                       </Button>
                     </PopoverTrigger>
@@ -309,7 +309,7 @@ export function MilestoneTracker() {
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" className="justify-start">
-                        <Calendar className="w-4 h-4 mr-2" />
+                        <CalendarIcon className="w-4 h-4 mr-2" />
                         {newMilestone.targetDate ? format(newMilestone.targetDate, 'MMM dd, yyyy') : 'Select date'}
                       </Button>
                     </PopoverTrigger>

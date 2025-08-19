@@ -39,7 +39,6 @@ import {
   CloudArrowUp,
   Bell,
   Key,
-  CheckCircle,
   XCircle,
   Warning,
   Code,

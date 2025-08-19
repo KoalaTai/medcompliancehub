@@ -11,7 +11,6 @@ import {
   CheckCircle, 
   Clock, 
   TrendUp,
-  Warning,
   FileX,
   Target,
   Brain,
