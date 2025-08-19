@@ -10,7 +10,6 @@ import {
   Scan,
   CheckCircle,
   Warning,
-  Warning,
   Eye,
   Download,
   Trash,
