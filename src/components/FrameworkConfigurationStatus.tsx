@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { 
   CheckCircle,
-  AlertTriangle,
+  Warning,
   Clock,
   Settings,
   FileText,
@@ -105,8 +105,8 @@ const frameworkStatuses: FrameworkConfigStatus[] = [
 const statusConfig = {
   complete: { color: 'text-green-600', bgColor: 'bg-green-100', icon: CheckCircle },
   partial: { color: 'text-orange-600', bgColor: 'bg-orange-100', icon: Clock },
-  minimal: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: AlertTriangle },
-  'not-configured': { color: 'text-red-600', bgColor: 'bg-red-100', icon: AlertTriangle }
+  minimal: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: Warning },
+  'not-configured': { color: 'text-red-600', bgColor: 'bg-red-100', icon: Warning }
 }
 
 export function FrameworkConfigurationStatus() {
@@ -283,7 +283,7 @@ export function FrameworkConfigurationStatus() {
               <h4 className="font-medium text-sm">High Priority</h4>
               <div className="space-y-2">
                 <div className="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                  <AlertTriangle className="h-4 w-4 text-red-600 mt-0.5" />
+                  <Warning className="h-4 w-4 text-red-600 mt-0.5" />
                   <div className="text-sm">
                     <div className="font-medium">Complete ISO 27001 templates</div>
                     <div className="text-muted-foreground">Only 1 of 4 templates configured</div>

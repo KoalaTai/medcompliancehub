@@ -10,12 +10,12 @@ import { toast } from 'sonner'
 import { 
   Bell, 
   BellRinging,
-  CheckCircle2,
-  AlertTriangle,
+  CheckCircle,
+  Warning,
   Info,
   X,
   Webhook,
-  ExternalLink,
+  ArrowSquareOut,
   Clock,
   FileText,
   Shield
@@ -194,7 +194,7 @@ export function WebhookNotificationSystem({ isMonitoring = false }: WebhookNotif
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'guidance': return <FileText className="w-4 h-4" />
-      case 'recall': return <AlertTriangle className="w-4 h-4" />
+      case 'recall': return <Warning className="w-4 h-4" />
       case 'standard': return <Shield className="w-4 h-4" />
       case 'alert': return <Bell className="w-4 h-4" />
       default: return <Info className="w-4 h-4" />
@@ -245,7 +245,7 @@ export function WebhookNotificationSystem({ isMonitoring = false }: WebhookNotif
                 size="sm"
                 onClick={handleMarkAllAsRead}
               >
-                <CheckCircle2 className="w-4 h-4" />
+                <CheckCircle className="w-4 h-4" />
               </Button>
             )}
             <Button
@@ -320,7 +320,7 @@ export function WebhookNotificationSystem({ isMonitoring = false }: WebhookNotif
                           size="sm"
                           onClick={() => window.open(notification.url, '_blank')}
                         >
-                          <ExternalLink className="w-4 h-4" />
+                          <ArrowSquareOut className="w-4 h-4" />
                         </Button>
                       )}
                       {!notification.read && (
@@ -329,7 +329,7 @@ export function WebhookNotificationSystem({ isMonitoring = false }: WebhookNotif
                           size="sm"
                           onClick={() => handleMarkAsRead(notification.id)}
                         >
-                          <CheckCircle2 className="w-4 h-4" />
+                          <CheckCircle className="w-4 h-4" />
                         </Button>
                       )}
                       <Button
@@ -369,7 +369,7 @@ export function WebhookNotificationSystem({ isMonitoring = false }: WebhookNotif
 
                   {notification.actionRequired && !notification.read && (
                     <Alert className="mt-3 ml-7">
-                      <AlertTriangle className="w-4 h-4" />
+                      <Warning className="w-4 h-4" />
                       <AlertDescription className="text-sm">
                         This notification requires your attention and may impact compliance.
                       </AlertDescription>

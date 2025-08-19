@@ -16,7 +16,7 @@ import {
   Plus,
   Clock,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   Users,
   Calendar,
   Target,
@@ -1734,7 +1734,7 @@ export function CAPAWorkflowGenerator() {
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-orange-500" />
+                    <Warning className="h-4 w-4 text-orange-500" />
                     <div>
                       <p className="text-2xl font-bold">
                         {workflows.filter(w => w.status === 'active').length}

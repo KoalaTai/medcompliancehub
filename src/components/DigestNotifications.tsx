@@ -4,7 +4,7 @@ import {
   Bell, 
   Clock,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   X,
   Mail,
   Settings
@@ -123,8 +123,8 @@ export function DigestNotifications() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'success': return <CheckCircle className="h-4 w-4 text-green-500" />
-      case 'error': return <AlertTriangle className="h-4 w-4 text-red-500" />
-      case 'warning': return <AlertTriangle className="h-4 w-4 text-yellow-500" />
+      case 'error': return <Warning className="h-4 w-4 text-red-500" />
+      case 'warning': return <Warning className="h-4 w-4 text-yellow-500" />
       default: return <Bell className="h-4 w-4 text-blue-500" />
     }
   }

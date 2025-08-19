@@ -10,7 +10,7 @@ import {
   Eye,
   Download,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   Filter,
   Plus,
   Trash2,
@@ -337,7 +337,7 @@ export function EmailDigestManager() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-orange-500" />
+              <Warning className="h-4 w-4 text-orange-500" />
               Critical Alerts
             </CardTitle>
           </CardHeader>

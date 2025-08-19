@@ -11,7 +11,7 @@ import {
   CheckCircle, 
   Clock, 
   TrendUp,
-  AlertTriangle,
+  Warning,
   FileX,
   Target,
   Brain,
@@ -333,7 +333,7 @@ function getStatusIcon(status: string) {
     case 'in-progress':
       return <Clock className="h-4 w-4 text-primary" weight="fill" />
     case 'open':
-      return <AlertTriangle className="h-4 w-4 text-destructive" weight="fill" />
+      return <Warning className="h-4 w-4 text-destructive" weight="fill" />
     default:
       return <Warning className="h-4 w-4 text-muted-foreground" />
   }
@@ -376,7 +376,7 @@ function getProcessStatusIcon(status: string) {
     case 'in-progress':
       return <Clock className="h-4 w-4 text-primary" weight="fill" />
     case 'blocked':
-      return <AlertTriangle className="h-4 w-4 text-destructive" weight="fill" />
+      return <Warning className="h-4 w-4 text-destructive" weight="fill" />
     case 'not-started':
       return <Warning className="h-4 w-4 text-muted-foreground" />
     default:
@@ -784,7 +784,7 @@ export function ComplianceGapAnalyzer() {
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-destructive" />
+                    <Warning className="h-4 w-4 text-destructive" />
                     <div>
                       <p className="text-2xl font-bold">{criticalGapsCount}</p>
                       <p className="text-xs text-muted-foreground">Critical Gaps</p>

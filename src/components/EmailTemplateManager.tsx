@@ -31,7 +31,7 @@ import {
   Download,
   RefreshCw,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   Sparkle,
   Layout,
   Type,

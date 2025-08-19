@@ -10,7 +10,7 @@ import {
   Scan,
   CheckCircle,
   Warning,
-  AlertTriangle,
+  Warning,
   Eye,
   Download,
   Trash,
@@ -169,7 +169,7 @@ function getElementIcon(status: string) {
     case 'incomplete':
       return <Warning className="h-4 w-4 text-accent" weight="fill" />
     case 'missing':
-      return <AlertTriangle className="h-4 w-4 text-destructive" weight="fill" />
+      return <Warning className="h-4 w-4 text-destructive" weight="fill" />
     default:
       return <FileText className="h-4 w-4 text-muted-foreground" />
   }

@@ -10,14 +10,14 @@ import {
   Trash2,
   Edit3,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   User,
   Mail,
   Bell,
   Zap,
   Users,
   Target,
-  BarChart3
+  ChartBar
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -419,7 +419,7 @@ export function DigestScheduler() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-purple-500" />
+              <ChartBar className="h-4 w-4 text-purple-500" />
               Success Rate
             </CardTitle>
           </CardHeader>
@@ -694,7 +694,7 @@ export function DigestScheduler() {
                           'bg-yellow-100 text-yellow-800'
                         }>
                           {execution.status === 'success' && <CheckCircle className="h-3 w-3 mr-1" />}
-                          {execution.status === 'failed' && <AlertTriangle className="h-3 w-3 mr-1" />}
+                          {execution.status === 'failed' && <Warning className="h-3 w-3 mr-1" />}
                           {execution.status.charAt(0).toUpperCase() + execution.status.slice(1)}
                         </Badge>
                       </div>

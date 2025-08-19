@@ -12,15 +12,15 @@ import { LearningPathMonitor } from '@/components/LearningPathMonitor'
 import { 
   Brain, 
   Target, 
-  TrendingUp, 
+  TrendUp, 
   BookOpen, 
-  AlertTriangle, 
-  CheckCircle2,
+  Warning, 
+  CheckCircle,
   PlayCircle,
   Clock,
   Users,
-  Award,
-  BarChart3,
+  Medal,
+  ChartBar,
   Lightbulb,
   RefreshCw,
   Eye,
@@ -868,8 +868,8 @@ export function SkillGapAnalyzer() {
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'improving': return <TrendingUp className="h-4 w-4 text-accent" />
-      case 'declining': return <AlertTriangle className="h-4 w-4 text-destructive" />
+      case 'improving': return <TrendUp className="h-4 w-4 text-accent" />
+      case 'declining': return <Warning className="h-4 w-4 text-destructive" />
       case 'stable': return <Target className="h-4 w-4 text-muted-foreground" />
       default: return null
     }
@@ -946,7 +946,7 @@ export function SkillGapAnalyzer() {
                   {skillGaps.filter(gap => gap.impact === 'critical').length}
                 </p>
               </div>
-              <AlertTriangle className="h-8 w-8 text-destructive" />
+              <Warning className="h-8 w-8 text-destructive" />
             </div>
           </CardContent>
         </Card>
@@ -1121,7 +1121,7 @@ export function SkillGapAnalyzer() {
                                           Start: {new Date(module.scheduledStartDate).toLocaleDateString()}
                                         </Badge>
                                       )}
-                                      <CheckCircle2 
+                                      <CheckCircle 
                                         className={`h-4 w-4 ${
                                           module.completionStatus === 'completed' 
                                             ? 'text-accent' 
@@ -1363,7 +1363,7 @@ export function SkillGapAnalyzer() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
+                <ChartBar className="h-5 w-5" />
                 Current Skill Assessment
               </CardTitle>
               <CardDescription>
@@ -1433,7 +1433,7 @@ export function SkillGapAnalyzer() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Award className="h-5 w-5" />
+                <Medal className="h-5 w-5" />
                 Learning Progress Tracking
               </CardTitle>
               <CardDescription>
@@ -1453,7 +1453,7 @@ export function SkillGapAnalyzer() {
                   
                   <Card>
                     <CardContent className="p-4 text-center">
-                      <CheckCircle2 className="h-8 w-8 mx-auto mb-2 text-accent" />
+                      <CheckCircle className="h-8 w-8 mx-auto mb-2 text-accent" />
                       <p className="text-2xl font-bold">7</p>
                       <p className="text-sm text-muted-foreground">Completed</p>
                     </CardContent>
@@ -1461,7 +1461,7 @@ export function SkillGapAnalyzer() {
                   
                   <Card>
                     <CardContent className="p-4 text-center">
-                      <Award className="h-8 w-8 mx-auto mb-2 text-secondary" />
+                      <Medal className="h-8 w-8 mx-auto mb-2 text-secondary" />
                       <p className="text-2xl font-bold">2</p>
                       <p className="text-sm text-muted-foreground">Certifications</p>
                     </CardContent>
@@ -1469,7 +1469,7 @@ export function SkillGapAnalyzer() {
                 </div>
                 
                 <div className="text-center py-8 text-muted-foreground">
-                  <TrendingUp className="h-12 w-12 mx-auto mb-4" />
+                  <TrendUp className="h-12 w-12 mx-auto mb-4" />
                   <p>Detailed progress tracking coming soon</p>
                   <p className="text-sm">Track learning paths, completion rates, and skill improvements</p>
                 </div>

@@ -11,7 +11,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { CalendarIcon, Plus, Target, Clock, CheckCircle2, AlertTriangle, Circle } from '@phosphor-icons/react'
+import { Calendar, Plus, Target, Clock, CheckCircle, Warning, Circle } from '@phosphor-icons/react'
 import { format, differenceInDays, isAfter, isBefore, addDays } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -149,13 +149,13 @@ export function MilestoneTracker() {
   const getStatusIcon = (status: Milestone['status']) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="w-4 h-4 text-green-600" />
+        return <CheckCircle className="w-4 h-4 text-green-600" />
       case 'in-progress':
         return <Circle className="w-4 h-4 text-blue-600 fill-current" />
       case 'at-risk':
-        return <AlertTriangle className="w-4 h-4 text-orange-600" />
+        return <Warning className="w-4 h-4 text-orange-600" />
       case 'delayed':
-        return <AlertTriangle className="w-4 h-4 text-red-600" />
+        return <Warning className="w-4 h-4 text-red-600" />
       default:
         return <Circle className="w-4 h-4 text-gray-400" />
     }
@@ -289,7 +289,7 @@ export function MilestoneTracker() {
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" className="justify-start">
-                        <CalendarIcon className="w-4 h-4 mr-2" />
+                        <Calendar className="w-4 h-4 mr-2" />
                         {newMilestone.startDate ? format(newMilestone.startDate, 'MMM dd, yyyy') : 'Select date'}
                       </Button>
                     </PopoverTrigger>
@@ -309,7 +309,7 @@ export function MilestoneTracker() {
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" className="justify-start">
-                        <CalendarIcon className="w-4 h-4 mr-2" />
+                        <Calendar className="w-4 h-4 mr-2" />
                         {newMilestone.targetDate ? format(newMilestone.targetDate, 'MMM dd, yyyy') : 'Select date'}
                       </Button>
                     </PopoverTrigger>

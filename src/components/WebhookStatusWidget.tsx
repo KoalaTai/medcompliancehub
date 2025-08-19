@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { 
   Webhook, 
-  CheckCircle2, 
+  CheckCircle, 
   XCircle, 
   Activity, 
-  AlertTriangle,
+  Warning,
   TrendUp,
   ArrowRight
 } from '@phosphor-icons/react'
@@ -126,7 +126,7 @@ export function WebhookStatusWidget({ showDetails = true, onViewAll }: WebhookSt
                   <div key={webhook.id} className="flex items-center justify-between py-2">
                     <div className="flex items-center space-x-3">
                       {webhook.status === 'active' ? (
-                        <CheckCircle2 className="w-4 h-4 text-green-500" />
+                        <CheckCircle className="w-4 h-4 text-green-500" />
                       ) : webhook.status === 'error' ? (
                         <XCircle className="w-4 h-4 text-red-500" />
                       ) : (
@@ -177,7 +177,7 @@ export function WebhookStatusWidget({ showDetails = true, onViewAll }: WebhookSt
                       <div key={event.id} className="flex items-center justify-between py-1 text-sm">
                         <div className="flex items-center space-x-2">
                           {event.status === 'success' ? (
-                            <CheckCircle2 className="w-3 h-3 text-green-500" />
+                            <CheckCircle className="w-3 h-3 text-green-500" />
                           ) : event.status === 'failed' ? (
                             <XCircle className="w-3 h-3 text-red-500" />
                           ) : (
@@ -248,7 +248,7 @@ export function WebhookHealthIndicator() {
   if (errorWebhooks.length > 0 || recentFailures.length > 0) {
     return (
       <Badge variant="destructive" className="text-xs">
-        <AlertTriangle className="w-3 h-3 mr-1" />
+        <Warning className="w-3 h-3 mr-1" />
         {errorWebhooks.length > 0 ? `${errorWebhooks.length} Error` : `${recentFailures.length} Failures`}
       </Badge>
     )
@@ -256,7 +256,7 @@ export function WebhookHealthIndicator() {
 
   return (
     <Badge className="bg-green-100 text-green-700 text-xs">
-      <CheckCircle2 className="w-3 h-3 mr-1" />
+      <CheckCircle className="w-3 h-3 mr-1" />
       {activeWebhooks.length} Active
     </Badge>
   )

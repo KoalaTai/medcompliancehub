@@ -11,16 +11,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { 
   Brain, 
-  TrendingUp, 
+  TrendUp, 
   Target, 
   CheckCircle,
   ArrowRight,
   Settings,
   Zap,
-  BarChart3,
+  ChartBar,
   Activity,
   Clock,
-  Award
+  Medal
 } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
@@ -275,7 +275,7 @@ export function TemplateOptimizationEngine() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
+            <ChartBar className="h-5 w-5" />
             Template Performance Analytics
           </CardTitle>
           <CardDescription>
@@ -320,7 +320,7 @@ export function TemplateOptimizationEngine() {
                     <div className="space-y-1">
                       <span className="text-muted-foreground">Quality Score</span>
                       <div className="flex items-center gap-1">
-                        <Award className="h-3 w-3" />
+                        <Medal className="h-3 w-3" />
                         <span className="font-medium">{template.qualityScore}/5</span>
                       </div>
                     </div>
@@ -383,7 +383,7 @@ export function TemplateOptimizationEngine() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
+              <TrendUp className="h-5 w-5" />
               Performance Insights
             </CardTitle>
           </CardHeader>
@@ -393,7 +393,7 @@ export function TemplateOptimizationEngine() {
               <span className="text-sm">CAPA templates show 23% faster completion after optimization</span>
             </div>
             <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
-              <TrendingUp className="h-4 w-4 text-blue-600" />
+              <TrendUp className="h-4 w-4 text-blue-600" />
               <span className="text-sm">AI recommendations improved quality scores by average 0.3 points</span>
             </div>
             <div className="flex items-center gap-2 p-3 bg-orange-50 rounded-lg">

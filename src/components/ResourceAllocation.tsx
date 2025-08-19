@@ -14,18 +14,18 @@ import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { 
   Users, 
-  TrendingUp, 
+  TrendUp, 
   Clock, 
   Target, 
-  AlertTriangle,
+  Warning,
   CheckCircle,
   ArrowRight,
-  BarChart3,
+  ChartBar,
   Brain,
   Calendar,
   Settings,
   Zap,
-  Award,
+  Medal,
   Activity,
   Shuffle
 } from '@phosphor-icons/react'
@@ -527,7 +527,7 @@ export function ResourceAllocation() {
                     <p className="text-xs text-green-600">↑ 15% with ML optimization</p>
                   </div>
                   <div className="relative">
-                    <TrendingUp className="h-8 w-8 text-green-600" />
+                    <TrendUp className="h-8 w-8 text-green-600" />
                     <div className="absolute -top-1 -right-1 h-3 w-3 bg-blue-500 rounded-full flex items-center justify-center">
                       <Zap className="h-2 w-2 text-white" />
                     </div>
@@ -546,7 +546,7 @@ export function ResourceAllocation() {
                     <p className="text-xs text-accent">⭐ AI-matched teams</p>
                   </div>
                   <div className="relative">
-                    <Award className="h-8 w-8 text-accent" />
+                    <Medal className="h-8 w-8 text-accent" />
                     <div className="absolute -top-1 -right-1 h-3 w-3 bg-yellow-500 rounded-full flex items-center justify-center">
                       <CheckCircle className="h-2 w-2 text-white" />
                     </div>
@@ -633,7 +633,7 @@ export function ResourceAllocation() {
 
                           {allocation.riskFactors.length > 0 && (
                             <div className="flex items-center gap-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">
-                              <AlertTriangle className="h-4 w-4" />
+                              <Warning className="h-4 w-4" />
                               <span>{allocation.riskFactors.join(', ')}</span>
                             </div>
                           )}
@@ -851,7 +851,7 @@ export function ResourceAllocation() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
+                <ChartBar className="h-5 w-5" />
                 Regulatory Framework Distribution
               </CardTitle>
               <CardDescription>Current workload distribution across compliance frameworks</CardDescription>
@@ -1166,8 +1166,8 @@ export function ResourceAllocation() {
                         >
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              {insight.type === 'risk' && <AlertTriangle className="h-4 w-4 text-red-600" />}
-                              {insight.type === 'opportunity' && <TrendingUp className="h-4 w-4 text-green-600" />}
+                              {insight.type === 'risk' && <Warning className="h-4 w-4 text-red-600" />}
+                              {insight.type === 'opportunity' && <TrendUp className="h-4 w-4 text-green-600" />}
                               {insight.type === 'optimization' && <Zap className="h-4 w-4 text-blue-600" />}
                               <h4 className="font-semibold">{insight.title}</h4>
                             </div>

@@ -17,7 +17,7 @@ import { toast } from 'sonner'
 import { LearningResourceNotifications } from '@/components/LearningResourceNotifications'
 import { 
   BookOpen, 
-  ExternalLink, 
+  ArrowSquareOut, 
   Play, 
   CheckCircle, 
   Clock, 
@@ -26,7 +26,7 @@ import {
   Settings, 
   Zap, 
   Star,
-  TrendingUp,
+  TrendUp,
   Users,
   Calendar,
   Download,
@@ -39,9 +39,9 @@ import {
   CloudArrowUp,
   Bell,
   Key,
-  CheckCircle2,
+  CheckCircle,
   XCircle,
-  AlertTriangle,
+  Warning,
   Code,
   Webhook,
   Activity,
@@ -821,7 +821,7 @@ export function LearningResourceIntegration() {
                       className="flex items-center gap-2"
                       onClick={() => window.open(resource.url, '_blank')}
                     >
-                      <ExternalLink className="w-4 h-4" />
+                      <ArrowSquareOut className="w-4 h-4" />
                       View Course
                     </Button>
                   </div>
@@ -1243,7 +1243,7 @@ export function LearningResourceIntegration() {
                           className="text-xs"
                         >
                           {endpoint.testResult === 'success' ? (
-                            <CheckCircle2 className="w-3 h-3 mr-1" />
+                            <CheckCircle className="w-3 h-3 mr-1" />
                           ) : (
                             <XCircle className="w-3 h-3 mr-1" />
                           )}
@@ -1633,7 +1633,7 @@ export function LearningResourceIntegration() {
                   
                   <div className="pt-4 space-y-2">
                     <div className="flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-green-600" />
+                      <TrendUp className="w-4 h-4 text-green-600" />
                       <span className="text-sm">12% improvement this month</span>
                     </div>
                     <div className="flex items-center gap-2">

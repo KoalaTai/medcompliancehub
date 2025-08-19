@@ -9,7 +9,7 @@ import {
   Warning,
   CheckCircle,
   Clock,
-  AlertTriangle,
+  Warning,
   FileX,
   Target,
   ArrowRight,
@@ -243,7 +243,7 @@ export function AutomatedGapDetection() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <Warning className="h-4 w-4 text-destructive" />
               <div>
                 <p className="text-2xl font-bold">{stats.critical}</p>
                 <p className="text-xs text-muted-foreground">Critical Gaps</p>

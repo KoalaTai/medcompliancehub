@@ -13,7 +13,7 @@ import {
   Activity,
   Clock,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   BarChart
 } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'

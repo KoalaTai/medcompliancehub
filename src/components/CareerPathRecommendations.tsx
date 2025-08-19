@@ -9,20 +9,20 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { 
-  TrendingUp, 
+  TrendUp, 
   Target, 
   User, 
   Star,
   RefreshCw,
   Brain,
   BookOpen,
-  Award,
+  Medal,
   Clock,
   Zap,
   MapPin,
   ArrowRight,
-  CheckCircle2,
-  AlertTriangle,
+  CheckCircle,
+  Warning,
   Briefcase,
   GraduationCap,
   Users,
@@ -594,7 +594,7 @@ export function CareerPathRecommendations() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
-            <TrendingUp className="h-6 w-6" />
+            <TrendUp className="h-6 w-6" />
             AI Career Path Recommendations
           </h2>
           <p className="text-muted-foreground">
@@ -646,7 +646,7 @@ export function CareerPathRecommendations() {
                   {careerAnalytics.filter(a => a.promotionReadiness >= 80).length}
                 </p>
               </div>
-              <TrendingUp className="h-8 w-8 text-accent" />
+              <TrendUp className="h-8 w-8 text-accent" />
             </div>
           </CardContent>
         </Card>
@@ -660,7 +660,7 @@ export function CareerPathRecommendations() {
                   {careerAnalytics.filter(a => a.retentionRisk >= 60).length}
                 </p>
               </div>
-              <AlertTriangle className="h-8 w-8 text-destructive" />
+              <Warning className="h-8 w-8 text-destructive" />
             </div>
           </CardContent>
         </Card>
@@ -857,7 +857,7 @@ export function CareerPathRecommendations() {
                               <div className="space-y-2">
                                 {plan.recommendations.filter(rec => rec.type === 'immediate').map((rec, idx) => (
                                   <div key={idx} className="flex items-start gap-3 p-3 bg-destructive/5 rounded-lg">
-                                    <AlertTriangle className="h-4 w-4 text-destructive mt-1" />
+                                    <Warning className="h-4 w-4 text-destructive mt-1" />
                                     <div className="flex-1">
                                       <div className="flex items-center gap-2 mb-1">
                                         <p className="font-medium text-sm">{rec.title}</p>
@@ -1023,7 +1023,7 @@ export function CareerPathRecommendations() {
                             {/* Milestones */}
                             <div>
                               <h5 className="font-medium mb-2 flex items-center gap-2">
-                                <CheckCircle2 className="h-4 w-4" />
+                                <CheckCircle className="h-4 w-4" />
                                 Key Milestones
                               </h5>
                               <div className="space-y-2">
@@ -1062,7 +1062,7 @@ export function CareerPathRecommendations() {
                                 <ul className="space-y-1">
                                   {path.riskFactors.slice(0, 3).map((risk, idx) => (
                                     <li key={idx} className="text-xs flex items-start gap-2">
-                                      <AlertTriangle className="h-3 w-3 text-destructive mt-0.5 flex-shrink-0" />
+                                      <Warning className="h-3 w-3 text-destructive mt-0.5 flex-shrink-0" />
                                       {risk}
                                     </li>
                                   ))}
@@ -1198,7 +1198,7 @@ export function CareerPathRecommendations() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
+                <TrendUp className="h-5 w-5" />
                 Market Intelligence & Trends
               </CardTitle>
               <CardDescription>
@@ -1302,22 +1302,22 @@ export function CareerPathRecommendations() {
                       <div className="text-center p-3 bg-accent/10 rounded-lg">
                         <div className="font-bold text-lg">92%</div>
                         <div className="text-sm">AI/ML Governance</div>
-                        <TrendingUp className="h-4 w-4 mx-auto mt-2 text-accent" />
+                        <TrendUp className="h-4 w-4 mx-auto mt-2 text-accent" />
                       </div>
                       <div className="text-center p-3 bg-accent/10 rounded-lg">
                         <div className="font-bold text-lg">88%</div>
                         <div className="text-sm">ESG Reporting</div>
-                        <TrendingUp className="h-4 w-4 mx-auto mt-2 text-accent" />
+                        <TrendUp className="h-4 w-4 mx-auto mt-2 text-accent" />
                       </div>
                       <div className="text-center p-3 bg-secondary/10 rounded-lg">
                         <div className="font-bold text-lg">76%</div>
                         <div className="text-sm">Cloud Compliance</div>
-                        <TrendingUp className="h-4 w-4 mx-auto mt-2 text-secondary" />
+                        <TrendUp className="h-4 w-4 mx-auto mt-2 text-secondary" />
                       </div>
                       <div className="text-center p-3 bg-secondary/10 rounded-lg">
                         <div className="font-bold text-lg">71%</div>
                         <div className="text-sm">RegTech</div>
-                        <TrendingUp className="h-4 w-4 mx-auto mt-2 text-secondary" />
+                        <TrendUp className="h-4 w-4 mx-auto mt-2 text-secondary" />
                       </div>
                     </div>
                   </CardContent>
@@ -1356,7 +1356,7 @@ export function CareerPathRecommendations() {
                     <CardContent>
                       <div className="space-y-3">
                         <div className="flex items-start gap-3 p-3 bg-destructive/10 rounded-lg">
-                          <AlertTriangle className="h-5 w-5 text-destructive mt-1" />
+                          <Warning className="h-5 w-5 text-destructive mt-1" />
                           <div>
                             <h5 className="font-medium">Retention Risk Mitigation</h5>
                             <p className="text-sm text-muted-foreground">
@@ -1395,7 +1395,7 @@ export function CareerPathRecommendations() {
                         </div>
                         
                         <div className="flex items-start gap-3 p-3 bg-accent/10 rounded-lg">
-                          <TrendingUp className="h-5 w-5 text-accent mt-1" />
+                          <TrendUp className="h-5 w-5 text-accent mt-1" />
                           <div>
                             <h5 className="font-medium">Market Positioning</h5>
                             <p className="text-sm text-muted-foreground">
@@ -1421,11 +1421,11 @@ export function CareerPathRecommendations() {
                         </h6>
                         <ul className="space-y-2 ml-6">
                           <li className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-accent" />
+                            <CheckCircle className="h-4 w-4 text-accent" />
                             Schedule career development meetings with high-risk retention members
                           </li>
                           <li className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-accent" />
+                            <CheckCircle className="h-4 w-4 text-accent" />
                             Initiate ESG training program for promotion-ready candidates
                           </li>
                         </ul>
@@ -1438,11 +1438,11 @@ export function CareerPathRecommendations() {
                         </h6>
                         <ul className="space-y-2 ml-6">
                           <li className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-secondary" />
+                            <CheckCircle className="h-4 w-4 text-secondary" />
                             Complete comprehensive skills assessments for all team members
                           </li>
                           <li className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-secondary" />
+                            <CheckCircle className="h-4 w-4 text-secondary" />
                             Establish mentoring program pairing senior and junior staff
                           </li>
                         </ul>
@@ -1455,11 +1455,11 @@ export function CareerPathRecommendations() {
                         </h6>
                         <ul className="space-y-2 ml-6">
                           <li className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                            <CheckCircle className="h-4 w-4 text-muted-foreground" />
                             Execute promotion pathway for top performers
                           </li>
                           <li className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                            <CheckCircle className="h-4 w-4 text-muted-foreground" />
                             Develop specialized tracks: AI Governance, ESG, Cyber Compliance
                           </li>
                         </ul>

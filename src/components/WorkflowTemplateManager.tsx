@@ -24,7 +24,7 @@ import {
   Shield,
   Repeat,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   Brain,
   Lightbulb,
   GitBranch,

@@ -19,13 +19,13 @@ import {
   Clock,
   Target,
   CheckCircle,
-  AlertTriangle,
-  TrendingUp,
+  Warning,
+  TrendUp,
   Users,
   Code,
   Zap,
   Shield,
-  BarChart3,
+  ChartBar,
   Wrench,
   Sparkles,
   ArrowRight,
@@ -51,7 +51,7 @@ import {
   Brain,
   Eye,
   Network,
-  CheckCircle2
+  CheckCircle
 } from '@phosphor-icons/react'
 
 interface RoadmapPhase {
@@ -1261,7 +1261,7 @@ export function DevelopmentRoadmap() {
                       <div className="grid gap-2 md:grid-cols-2">
                         {implementation.deliverables.map(deliverable => (
                           <div key={deliverable} className="flex items-center gap-2 p-2 bg-muted rounded text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                            <CheckCircle className="h-4 w-4 text-green-500" />
                             {deliverable}
                           </div>
                         ))}
@@ -1285,7 +1285,7 @@ export function DevelopmentRoadmap() {
             </CardHeader>
             <CardContent>
               <Alert>
-                <AlertTriangle className="h-4 w-4" />
+                <Warning className="h-4 w-4" />
                 <AlertDescription>
                   Phase 2 (AI Intelligence) is the critical path blocker. Any delays in ML model development 
                   will cascade to Phases 3 and 4. Consider parallel development of infrastructure components.
@@ -1315,7 +1315,7 @@ export function DevelopmentRoadmap() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
+                  <ChartBar className="h-5 w-5" />
                   Phase Progress
                 </CardTitle>
               </CardHeader>
@@ -1337,7 +1337,7 @@ export function DevelopmentRoadmap() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
+                  <TrendUp className="h-5 w-5" />
                   Feature Status Distribution
                 </CardTitle>
               </CardHeader>

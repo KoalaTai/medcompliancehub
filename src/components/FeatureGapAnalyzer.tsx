@@ -13,20 +13,20 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
 import {
-  AlertTriangle,
+  Warning,
   CheckCircle,
   Clock,
   Code,
   Zap,
   Target,
-  TrendingUp,
+  TrendUp,
   Bug,
   Wrench,
   Lightbulb,
   ArrowRight,
   PlayCircle,
   PauseCircle,
-  BarChart3,
+  ChartBar,
   Users,
   Settings,
   Sparkles,
@@ -671,7 +671,7 @@ export function FeatureGapAnalyzer() {
     switch (status) {
       case 'functional': return CheckCircle
       case 'partial': return Clock
-      case 'placeholder': return AlertTriangle
+      case 'placeholder': return Warning
       case 'missing': return XCircle
       default: return AlertCircle
     }
@@ -725,7 +725,7 @@ export function FeatureGapAnalyzer() {
             View Report
           </Button>
           <Button onClick={handleRunAnalysis}>
-            <BarChart3 className="w-4 h-4 mr-2" />
+            <ChartBar className="w-4 h-4 mr-2" />
             Run Analysis
           </Button>
         </div>
@@ -736,7 +736,7 @@ export function FeatureGapAnalyzer() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-red-600" />
+              <Warning className="w-4 h-4 text-red-600" />
               Critical Gaps
             </CardTitle>
           </CardHeader>
@@ -805,7 +805,7 @@ export function FeatureGapAnalyzer() {
       {/* High Priority Features Alert */}
       {assessments.filter(a => a.businessValue === 'critical' && a.functionalityScore < 70).length > 0 && (
         <Alert>
-          <AlertTriangle className="w-4 h-4" />
+          <Warning className="w-4 h-4" />
           <AlertDescription>
             <strong>Immediate attention required:</strong> {assessments.filter(a => a.businessValue === 'critical' && a.functionalityScore < 70).length} critical business features are significantly incomplete. 
             These should be prioritized for immediate development.
@@ -864,7 +864,7 @@ export function FeatureGapAnalyzer() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-orange-600" />
+              <Warning className="w-4 h-4 text-orange-600" />
               Placeholder
             </CardTitle>
           </CardHeader>
@@ -896,7 +896,7 @@ export function FeatureGapAnalyzer() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5" />
+            <ChartBar className="w-5 h-5" />
             Category Analysis
           </CardTitle>
         </CardHeader>
@@ -1081,7 +1081,7 @@ export function FeatureGapAnalyzer() {
                             <ul className="space-y-1">
                               {assessment.placeholderElements.map((item, index) => (
                                 <li key={index} className="text-xs text-muted-foreground flex items-center gap-2">
-                                  <AlertTriangle className="w-3 h-3 text-orange-500" />
+                                  <Warning className="w-3 h-3 text-orange-500" />
                                   {item}
                                 </li>
                               ))}
@@ -1198,7 +1198,7 @@ export function FeatureGapAnalyzer() {
                             <ul className="space-y-1">
                               {assessment.blockedBy.map((blocker, index) => (
                                 <li key={index} className="text-xs text-muted-foreground flex items-center gap-2">
-                                  <AlertTriangle className="w-3 h-3 text-red-500" />
+                                  <Warning className="w-3 h-3 text-red-500" />
                                   {blocker}
                                 </li>
                               ))}
@@ -1414,7 +1414,7 @@ export function FeatureGapAnalyzer() {
               </Tabs>
 
               <Alert>
-                <TrendingUp className="w-4 h-4" />
+                <TrendUp className="w-4 h-4" />
                 <AlertDescription>
                   Report generated on {new Date(currentReport.createdAt).toLocaleString()}. 
                   This comprehensive analysis includes development roadmap, risk assessment, and resource planning.

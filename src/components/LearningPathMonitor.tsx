@@ -10,9 +10,9 @@ import { Separator } from "@/components/ui/separator"
 import { 
   Calendar,
   Clock,
-  TrendingUp,
-  AlertTriangle,
-  CheckCircle2,
+  TrendUp,
+  Warning,
+  CheckCircle,
   PlayCircle,
   Pause,
   BookOpen,
@@ -20,10 +20,10 @@ import {
   Zap,
   Bell,
   Settings2,
-  BarChart3,
+  ChartBar,
   Route,
   Timer,
-  Award,
+  Medal,
   ArrowRight,
   RefreshCw
 } from "@phosphor-icons/react"
@@ -413,7 +413,7 @@ export function LearningPathMonitor() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'completed': return <CheckCircle2 className="h-4 w-4 text-accent" />
+      case 'completed': return <CheckCircle className="h-4 w-4 text-accent" />
       case 'in-progress': return <PlayCircle className="h-4 w-4 text-primary" />
       case 'paused': return <Pause className="h-4 w-4 text-muted-foreground" />
       default: return <Clock className="h-4 w-4 text-muted-foreground" />
@@ -471,7 +471,7 @@ export function LearningPathMonitor() {
               <div className="space-y-2">
                 {learningAlerts.slice(0, 5).map(alert => (
                   <Alert key={alert.id} className={getAlertColor(alert.severity)}>
-                    <AlertTriangle className="h-4 w-4" />
+                    <Warning className="h-4 w-4" />
                     <AlertDescription className="flex items-center justify-between">
                       <span className="text-sm">{alert.message}</span>
                       {alert.actionRequired && (
@@ -609,7 +609,7 @@ export function LearningPathMonitor() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
+            <ChartBar className="h-4 w-4" />
             Learning Analytics
           </CardTitle>
           <CardDescription>

@@ -21,8 +21,8 @@ import {
   Settings, 
   Trash2, 
   Eye, 
-  AlertTriangle,
-  CheckCircle2,
+  Warning,
+  CheckCircle,
   XCircle,
   Zap,
   Database,
@@ -243,7 +243,7 @@ export function WebhookIntegrations() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'active': return <CheckCircle2 className="w-4 h-4 text-green-500" />
+      case 'active': return <CheckCircle className="w-4 h-4 text-green-500" />
       case 'error': return <XCircle className="w-4 h-4 text-red-500" />
       case 'inactive': return <Pause className="w-4 h-4 text-gray-500" />
       default: return <Activity className="w-4 h-4" />
@@ -477,7 +477,7 @@ export function WebhookIntegrations() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
                               {event.status === 'success' ? (
-                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                <CheckCircle className="w-4 h-4 text-green-500" />
                               ) : event.status === 'failed' ? (
                                 <XCircle className="w-4 h-4 text-red-500" />
                               ) : (
@@ -505,7 +505,7 @@ export function WebhookIntegrations() {
                           </div>
                           {event.error && (
                             <Alert className="mt-2">
-                              <AlertTriangle className="w-4 h-4" />
+                              <Warning className="w-4 h-4" />
                               <AlertDescription>{event.error}</AlertDescription>
                             </Alert>
                           )}
@@ -726,7 +726,7 @@ function WebhookDetailsDialog({
                     <div key={event.id} className="flex items-center justify-between p-2 border rounded">
                       <div className="flex items-center space-x-2">
                         {event.status === 'success' ? (
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <CheckCircle className="w-4 h-4 text-green-500" />
                         ) : (
                           <XCircle className="w-4 h-4 text-red-500" />
                         )}

@@ -7,7 +7,7 @@ import {
   Calendar,
   Bell,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   Mail,
   Settings,
   Zap,
@@ -470,7 +470,7 @@ export function AutomatedSchedules() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-red-500" />
+              <Warning className="h-4 w-4 text-red-500" />
               Issues
             </CardTitle>
           </CardHeader>
@@ -622,7 +622,7 @@ export function AutomatedSchedules() {
                         }
                       >
                         {execution.status === 'completed' && <CheckCircle className="h-3 w-3 mr-1" />}
-                        {execution.status === 'failed' && <AlertTriangle className="h-3 w-3 mr-1" />}
+                        {execution.status === 'failed' && <Warning className="h-3 w-3 mr-1" />}
                         {execution.status === 'running' && <Clock className="h-3 w-3 mr-1 animate-spin" />}
                         {execution.status}
                       </Badge>

@@ -18,7 +18,7 @@ import {
   BarChart,
   Clock,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   Settings,
   Zap,
   Eye,
@@ -26,7 +26,7 @@ import {
   Download,
   GitBranch,
   Activity,
-  Award,
+  Medal,
   Users
 } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
@@ -535,7 +535,7 @@ export function AITemplateOptimizer() {
       case 'improving':
         return <TrendUp className="h-4 w-4 text-green-500" />
       case 'declining':
-        return <AlertTriangle className="h-4 w-4 text-red-500" />
+        return <Warning className="h-4 w-4 text-red-500" />
       default:
         return <Activity className="h-4 w-4 text-blue-500" />
     }
@@ -892,7 +892,7 @@ export function AITemplateOptimizer() {
                               </div>
                             </div>
                             <Badge className="bg-green-100 text-green-800">
-                              <Award className="h-3 w-3 mr-1" />
+                              <Medal className="h-3 w-3 mr-1" />
                               Live
                             </Badge>
                           </div>

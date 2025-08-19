@@ -7,7 +7,7 @@ import {
   Brain, 
   CheckCircle, 
   Clock, 
-  AlertTriangle,
+  Warning,
   Zap,
   Target,
   FileText,
@@ -154,7 +154,7 @@ function getStatusIcon(status: string) {
     case 'running':
       return <Clock className="h-4 w-4 text-primary animate-pulse" weight="fill" />
     case 'failed':
-      return <AlertTriangle className="h-4 w-4 text-destructive" weight="fill" />
+      return <Warning className="h-4 w-4 text-destructive" weight="fill" />
     case 'pending':
       return <Clock className="h-4 w-4 text-muted-foreground" />
     default:

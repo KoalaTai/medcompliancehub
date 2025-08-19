@@ -15,7 +15,7 @@ import {
   Bell,
   Users,
   Shield,
-  AlertTriangle,
+  Warning,
   CheckCircle,
   Mail,
   Globe,
@@ -297,7 +297,7 @@ export function AutomatedWorkflowConfiguration() {
   const categoryIcons = {
     notification: Bell,
     workflow: Target,
-    escalation: AlertTriangle,
+    escalation: Warning,
     monitoring: Activity,
     reporting: Database
   }
@@ -506,7 +506,7 @@ export function AutomatedWorkflowConfiguration() {
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-red-500" />
+                    <Warning className="h-4 w-4 text-red-500" />
                     <div>
                       <p className="text-2xl font-bold">{escalationRules.filter(r => r.active).length}</p>
                       <p className="text-xs text-muted-foreground">Escalations</p>
@@ -673,7 +673,7 @@ export function AutomatedWorkflowConfiguration() {
                 </p>
               </div>
               <Button>
-                <AlertTriangle className="h-4 w-4 mr-2" />
+                <Warning className="h-4 w-4 mr-2" />
                 Add Escalation Rule
               </Button>
             </div>
@@ -685,7 +685,7 @@ export function AutomatedWorkflowConfiguration() {
                     <div className="flex items-start justify-between">
                       <div>
                         <CardTitle className="text-base flex items-center gap-2">
-                          <AlertTriangle className="h-4 w-4" />
+                          <Warning className="h-4 w-4" />
                           {rule.name}
                         </CardTitle>
                         <div className="flex items-center gap-2 mt-2">
@@ -827,7 +827,7 @@ export function AutomatedWorkflowConfiguration() {
                     <span>Deadline reminder sent for CAPA workflow #CW-2024-0089</span>
                   </div>
                   <div className="flex items-center gap-3 p-2 text-sm">
-                    <AlertTriangle className="h-4 w-4 text-orange-500" />
+                    <Warning className="h-4 w-4 text-orange-500" />
                     <span className="text-muted-foreground">12:15 PM</span>
                     <span>Escalation triggered: Task overdue by 48 hours</span>
                   </div>

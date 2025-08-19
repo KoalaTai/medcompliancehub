@@ -8,7 +8,7 @@ import {
   Target,
   Shield,
   CheckCircle,
-  AlertTriangle,
+  Warning,
   Clock,
   GitBranch,
   GitBranch as Workflow,
@@ -208,7 +208,7 @@ export function GapToCAPAIntegration() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'no-capa':
-        return <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+        return <Warning className="h-4 w-4 text-muted-foreground" />
       case 'capa-generated':
         return <Lightbulb className="h-4 w-4 text-accent" />
       case 'capa-active':
@@ -216,7 +216,7 @@ export function GapToCAPAIntegration() {
       case 'capa-completed':
         return <CheckCircle className="h-4 w-4 text-secondary" />
       default:
-        return <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+        return <Warning className="h-4 w-4 text-muted-foreground" />
     }
   }
 
@@ -257,7 +257,7 @@ export function GapToCAPAIntegration() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-orange-500" />
+              <Warning className="h-4 w-4 text-orange-500" />
               <div>
                 <p className="text-2xl font-bold">{highPriorityGaps}</p>
                 <p className="text-xs text-muted-foreground">High Priority Gaps</p>

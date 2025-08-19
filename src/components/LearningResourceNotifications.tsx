@@ -24,7 +24,7 @@ import {
   XCircle,
   Clock,
   Users,
-  AlertTriangle,
+  Warning,
   Filter,
   Calendar,
   BookOpen,

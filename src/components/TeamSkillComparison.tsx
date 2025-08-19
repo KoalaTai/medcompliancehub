@@ -10,12 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { 
   Users, 
-  BarChart3, 
-  TrendingUp, 
+  ChartBar, 
+  TrendUp, 
   Trophy, 
-  AlertTriangle,
+  Warning,
   Target,
-  Award,
+  Medal,
   User,
   Star,
   RefreshCw,
@@ -23,7 +23,7 @@ import {
   ArrowUp,
   ArrowDown,
   Minus,
-  CheckCircle2,
+  CheckCircle,
   Clock,
   Zap,
   Brain,
@@ -539,7 +539,7 @@ export function TeamSkillComparison() {
                     : '0.0'}
                 </p>
               </div>
-              <BarChart3 className="h-8 w-8 text-accent" />
+              <ChartBar className="h-8 w-8 text-accent" />
             </div>
           </CardContent>
         </Card>
@@ -553,7 +553,7 @@ export function TeamSkillComparison() {
                   {filteredMembers.filter(m => m.riskLevel === 'high' || m.riskLevel === 'critical').length}
                 </p>
               </div>
-              <AlertTriangle className="h-8 w-8 text-destructive" />
+              <Warning className="h-8 w-8 text-destructive" />
             </div>
           </CardContent>
         </Card>
@@ -857,7 +857,7 @@ export function TeamSkillComparison() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5" />
+                <Warning className="h-5 w-5" />
                 Compliance Risk Analysis
               </CardTitle>
               <CardDescription>
@@ -869,7 +869,7 @@ export function TeamSkillComparison() {
                 <div className="space-y-4">
                   {riskAssessments.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
-                      <AlertTriangle className="h-12 w-12 mx-auto mb-4" />
+                      <Warning className="h-12 w-12 mx-auto mb-4" />
                       <p>Run analysis to generate risk assessments</p>
                     </div>
                   ) : (
@@ -922,7 +922,7 @@ export function TeamSkillComparison() {
                               <ul className="text-sm text-muted-foreground space-y-1">
                                 {risk.mitigation.map((action, idx) => (
                                   <li key={idx} className="flex items-start gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+                                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     {action}
                                   </li>
                                 ))}
@@ -1067,7 +1067,7 @@ export function TeamSkillComparison() {
                           <span className="text-sm">SOX Compliance</span>
                           <div className="flex items-center gap-2">
                             <Progress value={78} className="w-16 h-2" />
-                            <TrendingUp className="h-4 w-4 text-accent" />
+                            <TrendUp className="h-4 w-4 text-accent" />
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
