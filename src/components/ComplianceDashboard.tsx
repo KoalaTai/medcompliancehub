@@ -21,7 +21,9 @@ import {
   ArrowRight,
   MapPin,
   BookOpen,
-  GitBranch as Workflow
+  GitBranch as Workflow,
+  Bug,
+  Code
 } from '@phosphor-icons/react'
 import { useNotificationService } from '@/hooks/useNotificationService'
 
@@ -455,7 +457,7 @@ export function ComplianceDashboard() {
       </div>
 
       {/* Webhook Integration Status with AI Insights */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-4">
         <div className="lg:col-span-1">
           <WebhookStatusWidget 
             showDetails={true}
@@ -470,6 +472,62 @@ export function ComplianceDashboard() {
         <div className="lg:col-span-1">
           <AIInsightsPanel className="h-full" />
         </div>
+
+        <Card className="bg-gradient-to-br from-orange-500/5 to-orange-500/10 border-orange-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-orange-700">
+              <Bug className="h-5 w-5" />
+              Feature Gap Analysis
+            </CardTitle>
+            <CardDescription>Platform functionality assessment and improvement tracking</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Platform Maturity</span>
+                <span className="text-2xl font-bold text-orange-700">73%</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-600">6</div>
+                  <div className="text-xs text-muted-foreground">Functional</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-orange-600">4</div>
+                  <div className="text-xs text-muted-foreground">Need Work</div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Email Templates</span>
+                  <span className="font-medium text-green-600">95%</span>
+                </div>
+                <Progress value={95} className="h-2" />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>AI Features</span>
+                  <span className="font-medium text-orange-600">45%</span>
+                </div>
+                <Progress value={45} className="h-2" />
+              </div>
+
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-feature-gaps'))}
+              >
+                <Code className="h-3 w-3 mr-1" />
+                View Gap Analysis
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>

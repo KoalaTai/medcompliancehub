@@ -17,9 +17,10 @@ import { TeamSkillComparison } from '@/components/TeamSkillComparison'
 import { CareerPathRecommendations } from '@/components/CareerPathRecommendations'
 import { LearningResourceIntegration } from '@/components/LearningResourceIntegration'
 import { EmailTemplateManager } from '@/components/EmailTemplateManager'
+import { FeatureGapAnalyzer } from '@/components/FeatureGapAnalyzer'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'email-templates' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'email-templates' | 'feature-gaps' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -59,6 +60,10 @@ function App() {
       setActiveSection('email-templates')
     }
 
+    const handleNavigateToFeatureGaps = () => {
+      setActiveSection('feature-gaps')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
     window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     window.addEventListener('navigate-to-resources', handleNavigateToResources)
@@ -67,6 +72,7 @@ function App() {
     window.addEventListener('navigate-to-career-paths', handleNavigateToCareerPaths)
     window.addEventListener('navigate-to-learning-resources', handleNavigateToLearningResources)
     window.addEventListener('navigate-to-email-templates', handleNavigateToEmailTemplates)
+    window.addEventListener('navigate-to-feature-gaps', handleNavigateToFeatureGaps)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
       window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
@@ -76,6 +82,7 @@ function App() {
       window.removeEventListener('navigate-to-career-paths', handleNavigateToCareerPaths)
       window.removeEventListener('navigate-to-learning-resources', handleNavigateToLearningResources)
       window.removeEventListener('navigate-to-email-templates', handleNavigateToEmailTemplates)
+      window.removeEventListener('navigate-to-feature-gaps', handleNavigateToFeatureGaps)
     }
   }, [setActiveSection])
 
@@ -109,6 +116,8 @@ function App() {
         return <LearningResourceIntegration />
       case 'email-templates':
         return <EmailTemplateManager />
+      case 'feature-gaps':
+        return <FeatureGapAnalyzer />
       case 'team':
         return (
           <div className="p-6">
