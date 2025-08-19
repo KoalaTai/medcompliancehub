@@ -529,6 +529,62 @@ export function ComplianceDashboard() {
           </CardContent>
         </Card>
 
+        <Card className="bg-gradient-to-br from-indigo-500/5 to-indigo-500/10 border-indigo-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-indigo-700">
+              <Code className="h-5 w-5" />
+              Development Roadmap
+            </CardTitle>
+            <CardDescription>Implementation progress and timeline overview</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Overall Progress</span>
+                <span className="text-2xl font-bold text-indigo-700">32%</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-600">1</div>
+                  <div className="text-xs text-muted-foreground">Completed</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-blue-600">2</div>
+                  <div className="text-xs text-muted-foreground">Active</div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Phase 1: Foundation</span>
+                  <span className="font-medium text-blue-600">75%</span>
+                </div>
+                <Progress value={75} className="h-2" />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Phase 2: AI Integration</span>
+                  <span className="font-medium text-gray-600">25%</span>
+                </div>
+                <Progress value={25} className="h-2" />
+              </div>
+
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-roadmap'))}
+              >
+                <Code className="h-3 w-3 mr-1" />
+                View Full Roadmap
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
