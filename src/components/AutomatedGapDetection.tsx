@@ -9,7 +9,6 @@ import {
   Warning,
   CheckCircle,
   Clock,
-  Warning,
   FileX,
   Target,
   ArrowRight,

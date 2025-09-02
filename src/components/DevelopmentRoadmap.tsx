@@ -44,14 +44,12 @@ import {
   RefreshCw,
   FileText,
   DollarSign,
-  Warning,
   Timer,
   Gauge,
   Activity,
   Brain,
   Eye,
-  Network,
-  CheckCircle
+  Network
 } from '@phosphor-icons/react'
 
 interface RoadmapPhase {

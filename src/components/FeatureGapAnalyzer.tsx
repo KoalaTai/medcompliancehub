@@ -42,7 +42,6 @@ import {
   Shield,
   Calendar,
   MapPin,
-  Warning,
   DollarSign,
   Clock as ClockIcon
 } from '@phosphor-icons/react'
