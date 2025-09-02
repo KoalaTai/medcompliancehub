@@ -692,6 +692,114 @@ export function ComplianceDashboard() {
         </Card>
       </div>
 
+      {/* Regulatory Database Integration Widget */}
+      <div className="grid gap-6 lg:grid-cols-1">
+        <Card className="bg-gradient-to-br from-blue-500/5 to-blue-500/10 border-blue-500/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-700">
+              <Brain className="h-5 w-5" />
+              Regulatory Database Integration
+            </CardTitle>
+            <CardDescription>Automated compliance checks and real-time regulatory monitoring</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 lg:grid-cols-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Connected Databases</span>
+                  <span className="text-2xl font-bold text-blue-700">3</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>CFR Database</span>
+                    <Badge className="bg-green-100 text-green-800">Connected</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>FDA Regulations</span>
+                    <Badge className="bg-green-100 text-green-800">Connected</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>GDPR Database</span>
+                    <Badge className="bg-red-100 text-red-800">Error</Badge>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Active Rules</span>
+                  <span className="text-2xl font-bold text-blue-700">1,630</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Compliance Rate</span>
+                    <span className="font-medium text-green-600">94%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Non-Compliant</span>
+                    <span className="font-medium text-red-600">3 rules</span>
+                  </div>
+                  <Progress value={94} className="h-2" />
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Automated Checks</span>
+                  <span className="text-2xl font-bold text-blue-700">2</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Daily FDA Scan</span>
+                    <Badge className="bg-green-100 text-green-800">Active</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Weekly GDPR Check</span>
+                    <Badge className="bg-gray-100 text-gray-800">Disabled</Badge>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    Last sync: 2 hours ago
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Recent Findings</span>
+                  <span className="text-2xl font-bold text-orange-600">7</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>High Priority</span>
+                    <span className="font-medium text-red-600">2</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Medium Priority</span>
+                    <span className="font-medium text-orange-600">3</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Low Priority</span>
+                    <span className="font-medium text-green-600">2</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6">
+              <Button 
+                size="sm" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-regulatory-db'))}
+              >
+                <Brain className="h-3 w-3 mr-1" />
+                Manage Regulatory Integrations
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Resource Allocation Section */}
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="bg-gradient-to-br from-green-500/5 to-green-500/10 border-green-500/20">

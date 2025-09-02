@@ -20,9 +20,10 @@ import { EmailTemplateManager } from '@/components/EmailTemplateManager'
 import { FeatureGapAnalyzer } from '@/components/FeatureGapAnalyzer'
 import { DevelopmentRoadmap } from '@/components/DevelopmentRoadmap'
 import { MilestoneTracker } from '@/components/MilestoneTracker'
+import { RegulatoryDatabaseIntegration } from '@/components/RegulatoryDatabaseIntegration'
 import { useEffect } from 'react'
 
-type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'email-templates' | 'feature-gaps' | 'roadmap' | 'milestones' | 'team' | 'settings'
+type SectionType = 'dashboard' | 'simulations' | 'evidence' | 'gap-analysis' | 'workflows' | 'intelligence' | 'scheduler' | 'webhooks' | 'resources' | 'skills' | 'team-comparison' | 'career-paths' | 'learning-resources' | 'email-templates' | 'feature-gaps' | 'roadmap' | 'milestones' | 'regulatory-db' | 'team' | 'settings'
 
 function App() {
   const [activeSection, setActiveSection] = useKV<SectionType>('active-section', 'dashboard')
@@ -74,6 +75,10 @@ function App() {
       setActiveSection('milestones')
     }
 
+    const handleNavigateToRegulatoryDB = () => {
+      setActiveSection('regulatory-db')
+    }
+
     window.addEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
     window.addEventListener('navigate-to-workflows', handleNavigateToWorkflows)
     window.addEventListener('navigate-to-resources', handleNavigateToResources)
@@ -85,6 +90,7 @@ function App() {
     window.addEventListener('navigate-to-feature-gaps', handleNavigateToFeatureGaps)
     window.addEventListener('navigate-to-roadmap', handleNavigateToRoadmap)
     window.addEventListener('navigate-to-milestones', handleNavigateToMilestones)
+    window.addEventListener('navigate-to-regulatory-db', handleNavigateToRegulatoryDB)
     return () => {
       window.removeEventListener('navigate-to-webhooks', handleNavigateToWebhooks)
       window.removeEventListener('navigate-to-workflows', handleNavigateToWorkflows)
@@ -97,6 +103,7 @@ function App() {
       window.removeEventListener('navigate-to-feature-gaps', handleNavigateToFeatureGaps)
       window.removeEventListener('navigate-to-roadmap', handleNavigateToRoadmap)
       window.removeEventListener('navigate-to-milestones', handleNavigateToMilestones)
+      window.removeEventListener('navigate-to-regulatory-db', handleNavigateToRegulatoryDB)
     }
   }, [setActiveSection])
 
@@ -136,6 +143,8 @@ function App() {
         return <DevelopmentRoadmap />
       case 'milestones':
         return <MilestoneTracker />
+      case 'regulatory-db':
+        return <RegulatoryDatabaseIntegration />
       case 'team':
         return (
           <div className="p-6">

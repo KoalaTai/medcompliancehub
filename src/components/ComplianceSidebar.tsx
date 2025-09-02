@@ -18,7 +18,8 @@ import {
   Mail,
   Bug,
   GitBranch,
-  Target
+  Target,
+  Globe
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -41,6 +42,7 @@ const navigationItems = [
   { id: 'feature-gaps', label: 'Feature Gap Analysis', icon: Bug },
   { id: 'roadmap', label: 'Development Roadmap', icon: GitBranch },
   { id: 'milestones', label: 'Milestone Tracker', icon: Target },
+  { id: 'regulatory-db', label: 'Regulatory Databases', icon: Globe },
   { id: 'team', label: 'Team Management', icon: Users },
   { id: 'settings', label: 'Settings', icon: Gear },
 ]
