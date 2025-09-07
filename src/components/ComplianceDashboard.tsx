@@ -4,6 +4,10 @@ import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { WebhookStatusWidget } from '@/components/WebhookStatusWidget'
 import { AIInsightsPanel } from '@/components/AIInsightsPanel'
+import { useRegulatoryDatabase } from '@/lib/services/regulatory-database'
+import { useIntelligentCompliance } from '@/lib/services/intelligent-compliance'
+import { useCAPAWorkflow } from '@/lib/services/capa-workflow'
+import { useAutomatedEmail } from '@/lib/services/automated-email'
 import { 
   Shield, 
   Warning, 
@@ -23,7 +27,10 @@ import {
   BookOpen,
   GitBranch as Workflow,
   Bug,
-  Code
+  Code,
+  Database,
+  Activity,
+  AlertTriangle
 } from '@phosphor-icons/react'
 import { useNotificationService } from '@/hooks/useNotificationService'
 
@@ -126,861 +133,364 @@ function getStatusBadge(status: string) {
 
 export function ComplianceDashboard() {
   const { notifications, getUnreadCount, getCriticalCount } = useNotificationService()
+  const { databases, regulatoryUpdates, syncResults, complianceChecks } = useRegulatoryDatabase()
+  const { alerts, stats: complianceStats, recommendations } = useIntelligentCompliance()
+  const { workflows, getMetrics: getCAPAMetrics } = useCAPAWorkflow()
+  const { stats: emailStats } = useAutomatedEmail()
+  
   const unreadNotifications = getUnreadCount()
   const criticalNotifications = getCriticalCount()
+  
+  const capaMetrics = getCAPAMetrics()
+  const unacknowledgedAlerts = alerts.filter(alert => !alert.acknowledged)
+  const criticalAlerts = unacknowledgedAlerts.filter(alert => alert.severity === 'critical')
+  const activeDatabases = databases.filter(db => db.isActive)
+  const recentUpdates = regulatoryUpdates.slice(0, 3)
+  
+  // Calculate compliance rate
+  const totalChecks = complianceChecks.length
+  const compliantChecks = complianceChecks.filter(check => check.status === 'compliant').length
+  const complianceRate = totalChecks > 0 ? Math.round((compliantChecks / totalChecks) * 100) : 94
+  
+  const enhancedComplianceMetrics: ComplianceMetric[] = [
+    {
+      id: 'overall',
+      title: 'Overall Compliance Score',
+      value: `${complianceRate}%`,
+      change: '+2.1%',
+      trend: 'up',
+      status: complianceRate >= 90 ? 'compliant' : complianceRate >= 75 ? 'warning' : 'critical'
+    },
+    {
+      id: 'databases',
+      title: 'Active Regulatory Databases',
+      value: activeDatabases.length.toString(),
+      change: syncResults.length > 0 ? `Last sync: ${syncResults[0]?.rulesAdded || 0} new rules` : 'No recent sync',
+      trend: 'up',
+      status: activeDatabases.length > 0 ? 'compliant' : 'warning'
+    },
+    {
+      id: 'alerts',
+      title: 'Active Compliance Alerts',
+      value: unacknowledgedAlerts.length.toString(),
+      change: criticalAlerts.length > 0 ? `${criticalAlerts.length} critical` : 'No critical alerts',
+      trend: criticalAlerts.length > 0 ? 'down' : 'neutral',
+      status: criticalAlerts.length > 0 ? 'critical' : unacknowledgedAlerts.length > 5 ? 'warning' : 'compliant'
+    },
+    {
+      id: 'capa',
+      title: 'Open CAPA Workflows',
+      value: capaMetrics.openCAPAs.toString(),
+      change: capaMetrics.overdueCAPAs > 0 ? `${capaMetrics.overdueCAPAs} overdue` : 'All on track',
+      trend: capaMetrics.overdueCAPAs > 0 ? 'down' : 'neutral',
+      status: capaMetrics.overdueCAPAs > 0 ? 'warning' : 'compliant'
+    }
+  ]
+
+  // Enhanced recent activities with real data
+  const enhancedRecentActivities = [
+    ...(recentUpdates.length > 0 ? [{
+      id: 'regulatory-' + recentUpdates[0].id,
+      type: 'regulatory',
+      title: recentUpdates[0].title,
+      description: recentUpdates[0].summary,
+      timestamp: new Date(recentUpdates[0].publishedDate).toLocaleDateString(),
+      status: recentUpdates[0].priority === 'urgent' ? 'alert' : 'pending'
+    }] : []),
+    ...(criticalAlerts.length > 0 ? [{
+      id: 'alert-' + criticalAlerts[0].id,
+      type: 'alert',
+      title: criticalAlerts[0].title,
+      description: criticalAlerts[0].description,
+      timestamp: new Date(criticalAlerts[0].createdAt).toLocaleDateString(),
+      status: 'alert'
+    }] : []),
+    ...(capaMetrics.completedThisMonth > 0 ? [{
+      id: 'capa-completed',
+      type: 'capa',
+      title: `${capaMetrics.completedThisMonth} CAPA Workflows Completed`,
+      description: 'Monthly CAPA completion milestone reached',
+      timestamp: 'This month',
+      status: 'completed'
+    }] : []),
+    ...recentActivities.slice(0, 3)
+  ].slice(0, 5)
   
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Compliance Dashboard</h2>
-          <p className="text-muted-foreground">Monitor your regulatory compliance status and recent activities</p>
+          <p className="text-muted-foreground">AI-powered regulatory compliance monitoring and management</p>
         </div>
-        <Button className="gap-2">
-          <Calendar className="h-4 w-4" />
-          Schedule Audit
-        </Button>
+        <div className="flex gap-2">
+          {criticalAlerts.length > 0 && (
+            <Button 
+              variant="destructive" 
+              className="gap-2"
+              onClick={() => window.dispatchEvent(new Event('navigate-to-compliance-monitor'))}
+            >
+              <AlertTriangle className="h-4 w-4" />
+              {criticalAlerts.length} Critical Alert{criticalAlerts.length !== 1 ? 's' : ''}
+            </Button>
+          )}
+          <Button className="gap-2">
+            <Calendar className="h-4 w-4" />
+            Schedule Audit
+          </Button>
+        </div>
       </div>
 
+      {/* Enhanced Metrics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {complianceMetrics.map((metric) => (
-          <Card key={metric.id}>
+        {enhancedComplianceMetrics.map((metric) => (
+          <Card key={metric.id} className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{metric.title}</CardTitle>
               {getStatusIcon(metric.status)}
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{metric.value}</div>
-              <p className={`text-xs flex items-center gap-1 ${
-                metric.trend === 'up' ? 'text-secondary' : 
-                metric.trend === 'down' ? 'text-muted-foreground' : 
-                'text-muted-foreground'
-              }`}>
-                <TrendUp className={`h-3 w-3 ${
-                  metric.trend === 'down' ? 'rotate-180' : ''
-                }`} />
-                {metric.change} from last month
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                {metric.trend === 'up' && <TrendUp className="h-3 w-3 text-secondary" />}
+                {metric.trend === 'down' && <Warning className="h-3 w-3 text-destructive" />}
+                {metric.change}
               </p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Regulatory Notifications Summary */}
-      {(unreadNotifications > 0 || criticalNotifications > 0) && (
-        <Card className="border-amber-200 bg-amber-50/50">
+      {/* Real-time Status Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {/* Regulatory Database Status */}
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-amber-800">
-              <Bell className="h-5 w-5" />
-              Regulatory Update Notifications
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Database className="h-5 w-5 text-blue-600" />
+              Regulatory Databases
             </CardTitle>
-            <CardDescription className="text-amber-700">
-              Important regulatory changes that may affect your compliance status
-            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-amber-800">{unreadNotifications}</div>
-                  <p className="text-xs text-amber-600">Unread Updates</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-red-800">{criticalNotifications}</div>
-                  <p className="text-xs text-red-600">Critical Issues</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-amber-800">
-                    {notifications.filter(n => n.actionRequired && !n.dismissed).length}
-                  </div>
-                  <p className="text-xs text-amber-600">Require Action</p>
-                </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Active Connections</span>
+                <Badge>{activeDatabases.length}</Badge>
               </div>
-              <Button variant="outline" className="border-amber-300 text-amber-800 hover:bg-amber-100">
-                View All Updates
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Recent Updates</span>
+                <Badge variant="outline">{regulatoryUpdates.length}</Badge>
+              </div>
+              <Button 
+                size="sm" 
+                className="w-full gap-2"
+                onClick={() => window.dispatchEvent(new Event('navigate-to-regulatory-db'))}
+              >
+                <ArrowRight className="h-4 w-4" />
+                Manage Databases
               </Button>
             </div>
           </CardContent>
         </Card>
-      )}
 
-      <div className="grid gap-6 lg:grid-cols-2">
+        {/* AI Intelligence Status */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              Compliance Overview
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Brain className="h-5 w-5 text-purple-600" />
+              AI Intelligence
             </CardTitle>
-            <CardDescription>Current compliance status across key regulations</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <div className="flex items-center justify-between text-sm mb-2">
-                <span>FDA 21 CFR Part 820</span>
-                <span className="font-medium">96%</span>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Monitoring Status</span>
+                <Badge className="bg-green-100 text-green-800">
+                  <Activity className="h-3 w-3 mr-1" />
+                  Active
+                </Badge>
               </div>
-              <Progress value={96} className="h-2" />
-            </div>
-            <div>
-              <div className="flex items-center justify-between text-sm mb-2">
-                <span>ISO 13485:2016</span>
-                <span className="font-medium">92%</span>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Recommendations</span>
+                <Badge variant="outline">{recommendations.length}</Badge>
               </div>
-              <Progress value={92} className="h-2" />
-            </div>
-            <div>
-              <div className="flex items-center justify-between text-sm mb-2">
-                <span>EU MDR 2017/745</span>
-                <span className="font-medium">89%</span>
-              </div>
-              <Progress value={89} className="h-2" />
-            </div>
-            <div>
-              <div className="flex items-center justify-between text-sm mb-2">
-                <span>ISO 14971:2019</span>
-                <span className="font-medium">98%</span>
-              </div>
-              <Progress value={98} className="h-2" />
+              <Button 
+                size="sm" 
+                className="w-full gap-2"
+                onClick={() => window.dispatchEvent(new Event('navigate-to-compliance-monitor'))}
+              >
+                <ArrowRight className="h-4 w-4" />
+                View Insights
+              </Button>
             </div>
           </CardContent>
         </Card>
 
+        {/* Email Automation Status */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              Recent Activities
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Mail className="h-5 w-5 text-green-600" />
+              Email Automation
             </CardTitle>
-            <CardDescription>Latest compliance activities and updates</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Active Templates</span>
+                <Badge>{emailStats.activeTemplates}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Pending Emails</span>
+                <Badge variant="outline">{emailStats.pendingEmails}</Badge>
+              </div>
+              <Button 
+                size="sm" 
+                className="w-full gap-2"
+                onClick={() => window.dispatchEvent(new Event('navigate-to-email-templates'))}
+              >
+                <ArrowRight className="h-4 w-4" />
+                Manage Templates
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Enhanced Recent Activities */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activities</CardTitle>
+            <CardDescription>Latest compliance and regulatory activities</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex gap-4 p-3 rounded-lg border bg-card/30">
-                  <div className="mt-1">
-                    {activity.type === 'audit' && <FileText className="h-4 w-4 text-primary" />}
-                    {activity.type === 'document' && <FileText className="h-4 w-4 text-secondary" />}
-                    {activity.type === 'regulatory' && <Shield className="h-4 w-4 text-accent" />}
+              {enhancedRecentActivities.map((activity) => (
+                <div key={activity.id} className="flex items-start space-x-3">
+                  <div className="flex-shrink-0">
+                    {activity.type === 'regulatory' && <FileText className="h-4 w-4 text-blue-600 mt-0.5" />}
+                    {activity.type === 'alert' && <AlertTriangle className="h-4 w-4 text-red-600 mt-0.5" />}
+                    {activity.type === 'capa' && <Workflow className="h-4 w-4 text-purple-600 mt-0.5" />}
+                    {activity.type === 'audit' && <Shield className="h-4 w-4 text-green-600 mt-0.5" />}
+                    {activity.type === 'document' && <FileText className="h-4 w-4 text-orange-600 mt-0.5" />}
                   </div>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-medium">{activity.title}</h4>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium">{activity.title}</p>
+                    <p className="text-xs text-muted-foreground">{activity.description}</p>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
                       {getStatusBadge(activity.status)}
                     </div>
-                    <p className="text-xs text-muted-foreground">{activity.description}</p>
-                    <p className="text-xs text-muted-foreground">{activity.timestamp}</p>
                   </div>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
-      </div>
 
-      {/* AI-Powered Features Section */}
-      <div className="grid gap-6 lg:grid-cols-4">
-        <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+        {/* Quick Actions Panel */}
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-primary">
-              <Brain className="h-5 w-5" />
-              AI Gap Detection
-            </CardTitle>
-            <CardDescription>Automated compliance gap identification</CardDescription>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>Navigate to key compliance features</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Automated Monitoring</span>
-                <Badge className="bg-secondary text-secondary-foreground">Active</Badge>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Gaps Detected Today</span>
-                  <span className="font-medium text-destructive">3</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Regulatory Changes</span>
-                  <span className="font-medium">2 new</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Confidence Level</span>
-                  <span className="font-medium">92%</span>
-                </div>
-              </div>
-              <Button size="sm" variant="outline" className="w-full">
-                <Target className="h-3 w-3 mr-1" />
-                View Analysis
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-secondary/5 to-secondary/10 border-secondary/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-secondary">
-              <Workflow className="h-5 w-5" />
-              CAPA Workflows
-            </CardTitle>
-            <CardDescription>Automated corrective & preventive actions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Smart Generation</span>
-                <Badge variant="outline" className="border-secondary text-secondary">Active</Badge>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Auto-Generated CAPAs</span>
-                  <span className="font-medium text-secondary">5</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Active Workflows</span>
-                  <span className="font-medium">3</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Avg. Resolution Time</span>
-                  <span className="font-medium">18.5 days</span>
-                </div>
-              </div>
+            <div className="grid gap-3">
               <Button 
-                size="sm" 
                 variant="outline" 
-                className="w-full"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-workflows'))}
+                className="justify-start gap-3"
+                onClick={() => window.dispatchEvent(new Event('navigate-to-simulations'))}
               >
-                <Workflow className="h-3 w-3 mr-1" />
-                Manage CAPAs
+                <Shield className="h-4 w-4" />
+                Run Audit Simulation
               </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-accent/5 to-accent/10 border-accent/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-accent">
-              <Brain className="h-5 w-5" />
-              Document Intelligence
-            </CardTitle>
-            <CardDescription>AI-powered document analysis</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Documents Analyzed</span>
-                <span className="text-2xl font-bold text-accent">47</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Avg Compliance Score</span>
-                <span className="text-2xl font-bold text-accent">87%</span>
-              </div>
-              <Button size="sm" variant="outline" className="w-full">
-                <FileText className="h-3 w-3 mr-1" />
-                Analyze Documents
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-blue-500/5 to-blue-500/10 border-blue-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-blue-600">
-              <Mail className="h-5 w-5" />
-              Email Digests
-            </CardTitle>
-            <CardDescription>Weekly regulatory update summaries</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Active Subscribers</span>
-                <span className="text-2xl font-bold text-blue-600">47</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">This Week's Updates</span>
-                <span className="text-2xl font-bold text-blue-600">12</span>
-              </div>
-              <Button size="sm" variant="outline" className="w-full">
-                <Mail className="h-3 w-3 mr-1" />
-                Manage Digests
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-purple-500/5 to-purple-500/10 border-purple-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-purple-600">
-              <Brain className="h-5 w-5" />
-              Learning Paths
-            </CardTitle>
-            <CardDescription>AI-optimized skill development tracking</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Active Paths</span>
-                <span className="text-2xl font-bold text-purple-600">2</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Completion Rate</span>
-                <span className="text-2xl font-bold text-purple-600">78%</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Critical Gaps</span>
-                <span className="text-lg font-bold text-destructive">3</span>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span>SOX Preparation</span>
-                  <span className="font-medium">45%</span>
-                </div>
-                <Progress value={45} className="h-1.5" />
-                <div className="flex justify-between text-xs">
-                  <span>AI Act Readiness</span>
-                  <span className="font-medium">0%</span>
-                </div>
-                <Progress value={0} className="h-1.5" />
-              </div>
+              
               <Button 
-                size="sm" 
                 variant="outline" 
-                className="w-full"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-skills'))}
+                className="justify-start gap-3"
+                onClick={() => window.dispatchEvent(new Event('navigate-to-gap-analysis'))}
               >
-                <Target className="h-3 w-3 mr-1" />
-                View Learning Paths
+                <Target className="h-4 w-4" />
+                Gap Analysis
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="justify-start gap-3"
+                onClick={() => window.dispatchEvent(new Event('navigate-to-workflows'))}
+              >
+                <Workflow className="h-4 w-4" />
+                CAPA Workflows
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="justify-start gap-3"
+                onClick={() => window.dispatchEvent(new Event('navigate-to-evidence'))}
+              >
+                <FileText className="h-4 w-4" />
+                Evidence Management
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="justify-start gap-3"
+                onClick={() => window.dispatchEvent(new Event('navigate-to-intelligence'))}
+              >
+                <Brain className="h-4 w-4" />
+                Regulatory Intelligence
               </Button>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Webhook Integration Status with AI Insights */}
-      <div className="grid gap-6 lg:grid-cols-4">
-        <div className="lg:col-span-1">
-          <WebhookStatusWidget 
-            showDetails={true}
-            onViewAll={() => {
-              // This would typically use a router to navigate
-              // For now, we'll use the useKV hook to change the active section
-              window.dispatchEvent(new CustomEvent('navigate-to-webhooks'))
-            }}
-          />
-        </div>
-        
-        <div className="lg:col-span-1">
-          <AIInsightsPanel className="h-full" />
-        </div>
+      {/* Existing components */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <WebhookStatusWidget />
+        <AIInsightsPanel />
+      </div>
 
-        <Card className="bg-gradient-to-br from-orange-500/5 to-orange-500/10 border-orange-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-orange-700">
-              <Bug className="h-5 w-5" />
-              Feature Gap Analysis
-            </CardTitle>
-            <CardDescription>Platform functionality assessment and improvement tracking</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Platform Maturity</span>
-                <span className="text-2xl font-bold text-orange-700">73%</span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-green-600">6</div>
-                  <div className="text-xs text-muted-foreground">Functional</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-orange-600">4</div>
-                  <div className="text-xs text-muted-foreground">Need Work</div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Email Templates</span>
-                  <span className="font-medium text-green-600">95%</span>
-                </div>
-                <Progress value={95} className="h-2" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>AI Features</span>
-                  <span className="font-medium text-orange-600">45%</span>
-                </div>
-                <Progress value={45} className="h-2" />
-              </div>
-
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-feature-gaps'))}
-              >
-                <Code className="h-3 w-3 mr-1" />
-                View Gap Analysis
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-indigo-500/5 to-indigo-500/10 border-indigo-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-indigo-700">
-              <Target className="h-5 w-5" />
-              Milestone Progress
-            </CardTitle>
-            <CardDescription>Key delivery dates and compliance milestones</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Active Milestones</span>
-                <span className="text-2xl font-bold text-indigo-700">8</span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-green-600">3</div>
-                  <div className="text-xs text-muted-foreground">Completed</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-orange-600">2</div>
-                  <div className="text-xs text-muted-foreground">At Risk</div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>FDA Audit Prep</span>
-                  <span className="font-medium text-blue-600">82%</span>
-                </div>
-                <Progress value={82} className="h-2" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>MDR Compliance Review</span>
-                  <span className="font-medium text-orange-600">45%</span>
-                </div>
-                <Progress value={45} className="h-2" />
-              </div>
-
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-milestones'))}
-              >
-                <Target className="h-3 w-3 mr-1" />
-                View All Milestones
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-indigo-500/5 to-indigo-500/10 border-indigo-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-indigo-700">
-              <Code className="h-5 w-5" />
-              Development Roadmap
-            </CardTitle>
-            <CardDescription>Implementation progress and timeline overview</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Overall Progress</span>
-                <span className="text-2xl font-bold text-indigo-700">32%</span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-green-600">1</div>
-                  <div className="text-xs text-muted-foreground">Completed</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-blue-600">2</div>
-                  <div className="text-xs text-muted-foreground">Active</div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Phase 1: Foundation</span>
-                  <span className="font-medium text-blue-600">75%</span>
-                </div>
-                <Progress value={75} className="h-2" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Phase 2: AI Integration</span>
-                  <span className="font-medium text-gray-600">25%</span>
-                </div>
-                <Progress value={25} className="h-2" />
-              </div>
-
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-roadmap'))}
-              >
-                <Code className="h-3 w-3 mr-1" />
-                View Full Roadmap
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
+      {/* Notifications Panel */}
+      {(criticalNotifications > 0 || unreadNotifications > 0) && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Team Skill Performance
+              <Bell className="h-5 w-5" />
+              System Notifications
+              {unreadNotifications > 0 && (
+                <Badge className="ml-2">{unreadNotifications} unread</Badge>
+              )}
             </CardTitle>
-            <CardDescription>Real-time team skill benchmarking and analytics</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">7.3</div>
-                  <div className="text-xs text-muted-foreground">Avg Team Score</div>
+            <div className="space-y-3">
+              {criticalNotifications > 0 && (
+                <div className="p-3 border border-red-200 bg-red-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-red-600" />
+                    <span className="text-sm font-medium text-red-800">
+                      {criticalNotifications} critical notification{criticalNotifications !== 1 ? 's' : ''} require immediate attention
+                    </span>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-destructive">2</div>
-                  <div className="text-xs text-muted-foreground">At Risk</div>
+              )}
+              {notifications.slice(0, 3).map((notification) => (
+                <div key={notification.id} className="flex items-start gap-3 p-2 rounded hover:bg-muted/50">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{notification.title}</p>
+                    <p className="text-xs text-muted-foreground">{notification.message}</p>
+                  </div>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    {new Date(notification.createdAt).toLocaleTimeString()}
+                  </span>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>SOX Compliance</span>
-                  <span className="font-medium">8.2/10</span>
-                </div>
-                <Progress value={82} className="h-2" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Data Privacy</span>
-                  <span className="font-medium text-destructive">6.1/10</span>
-                </div>
-                <Progress value={61} className="h-2" />
-              </div>
-
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full" 
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-team-comparison'))}
-              >
-                <Users className="h-3 w-3 mr-1" />
-                View Team Benchmarks
-              </Button>
+              ))}
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Regulatory Database Integration Widget */}
-      <div className="grid gap-6 lg:grid-cols-1">
-        <Card className="bg-gradient-to-br from-blue-500/5 to-blue-500/10 border-blue-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-blue-700">
-              <Brain className="h-5 w-5" />
-              Regulatory Database Integration
-            </CardTitle>
-            <CardDescription>Automated compliance checks and real-time regulatory monitoring</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-6 lg:grid-cols-4">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Connected Databases</span>
-                  <span className="text-2xl font-bold text-blue-700">3</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>CFR Database</span>
-                    <Badge className="bg-green-100 text-green-800">Connected</Badge>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>FDA Regulations</span>
-                    <Badge className="bg-green-100 text-green-800">Connected</Badge>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>GDPR Database</span>
-                    <Badge className="bg-red-100 text-red-800">Error</Badge>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Active Rules</span>
-                  <span className="text-2xl font-bold text-blue-700">1,630</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Compliance Rate</span>
-                    <span className="font-medium text-green-600">94%</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Non-Compliant</span>
-                    <span className="font-medium text-red-600">3 rules</span>
-                  </div>
-                  <Progress value={94} className="h-2" />
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Automated Checks</span>
-                  <span className="text-2xl font-bold text-blue-700">2</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Daily FDA Scan</span>
-                    <Badge className="bg-green-100 text-green-800">Active</Badge>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Weekly GDPR Check</span>
-                    <Badge className="bg-gray-100 text-gray-800">Disabled</Badge>
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-2">
-                    Last sync: 2 hours ago
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Recent Findings</span>
-                  <span className="text-2xl font-bold text-orange-600">7</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>High Priority</span>
-                    <span className="font-medium text-red-600">2</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Medium Priority</span>
-                    <span className="font-medium text-orange-600">3</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Low Priority</span>
-                    <span className="font-medium text-green-600">2</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-6">
-              <Button 
-                size="sm" 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-regulatory-db'))}
-              >
-                <Brain className="h-3 w-3 mr-1" />
-                Manage Regulatory Integrations
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Resource Allocation Section */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="bg-gradient-to-br from-green-500/5 to-green-500/10 border-green-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-700">
-              <Users className="h-5 w-5" />
-              Resource Allocation
-            </CardTitle>
-            <CardDescription>AI-powered intelligent resource optimization</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Team Utilization</span>
-                <span className="text-2xl font-bold text-green-700">78%</span>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Active Allocations</span>
-                  <span className="font-medium">3</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Efficiency Score</span>
-                  <span className="font-medium">94%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>On-time Delivery</span>
-                  <span className="font-medium">98%</span>
-                </div>
-              </div>
-
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-resources'))}
-              >
-                <TrendUp className="h-3 w-3 mr-1" />
-                Optimize Resources
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-orange-500/5 to-orange-500/10 border-orange-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-orange-700">
-              <BookOpen className="h-5 w-5" />
-              Learning Resources
-            </CardTitle>
-            <CardDescription>External platform integrations and training</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Active Platforms</span>
-                <span className="text-2xl font-bold text-orange-700">4</span>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Available Courses</span>
-                  <span className="font-medium">2,682</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Completion Rate</span>
-                  <span className="font-medium">84%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>CPD Credits</span>
-                  <span className="font-medium">156</span>
-                </div>
-              </div>
-
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-learning-resources'))}
-              >
-                <BookOpen className="h-3 w-3 mr-1" />
-                Browse Resources
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5" />
-              Performance Analytics
-            </CardTitle>
-            <CardDescription>Historical performance trends and insights</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Q3 Efficiency Improvement</span>
-                  <span className="font-medium text-green-600">+5%</span>
-                </div>
-                <Progress value={85} className="h-2" />
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Quality Score</span>
-                  <span className="font-medium">4.8/5.0</span>
-                </div>
-                <Progress value={96} className="h-2" />
-              </div>
-
-              <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-2 rounded">
-                <CheckCircle className="h-4 w-4" />
-                <span>AI optimization active</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-indigo-500/5 to-indigo-500/10 border-indigo-500/20">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-indigo-700">
-              <MapPin className="h-5 w-5" />
-              Career Development
-            </CardTitle>
-            <CardDescription>AI-powered individual career path recommendations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Promotion Ready</span>
-                <span className="text-2xl font-bold text-indigo-700">2</span>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>At Career Risk</span>
-                  <span className="font-medium text-destructive">1</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Avg Career Velocity</span>
-                  <span className="font-medium">24 months</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Market Alignment</span>
-                  <span className="font-medium text-accent">82%</span>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span>Sarah Chen - Promotion Track</span>
-                  <span className="font-medium text-accent">Ready</span>
-                </div>
-                <Progress value={95} className="h-1.5" />
-                <div className="flex justify-between text-xs">
-                  <span>Emily Johnson - Development</span>
-                  <span className="font-medium">68%</span>
-                </div>
-                <Progress value={68} className="h-1.5" />
-              </div>
-
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full"
-                onClick={() => window.dispatchEvent(new CustomEvent('navigate-to-career-paths'))}
-              >
-                <MapPin className="h-3 w-3 mr-1" />
-                View Career Paths
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      )}
     </div>
   )
 }

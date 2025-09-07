@@ -19,7 +19,8 @@ import {
   Bug,
   GitBranch,
   Target,
-  Globe
+  Globe,
+  Activity
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -43,6 +44,7 @@ const navigationItems = [
   { id: 'roadmap', label: 'Development Roadmap', icon: GitBranch },
   { id: 'milestones', label: 'Milestone Tracker', icon: Target },
   { id: 'regulatory-db', label: 'Regulatory Databases', icon: Globe },
+  { id: 'compliance-monitor', label: 'Intelligent Monitor', icon: Activity },
   { id: 'team', label: 'Team Management', icon: Users },
   { id: 'settings', label: 'Settings', icon: Gear },
 ]
